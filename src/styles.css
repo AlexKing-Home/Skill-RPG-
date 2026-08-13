@@ -1,0 +1,119 @@
+:root {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #eadfc9;
+  background: #050709;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { min-height: 100%; margin: 0; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.screen {
+  min-height: 100vh;
+  padding: 18px;
+  display: grid;
+  place-items: center;
+  background-image:
+    linear-gradient(rgba(2, 4, 6, 0.34), rgba(2, 3, 4, 0.8)),
+    var(--fantasy-bg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.fantasy-panel {
+  border: 1px solid #77542d;
+  background: linear-gradient(rgba(3, 7, 9, 0.78), rgba(2, 5, 7, 0.94));
+  box-shadow: inset 0 0 0 1px #050505, 0 24px 80px rgba(0, 0, 0, 0.62);
+}
+
+.welcome-panel {
+  width: min(100%, 730px);
+  min-height: min(90vh, 760px);
+  padding: clamp(34px, 7vw, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo-gem {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 14px;
+  transform: rotate(45deg);
+  border: 3px solid #d4ae6d;
+  background: linear-gradient(135deg, #62d7ff, #0e5b99 58%, #062039);
+  box-shadow: 0 0 16px rgba(66, 185, 255, 0.55);
+}
+
+.game-logo {
+  margin: 0;
+  color: #d3ae6c;
+  font-size: clamp(4.4rem, 17vw, 8.2rem);
+  line-height: 0.72;
+  letter-spacing: 0.03em;
+  text-shadow: 0 3px 0 #1a1109, 0 0 24px rgba(196, 147, 75, 0.22);
+}
+.game-logo span { display: block; margin-top: 25px; font-size: 0.65em; }
+.welcome-title { margin: 44px 0 6px; color: #dec183; text-transform: uppercase; font-size: clamp(1rem, 3.5vw, 1.35rem); }
+.welcome-subtitle { margin: 0; font-size: clamp(1rem, 3vw, 1.2rem); }
+.welcome-actions { width: min(100%, 470px); display: grid; gap: 18px; margin-top: 48px; }
+.menu-button {
+  min-height: 92px;
+  border: 1px solid #a4763b;
+  color: #f4e6ca;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.72), 0 10px 24px rgba(0,0,0,.4);
+  text-transform: uppercase;
+}
+.menu-button strong { display: block; font-size: clamp(1.25rem, 4vw, 1.65rem); font-weight: 500; }
+.menu-button span { display: block; margin-top: 4px; color: #dacdb8; text-transform: none; font-size: 1rem; }
+.menu-button--continue { background: linear-gradient(#164c78, #082c49 70%, #061d2f); }
+.menu-button--create { background: linear-gradient(#1d7038, #0d4123 70%, #082d18); }
+.save-status { margin: 28px 0 0; color: #9e8a6b; }
+.status-message { margin: 12px 0 0; color: #e0c9a2; }
+
+.creation-panel { width: min(100%, 1020px); padding: clamp(20px, 4vw, 42px); }
+.section-title { margin: 0 0 28px; text-align: center; color: #d7b574; text-transform: uppercase; font-weight: 500; font-size: clamp(1.45rem, 4vw, 2rem); }
+.field-label, .classes-title { display: block; margin: 18px 0 9px; color: #d7b574; text-transform: uppercase; font-size: 1rem; font-weight: 500; }
+.nickname-input { width: 100%; height: 50px; padding: 0 14px; border: 1px solid #4b3a29; background: rgba(5, 8, 10, 0.94); color: #f3ead8; outline: none; }
+.nickname-input:focus { border-color: #9f753f; box-shadow: 0 0 0 1px #9f753f55; }
+.gender-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 600px; }
+.gender-button { min-height: 56px; border: 1px solid #493e34; background: #080c0f; color: #ddd2bf; text-transform: uppercase; }
+.gender-button span { margin-right: 8px; font-size: 1.65rem; }
+.gender-button--male span { color: #4dccff; }
+.gender-button--female span { color: #ec78a2; }
+.gender-button--male.is-active { border-color: #4dccff; box-shadow: 0 0 15px #4dccff55; background: #0a1720; }
+.gender-button--female.is-active { border-color: #ec78a2; box-shadow: 0 0 15px #ec78a255; background: #1b0c13; }
+.skins-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.skin-card { position: relative; padding: 0; overflow: hidden; border: 1px solid #7a5a35; background: #06090b; color: #f0e5d0; text-align: center; }
+.skin-card--selected { border-color: var(--selection-accent); box-shadow: 0 0 16px color-mix(in srgb, var(--selection-accent) 38%, transparent); }
+.skin-card__name { display: grid; place-items: center; min-height: 52px; padding: 8px; text-transform: uppercase; font-size: clamp(.9rem, 2.3vw, 1.08rem); }
+.skin-card__image { display: block; width: 100%; aspect-ratio: 163 / 296; object-fit: cover; object-position: center center; background: #080a0d; }
+.skin-card__selected { position: absolute; right: 8px; bottom: 8px; padding: 6px 9px; border: 1px solid var(--selection-accent); background: rgba(12, 10, 13, 0.9); color: var(--selection-accent); font-size: .8rem; }
+.form-error { color: #f2aaa9; }
+.creation-actions { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; margin-top: 24px; }
+.secondary-button, .primary-button { min-height: 52px; padding: 0 24px; border: 1px solid #91683a; color: #f3e6ce; text-transform: uppercase; background: rgba(9, 10, 11, 0.92); }
+.primary-button { background: linear-gradient(#6b431d, #3f250f); }
+
+.character-panel { width: min(100%, 680px); padding: clamp(24px, 5vw, 44px); text-align: center; }
+.character-portrait { width: min(72%, 360px); display: block; margin: 0 auto; border: 1px solid #7a5a35; }
+.character-name { color: #ebdbbe; font-size: 2.5rem; margin-bottom: 6px; }
+.character-class { color: #d8c7aa; font-size: 1.35rem; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+.stats-grid div { border: 1px solid #5e4933; background: #101418; padding: 16px; }
+.stats-grid span, .stats-grid strong { display: block; }
+.stats-grid strong { font-size: 1.5rem; }
+
+@media (max-width: 760px) {
+  .screen { padding: 0; align-items: start; background-attachment: scroll; }
+  .welcome-panel { min-height: 100vh; width: 100%; }
+  .creation-panel { width: 100%; min-height: 100vh; padding: 22px 16px 34px; }
+  .skins-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .skin-card__name { min-height: 48px; }
+  .creation-actions { flex-direction: column-reverse; }
+  .secondary-button, .primary-button { width: 100%; }
+}
