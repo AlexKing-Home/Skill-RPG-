@@ -1,8 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  fantasyBackground,
+  femaleSwordsman,
+  maleAssassin,
+} from "../src/data/assets.js";
 import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
 
-const dataUriPattern = /^data:image\/jpeg;base64,/;
+const externalUrlPattern = /^https?:\/\//;
 
 test("there are exactly eight unique skins", () => {
   assert.equal(skins.length, 8);
@@ -10,23 +15,29 @@ test("there are exactly eight unique skins", () => {
 });
 
 test("male and female each have four classes", () => {
-  assert.deepEqual(getSkinsByGender("male").map((skin) => skin.classId), ["swordsman", "spearman", "assassin", "archer"]);
-  assert.deepEqual(getSkinsByGender("female").map((skin) => skin.classId), ["swordsman", "spearman", "assassin", "archer"]);
+  assert.deepEqual(
+    getSkinsByGender("male").map((skin) => skin.classId),
+    ["swordsman", "spearman", "assassin", "archer"],
+  );
+  assert.deepEqual(
+    getSkinsByGender("female").map((skin) => skin.classId),
+    ["swordsman", "spearman", "assassin", "archer"],
+  );
 });
 
-test("all eight skin images are embedded locally in React data", () => {
+test("all game art uses local Vite assets", () => {
+  assert.equal(externalUrlPattern.test(fantasyBackground), false);
+  assert.match(fantasyBackground, /^\/backgrounds\//);
   for (const skin of skins) {
-    assert.match(skin.image, dataUriPattern, `${skin.id} image is not embedded`);
-    assert.ok(skin.image.length > 4000, `${skin.id} image data is unexpectedly short`);
+    assert.equal(externalUrlPattern.test(skin.image), false, `${skin.id} uses an external URL`);
+    assert.match(skin.image, /^\/skins\//, `${skin.id} is not a local skin asset`);
   }
 });
 
-test("female assassin and archer are separate standalone assets", () => {
-  const assassin = skins.find((skin) => skin.id === "female-assassin");
-  const archer = skins.find((skin) => skin.id === "female-archer");
-  assert.notEqual(assassin.image, archer.image);
-  assert.match(assassin.image, dataUriPattern);
-  assert.match(archer.image, dataUriPattern);
+test("male assassin and female swordswoman use repaired standalone paths", () => {
+  assert.match(maleAssassin, /male-assassin\.jpg/);
+  assert.match(femaleSwordsman, /female-swordsman\.svg/);
+  assert.notEqual(maleAssassin, femaleSwordsman);
 });
 
 test("character has defense and no mana", () => {

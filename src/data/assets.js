@@ -1,11 +1,12 @@
-const raw = "https:" + "//raw.githubusercontent.com";
-const base = `${raw}/AlexKing-Home/Skill-RPG-/66e21c27146acda59a4e9a6c3f5b8d2c882bb150/public`;
-export const fantasyBackground = `${base}/backgrounds/welcome-bg.jpg`;
-export const maleSwordsman = `${base}/skins/male-swordsman.jpg`;
-export const maleSpearman = `${base}/skins/male-spearman.jpg`;
-export const maleAssassin = `${base}/skins/male-assassin.jpg`;
-export const maleArcher = `${base}/skins/male-archer.jpg`;
-export const femaleSwordsman = `${base}/skins/female-swordsman.avif`;
-export const femaleSpearman = `${base}/skins/female-spearman.avif`;
-export const femaleAssassin = `${base}/skins/female-assassin.avif`;
-export const femaleArcher = `${base}/skins/female-archer.avif`;
+const asset = (path) => `${path}?v=clean-assets-v2`;
+
+export const fantasyBackground = asset("/backgrounds/welcome-bg.jpg");
+
+export const maleSwordsman = asset("/skins/male-swordsman.jpg");
+export const maleSpearman = asset("/skins/male-spearman.jpg");
+export const maleAssassin = asset("/skins/male-assassin.jpg");
+export const maleArcher = asset("/skins/male-archer.jpg");
+export const femaleSwordsman = asset("/skins/female-swordsman.svg");
+export const femaleSpearman = asset("/skins/female-spearman.avif");
+export const femaleAssassin = asset("/skins/female-assassin.avif");
+export const femaleArcher = asset("/skins/female-archer.avif");
