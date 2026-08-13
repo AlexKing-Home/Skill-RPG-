@@ -1,4 +1,4 @@
-const asset = (path) => `${path}?v=clean-assets-v2`;
+const asset = (path) => `${path}?v=clean-assets-v3`;
 
 export const fantasyBackground = asset("/backgrounds/welcome-bg.jpg");
 
