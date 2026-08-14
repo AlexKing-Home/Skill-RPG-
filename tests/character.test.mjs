@@ -36,7 +36,7 @@ test("all game art uses local Vite assets", () => {
 
 test("male assassin and female swordswoman use repaired standalone paths", () => {
   assert.match(maleAssassin, /male-assassin\.jpg/);
-  assert.match(femaleSwordsman, /female-swordsman\.svg/);
+  assert.match(femaleSwordsman, /female-swordsman\.jpg/);
   assert.notEqual(maleAssassin, femaleSwordsman);
 });
 
