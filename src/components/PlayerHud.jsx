@@ -1,6 +1,8 @@
 export default function PlayerHud({ nickname, level, currentHealth, maxHealth, experience }) {
-  const hpPercent = maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
-  const expLabel = experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
+  const hpPercent =
+    maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
+  const expLabel =
+    experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
 
   return (
     <header className="player-hud fantasy-panel">
@@ -13,10 +15,15 @@ export default function PlayerHud({ nickname, level, currentHealth, maxHealth, e
         <div className="hud-resource">
           <div className="hud-resource__label">
             <span>HP</span>
-            <strong>{currentHealth} / {maxHealth}</strong>
+            <strong>
+              {currentHealth} / {maxHealth}
+            </strong>
           </div>
           <div className="hud-resource__track">
-            <span className="hud-resource__fill hud-resource__fill--hp" style={{ width: `${hpPercent}%` }} />
+            <span
+              className="hud-resource__fill hud-resource__fill--hp"
+              style={{ width: `${hpPercent}%` }}
+            />
           </div>
         </div>
 

@@ -228,7 +228,9 @@
   border: 1px solid #e6bd65;
   border-radius: 50%;
   background: #1e4161;
-  box-shadow: 0 0 0 4px rgba(11, 27, 38, 0.78), 0 0 22px rgba(94, 187, 242, 0.45);
+  box-shadow:
+    0 0 0 4px rgba(11, 27, 38, 0.78),
+    0 0 22px rgba(94, 187, 242, 0.45);
 }
 
 .hero-marker strong {

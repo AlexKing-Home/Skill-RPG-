@@ -26,7 +26,9 @@ export default function CharacterScreen({ character, onBack }) {
   if (activeTab === "location") {
     content = <LocationMapView location={location} />;
   } else if (activeTab === "character") {
-    content = <CharacterDetailsView character={character} currentHealth={currentHealth} level={level} />;
+    content = (
+      <CharacterDetailsView character={character} currentHealth={currentHealth} level={level} />
+    );
   } else {
     content = <WorldMapView location={location} />;
   }
