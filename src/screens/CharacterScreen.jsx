@@ -1,18 +1,54 @@
+import "../game-interface.css";
+import { useState } from "react";
+import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
+import GameTabs from "../components/GameTabs.jsx";
+import LocationMapView from "../components/LocationMapView.jsx";
+import PlayerHud from "../components/PlayerHud.jsx";
+import WorldMapView from "../components/WorldMapView.jsx";
+import { getExperienceProgress } from "../data/progression.js";
+
+const defaultLocation = {
+  worldName: "Текущая местность",
+  areaName: "Текущая локация",
+  x: 50,
+  y: 50,
+};
+
 export default function CharacterScreen({ character, onBack }) {
+  const [activeTab, setActiveTab] = useState("map");
+  const experience = getExperienceProgress(character.experience ?? 0);
+  const level = experience.level;
+  const maxHealth = character.stats.health;
+  const currentHealth = Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth));
+  const location = { ...defaultLocation, ...(character.location ?? {}) };
+
+  let content;
+  if (activeTab === "location") {
+    content = <LocationMapView location={location} />;
+  } else if (activeTab === "character") {
+    content = <CharacterDetailsView character={character} currentHealth={currentHealth} level={level} />;
+  } else {
+    content = <WorldMapView location={location} />;
+  }
+
   return (
-    <main className="screen screen--character">
-      <section className="character-panel fantasy-panel">
-        <img className="character-portrait" src={character.skinImage} alt={character.skinName} />
-        <h1 className="character-name">{character.nickname}</h1>
-        <p className="character-class">{character.skinName}</p>
-        <div className="stats-grid">
-          <div><span>Уровень</span><strong>{character.level}</strong></div>
-          <div><span>Здоровье</span><strong>{character.stats.health}</strong></div>
-          <div><span>Атака</span><strong>{character.stats.attack}</strong></div>
-          <div><span>Защита</span><strong>{character.stats.defense}</strong></div>
-          <div><span>Ловкость</span><strong>{character.stats.agility}</strong></div>
-        </div>
-        <button className="secondary-button" type="button" onClick={onBack}>В главное меню</button>
+    <main className="screen screen--game">
+      <section className="game-shell">
+        <PlayerHud
+          nickname={character.nickname}
+          level={level}
+          currentHealth={currentHealth}
+          maxHealth={maxHealth}
+          experience={experience}
+        />
+
+        <GameTabs activeTab={activeTab} onChange={setActiveTab} />
+
+        <div className="game-content fantasy-panel">{content}</div>
+
+        <button className="secondary-button game-back-button" type="button" onClick={onBack}>
+          В главное меню
+        </button>
       </section>
     </main>
   );

@@ -8,6 +8,7 @@ import {
   maleSpearman,
   maleSwordsman,
 } from "./assets.js";
+import { createEmptyEquipment } from "./equipment.js";
 
 const classDefinitions = {
   swordsman: {
@@ -66,7 +67,7 @@ export function getSkinsByGender(gender) {
 
 export function createCharacter(nickname, skin) {
   return {
-    version: 1,
+    version: 2,
     nickname,
     gender: skin.gender,
     classId: skin.classId,
@@ -74,7 +75,16 @@ export function createCharacter(nickname, skin) {
     skinName: skin.name,
     skinImage: skin.image,
     level: 1,
+    experience: 0,
+    currentHealth: skin.stats.health,
     stats: { ...skin.stats },
+    equipment: createEmptyEquipment(),
+    location: {
+      worldName: "Текущая местность",
+      areaName: "Текущая локация",
+      x: 50,
+      y: 50,
+    },
     createdAt: new Date().toISOString(),
   };
 }
