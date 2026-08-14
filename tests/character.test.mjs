@@ -1,10 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {
-  fantasyBackground,
-  femaleSwordsman,
-  maleAssassin,
-} from "../src/data/assets.js";
+import { fantasyBackground, femaleSwordsman, maleAssassin } from "../src/data/assets.js";
 import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
 
 const externalUrlPattern = /^https?:\/\//;
