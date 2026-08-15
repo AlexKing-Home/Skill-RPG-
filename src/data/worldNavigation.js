@@ -1,25 +1,27 @@
-export const START_NODE_ID = "start-city";
+export const START_NODE_ID = "swamp";
+export const CITY_NODE_ID = "start-city";
+export const FLOOR_MAP_VERSION = 2;
 
 export const floorOneNavigation = {
   id: "floor-1",
   name: "Этаж 1",
   nodes: [
-    { id: START_NODE_ID, name: "Стартовый город", kind: "city", x: 24.5, y: 28.5 },
+    { id: CITY_NODE_ID, name: "Стартовый город", kind: "city", x: 24.5, y: 28.5 },
     { id: "meadows", name: "Луга", kind: "meadows", x: 52, y: 31 },
     { id: "forest", name: "Лес", kind: "forest", x: 77, y: 35 },
-    { id: "swamp", name: "Болото", kind: "swamp", x: 47.2, y: 46.5 },
+    { id: START_NODE_ID, name: "Болото", kind: "swamp", x: 47.2, y: 46.5 },
     { id: "ruins", name: "Руины", kind: "ruins", x: 24.5, y: 68 },
     { id: "settlement", name: "Поселение", kind: "settlement", x: 76.5, y: 69 },
     { id: "dungeon", name: "Подземелье", kind: "dungeon", x: 52, y: 92.5 },
   ],
   edges: [
-    { from: START_NODE_ID, to: "meadows", distanceKm: 1.1 },
-    { from: START_NODE_ID, to: "ruins", distanceKm: 1.7 },
-    { from: "meadows", to: "swamp", distanceKm: 1.2 },
-    { from: "forest", to: "swamp", distanceKm: 1.4 },
+    { from: CITY_NODE_ID, to: "meadows", distanceKm: 1.1 },
+    { from: CITY_NODE_ID, to: "ruins", distanceKm: 1.7 },
+    { from: "meadows", to: START_NODE_ID, distanceKm: 1.2 },
+    { from: "forest", to: START_NODE_ID, distanceKm: 1.4 },
     { from: "forest", to: "settlement", distanceKm: 1.3 },
-    { from: "swamp", to: "ruins", distanceKm: 1.2 },
-    { from: "swamp", to: "settlement", distanceKm: 1.4 },
+    { from: START_NODE_ID, to: "ruins", distanceKm: 1.2 },
+    { from: START_NODE_ID, to: "settlement", distanceKm: 1.4 },
     { from: "ruins", to: "dungeon", distanceKm: 1.6 },
     { from: "settlement", to: "dungeon", distanceKm: 1.5 },
   ],
