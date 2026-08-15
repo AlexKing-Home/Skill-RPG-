@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { locationMapArt } from "../data/assets.js";
 import { swampLocationArt } from "../data/swampLocationArt.js";
 
@@ -22,18 +22,22 @@ const fieldObjects = [
 ];
 
 /*
- * Coordinates are measured from the centres of the painted blue/gold markers
- * in the approved 768 x 687 swamp image. Keep these values in the same
- * percentage coordinate system as the responsive image itself.
+ * Exact pixel coordinate system of the approved swamp scene crop.
+ * The functional points below are measured from the actual painted blue/gold
+ * marker centres in that image, not from screenshots of the rendered page.
  */
+const SWAMP_ART_WIDTH = 775;
+const SWAMP_ART_HEIGHT = 695;
+const SWAMP_TAP_RADIUS = 72;
+
 const swampPoints = [
   {
     id: "swamp-arch",
     type: "inspect",
     name: "Затопленная арка",
     action: "Осмотреть",
-    x: 19.26,
-    y: 20.531,
+    sourceX: 148,
+    sourceY: 142,
     text: "Старая каменная арка почти ушла под воду. На камнях заметны стёртые символы.",
   },
   {
@@ -41,8 +45,8 @@ const swampPoints = [
     type: "move",
     name: "Тропа в глубь болота",
     action: "Перейти",
-    x: 47.388,
-    y: 18.511,
+    sourceX: 368,
+    sourceY: 130,
     text: "Топкая тропа уходит дальше в густой туман. Путь обнаружен.",
   },
   {
@@ -50,8 +54,8 @@ const swampPoints = [
     type: "inspect",
     name: "Искажённое дерево",
     action: "Осмотреть",
-    x: 68.314,
-    y: 21.569,
+    sourceX: 526,
+    sourceY: 150,
     text: "Из полого ствола сочится слабое зелёное свечение.",
   },
   {
@@ -59,8 +63,8 @@ const swampPoints = [
     type: "inspect",
     name: "Ядовитая заводь",
     action: "Осмотреть",
-    x: 33.803,
-    y: 40.316,
+    sourceX: 263,
+    sourceY: 279,
     text: "Вода здесь пузырится и светится изнутри. Прикасаться к ней опасно.",
   },
   {
@@ -68,8 +72,8 @@ const swampPoints = [
     type: "move",
     name: "Нора среди корней",
     action: "Перейти",
-    x: 88.275,
-    y: 45.127,
+    sourceX: 681,
+    sourceY: 316,
     text: "Между корнями виднеется узкий тёмный проход. Путь обнаружен.",
   },
   {
@@ -77,8 +81,8 @@ const swampPoints = [
     type: "inspect",
     name: "Затонувшая статуя",
     action: "Осмотреть",
-    x: 12.104,
-    y: 61.571,
+    sourceX: 97,
+    sourceY: 429,
     text: "Каменное лицо выступает из воды. Кто-то оставил здесь древний идол.",
   },
   {
@@ -86,8 +90,8 @@ const swampPoints = [
     type: "inspect",
     name: "Останки путника",
     action: "Осмотреть",
-    x: 41.488,
-    y: 70.116,
+    sourceX: 322,
+    sourceY: 487,
     text: "Кости лежат прямо в воде. Рядом могут остаться полезные вещи.",
   },
   {
@@ -95,8 +99,8 @@ const swampPoints = [
     type: "inspect",
     name: "Корни у топи",
     action: "Осмотреть",
-    x: 87.595,
-    y: 81.204,
+    sourceX: 678,
+    sourceY: 564,
     text: "Корни образуют естественное укрытие. Внутри что-то блеснуло.",
   },
   {
@@ -104,16 +108,24 @@ const swampPoints = [
     type: "move",
     name: "Гнилой мост",
     action: "Перейти",
-    x: 44.703,
-    y: 90.802,
+    sourceX: 346,
+    sourceY: 627,
     text: "Старый настил ещё держится и ведёт к другой части болота. Путь обнаружен.",
   },
 ];
+
+function swampPointStyle(point) {
+  return {
+    left: `${(point.sourceX / SWAMP_ART_WIDTH) * 100}%`,
+    top: `${(point.sourceY / SWAMP_ART_HEIGHT) * 100}%`,
+  };
+}
 
 export default function LocationMapView({ location, worldState = {}, onOpenChest }) {
   const [selectedId, setSelectedId] = useState(null);
   const [dialogue, setDialogue] = useState("");
   const [swampArtStatus, setSwampArtStatus] = useState("loading");
+  const swampPointerStart = useRef(null);
   const isField = ["field", "meadows"].includes(location.nodeId);
   const isSwamp = location.nodeId === "swamp";
   const openedChests = worldState.openedChests ?? [];
@@ -123,12 +135,59 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   useEffect(() => {
     setSelectedId(null);
     setDialogue("");
+    swampPointerStart.current = null;
     if (location.nodeId === "swamp") setSwampArtStatus("loading");
   }, [location.nodeId]);
 
   function handleObjectTap(objectId) {
     setSelectedId(objectId);
     setDialogue("");
+  }
+
+  function handleSwampPointerDown(event) {
+    if (!isSwamp || swampArtStatus !== "ready") return;
+
+    swampPointerStart.current = {
+      pointerId: event.pointerId,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+  }
+
+  function handleSwampPointerUp(event) {
+    if (!isSwamp || swampArtStatus !== "ready") return;
+
+    const start = swampPointerStart.current;
+    swampPointerStart.current = null;
+    if (!start || start.pointerId !== event.pointerId) return;
+
+    const movement = Math.hypot(event.clientX - start.clientX, event.clientY - start.clientY);
+    if (movement > 18) return;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const sourceX = ((event.clientX - rect.left) / rect.width) * SWAMP_ART_WIDTH;
+    const sourceY = ((event.clientY - rect.top) / rect.height) * SWAMP_ART_HEIGHT;
+
+    let nearestPoint = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    for (const point of swampPoints) {
+      const distance = Math.hypot(sourceX - point.sourceX, sourceY - point.sourceY);
+      if (distance < nearestDistance) {
+        nearestPoint = point;
+        nearestDistance = distance;
+      }
+    }
+
+    if (nearestPoint && nearestDistance <= SWAMP_TAP_RADIUS) {
+      handleObjectTap(nearestPoint.id);
+    }
+  }
+
+  function handleSwampPointerCancel() {
+    swampPointerStart.current = null;
   }
 
   function handleInteract() {
@@ -187,6 +246,9 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
                 ? "Луга. На локации есть NPC и сундук, доступные для взаимодействия."
                 : "Карта текущей локации."
           }
+          onPointerDown={isSwamp ? handleSwampPointerDown : undefined}
+          onPointerUp={isSwamp ? handleSwampPointerUp : undefined}
+          onPointerCancel={isSwamp ? handleSwampPointerCancel : undefined}
         >
           {!isSwamp && (
             <div className="map-fallback" aria-hidden="true">
@@ -268,7 +330,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
                 key={point.id}
                 type="button"
                 className={`swamp-point ${selectedId === point.id ? "is-selected" : ""}`}
-                style={{ left: `${point.x}%`, top: `${point.y}%` }}
+                style={swampPointStyle(point)}
                 onClick={() => handleObjectTap(point.id)}
                 aria-label={`${point.name}. ${point.action}`}
                 aria-pressed={selectedId === point.id}
