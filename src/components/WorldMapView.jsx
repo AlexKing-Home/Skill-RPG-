@@ -11,39 +11,35 @@ export default function WorldMapView({ location, onTravel }) {
   const currentNode = getTravelNode(location.nodeId) ?? getTravelNode(START_NODE_ID);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [heroNodeId, setHeroNodeId] = useState(currentNode.id);
+  const [activeRoute, setActiveRoute] = useState(null);
   const [isTraveling, setIsTraveling] = useState(false);
 
   const selectedNode = useMemo(() => getTravelNode(selectedNodeId), [selectedNodeId]);
   const heroNode = getTravelNode(heroNodeId) ?? currentNode;
-  const route = useMemo(
-    () => getTravelRoute(currentNode.id, selectedNode?.id),
-    [currentNode.id, selectedNode?.id],
-  );
 
   useEffect(() => {
     setSelectedNodeId(null);
     setHeroNodeId(currentNode.id);
+    setActiveRoute(null);
     setIsTraveling(false);
   }, [currentNode.id]);
 
-  function handleNodeTap(nodeId) {
-    if (isTraveling) return;
-    if (nodeId === currentNode.id) {
-      setSelectedNodeId(null);
-      return;
-    }
+  function travelTo(nodeId) {
+    if (isTraveling || nodeId === currentNode.id) return;
+
+    const destination = getTravelNode(nodeId);
+    const route = getTravelRoute(currentNode.id, nodeId);
+    if (!destination || !route) return;
+
     setSelectedNodeId(nodeId);
-  }
-
-  function handleTravel() {
-    if (!route || !selectedNode || isTraveling) return;
-
+    setActiveRoute(route);
     setIsTraveling(true);
+
     const steps = route.nodeIds.slice(1);
 
     function moveStep(index) {
       if (index >= steps.length) {
-        onTravel?.(selectedNode.id);
+        onTravel?.(destination.id);
         return;
       }
 
@@ -59,7 +55,7 @@ export default function WorldMapView({ location, onTravel }) {
       <div className="game-view__heading">
         <div>
           <span className="game-view__eyebrow">Местоположение героя</span>
-          <h1 id="world-map-title">{location.worldName}</h1>
+          <h1 id="world-map-title">Текущая местность</h1>
         </div>
         <span className="location-badge">
           <span aria-hidden="true">⌖</span>
@@ -70,20 +66,13 @@ export default function WorldMapView({ location, onTravel }) {
       <div className="map-frame map-frame--reference">
         <div
           className="world-map world-map--reference world-map--travel floor-map-art"
-          aria-label="Карта первого этажа. Все отмеченные локации доступны для выбора."
+          aria-label="Карта первого этажа. Нажмите на название или метку локации для перемещения."
         >
           <div className="map-fallback" aria-hidden="true">
             <span className="world-fallback__land" />
           </div>
 
-          <img
-            className="map-art-image"
-            src={floorOneMapArt}
-            alt="Карта первого этажа"
-            onError={(event) => {
-              event.currentTarget.hidden = true;
-            }}
-          />
+          <img className="map-art-image" src={floorOneMapArt} alt="Карта первого этажа" />
 
           <div className="swamp-replacement" aria-hidden="true">
             <span className="swamp-replacement__icon">♒</span>
@@ -95,7 +84,7 @@ export default function WorldMapView({ location, onTravel }) {
               const from = getTravelNode(edge.from);
               const to = getTravelNode(edge.to);
               const key = `${edge.from}-${edge.to}`;
-              const active = route?.edgeKeys.includes(key);
+              const active = activeRoute?.edgeKeys.includes(key);
               if (!active) return null;
 
               return (
@@ -115,14 +104,13 @@ export default function WorldMapView({ location, onTravel }) {
             <button
               key={node.id}
               type="button"
-              className={`map-hotspot ${node.id === currentNode.id ? "is-current" : ""} ${
-                node.id === selectedNodeId ? "is-selected" : ""
-              }`}
+              className={`map-hotspot map-hotspot--${node.kind} ${
+                node.id === currentNode.id ? "is-current" : ""
+              } ${node.id === selectedNodeId ? "is-selected" : ""}`}
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              onClick={() => handleNodeTap(node.id)}
-              aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ""}`}
-              aria-pressed={node.id === selectedNodeId}
-              disabled={isTraveling}
+              onClick={() => travelTo(node.id)}
+              aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ", перейти"}`}
+              disabled={isTraveling || node.id === currentNode.id}
             >
               <span className="map-hotspot__ring" aria-hidden="true" />
             </button>
@@ -141,31 +129,23 @@ export default function WorldMapView({ location, onTravel }) {
         </div>
       </div>
 
-      <div className="travel-panel">
-        {route && selectedNode ? (
+      <div className="travel-panel" aria-live="polite">
+        {activeRoute && selectedNode ? (
           <div className="travel-panel__route">
             <div>
               <strong>
                 {currentNode.name} → {selectedNode.name}
               </strong>
               <span>
-                Путь: {route.nodeIds.map((nodeId) => getTravelNode(nodeId)?.name).join(" → ")}
+                Путь: {activeRoute.nodeIds.map((nodeId) => getTravelNode(nodeId)?.name).join(" → ")}
               </span>
-              <span>Расстояние: {route.distanceKm.toFixed(1)} км</span>
+              <span>Расстояние: {activeRoute.distanceKm.toFixed(1)} км</span>
             </div>
-            <button
-              type="button"
-              className="travel-panel__button"
-              onClick={handleTravel}
-              disabled={isTraveling}
-            >
-              {isTraveling ? "Идём..." : "Отправиться"}
-            </button>
+            <span className="travel-panel__status">{isTraveling ? "Перемещение..." : "Прибытие"}</span>
           </div>
         ) : (
           <p className="travel-panel__hint">
-            Нажмите на любую локацию на карте: Стартовый город, Луга, Лес, Болото, Руины, Поселение
-            или Подземелье.
+            Тапните прямо по точке или названию нужной локации — герой сразу начнёт движение.
           </p>
         )}
       </div>
