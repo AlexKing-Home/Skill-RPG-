@@ -8,6 +8,7 @@ import "./device-regression-fixes.css";
 import "./reference-parity-final.css";
 import "./mobile-polish.css";
 import "./reference-ui-v8.css";
+import "./navigation-reference-v9.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
