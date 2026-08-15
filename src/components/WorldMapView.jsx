@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { floorOneMapArt } from "../data/floorOneMapArt.js";
 import {
   START_NODE_ID,
@@ -7,12 +7,15 @@ import {
   getTravelRoute,
 } from "../data/worldNavigation.js";
 
+const TAP_MOVE_TOLERANCE = 18;
+
 export default function WorldMapView({ location, onTravel }) {
   const currentNode = getTravelNode(location.nodeId) ?? getTravelNode(START_NODE_ID);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [heroNodeId, setHeroNodeId] = useState(currentNode.id);
   const [activeRoute, setActiveRoute] = useState(null);
   const [isTraveling, setIsTraveling] = useState(false);
+  const pointerStartRef = useRef(null);
 
   const selectedNode = useMemo(() => getTravelNode(selectedNodeId), [selectedNodeId]);
   const heroNode = getTravelNode(heroNodeId) ?? currentNode;
@@ -22,6 +25,7 @@ export default function WorldMapView({ location, onTravel }) {
     setHeroNodeId(currentNode.id);
     setActiveRoute(null);
     setIsTraveling(false);
+    pointerStartRef.current = null;
   }, [currentNode.id]);
 
   function travelTo(nodeId) {
@@ -50,10 +54,38 @@ export default function WorldMapView({ location, onTravel }) {
     moveStep(0);
   }
 
+  function handlePointerDown(event, nodeId) {
+    if (isTraveling || nodeId === currentNode.id) return;
+
+    pointerStartRef.current = {
+      pointerId: event.pointerId,
+      nodeId,
+      x: event.clientX,
+      y: event.clientY,
+    };
+
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Pointer capture is optional; tap still works without it.
+    }
+  }
+
   function handlePointerUp(event, nodeId) {
-    if (event.pointerType === "mouse") return;
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+
+    if (!start || start.pointerId !== event.pointerId || start.nodeId !== nodeId) return;
+
+    const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    if (moved > TAP_MOVE_TOLERANCE) return;
+
     event.preventDefault();
     travelTo(nodeId);
+  }
+
+  function handleKeyboardClick(event, nodeId) {
+    if (event.detail === 0) travelTo(nodeId);
   }
 
   return (
@@ -110,8 +142,8 @@ export default function WorldMapView({ location, onTravel }) {
             const hitbox = node.hitbox ?? {
               x: node.x,
               y: node.y,
-              width: 18,
-              height: 14,
+              width: 20,
+              height: 16,
             };
 
             return (
@@ -127,8 +159,12 @@ export default function WorldMapView({ location, onTravel }) {
                   width: `${hitbox.width}%`,
                   height: `${hitbox.height}%`,
                 }}
+                onPointerDown={(event) => handlePointerDown(event, node.id)}
                 onPointerUp={(event) => handlePointerUp(event, node.id)}
-                onClick={() => travelTo(node.id)}
+                onPointerCancel={() => {
+                  pointerStartRef.current = null;
+                }}
+                onClick={(event) => handleKeyboardClick(event, node.id)}
                 aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ", перейти"}`}
                 disabled={isTraveling || node.id === currentNode.id}
               >
