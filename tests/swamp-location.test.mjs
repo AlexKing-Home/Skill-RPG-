@@ -25,16 +25,16 @@ const pointIds = [
   "swamp-bridge",
 ];
 
-const paintedMarkerCenters = [
-  [19.26, 20.531],
-  [47.388, 18.511],
-  [68.314, 21.569],
-  [33.803, 40.316],
-  [88.275, 45.127],
-  [12.104, 61.571],
-  [41.488, 70.116],
-  [87.595, 81.204],
-  [44.703, 90.802],
+const paintedMarkerPixels = [
+  [148, 142],
+  [368, 130],
+  [526, 150],
+  [263, 279],
+  [681, 316],
+  [97, 429],
+  [322, 487],
+  [678, 564],
+  [346, 627],
 ];
 
 test("swamp node renders the exact uploaded scene as an embedded image", () => {
@@ -56,29 +56,31 @@ test("approved swamp scene exposes all nine clickable interest points", () => {
 
   assert.match(viewSource, /className={`swamp-point/);
   assert.match(viewSource, /onClick=\{\(\) => handleObjectTap\(point\.id\)\}/);
-  assert.match(viewSource, /swampArtStatus === "ready"/);
-  assert.match(viewSource, /Нажмите на светящуюся точку на болоте/);
+  assert.match(viewSource, /onPointerDown=\{isSwamp \? handleSwampPointerDown : undefined\}/);
+  assert.match(viewSource, /onPointerUp=\{isSwamp \? handleSwampPointerUp : undefined\}/);
+  assert.match(viewSource, /SWAMP_TAP_RADIUS = 72/);
+  assert.match(viewSource, /nearestDistance <= SWAMP_TAP_RADIUS/);
   assert.match(cssSource, /\.swamp-point/);
   assert.match(cssSource, /touch-action: manipulation/);
 });
 
-test("swamp art and hotspots share one responsive coordinate system", () => {
-  assert.match(cssSource, /aspect-ratio: 768 \/ 687 !important/);
-  assert.match(cssSource, /width: 100% !important/);
-  assert.match(cssSource, /height: 100% !important/);
-  assert.match(cssSource, /max-width: 100% !important/);
+test("swamp art and hotspots share the exact approved crop geometry", () => {
+  assert.match(viewSource, /SWAMP_ART_WIDTH = 775/);
+  assert.match(viewSource, /SWAMP_ART_HEIGHT = 695/);
+  assert.match(cssSource, /aspect-ratio: 775 \/ 695 !important/);
+  assert.match(cssSource, /object-fit: fill !important/);
   assert.match(cssSource, /transform: none !important/);
   assert.match(cssSource, /translate: none !important/);
   assert.match(cssSource, /scale: 1 !important/);
 });
 
-test("all functional swamp hotspots are pinned to painted marker centres", () => {
-  for (const [x, y] of paintedMarkerCenters) {
-    assert.match(
-      viewSource,
-      new RegExp(`x: ${String(x).replace(".", "\\.")},\\s+y: ${String(y).replace(".", "\\.")}`),
-    );
+test("all functional swamp hotspots are pinned to measured painted marker pixels", () => {
+  for (const [sourceX, sourceY] of paintedMarkerPixels) {
+    assert.match(viewSource, new RegExp(`sourceX: ${sourceX},\\s+sourceY: ${sourceY}`));
   }
+
+  assert.match(viewSource, /point\.sourceX \/ SWAMP_ART_WIDTH/);
+  assert.match(viewSource, /point\.sourceY \/ SWAMP_ART_HEIGHT/);
 });
 
 test("swamp points stay disabled until its real image is loaded", () => {
