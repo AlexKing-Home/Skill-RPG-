@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { worldMapArt } from "../data/assets.js";
+import { floorOneMapArt } from "../data/floorOneMapArt.js";
 import {
   START_NODE_ID,
   floorOneNavigation,
@@ -10,9 +10,11 @@ import {
 export default function WorldMapView({ location, onTravel }) {
   const currentNode = getTravelNode(location.nodeId) ?? getTravelNode(START_NODE_ID);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [heroNodeId, setHeroNodeId] = useState(currentNode.id);
   const [isTraveling, setIsTraveling] = useState(false);
 
   const selectedNode = useMemo(() => getTravelNode(selectedNodeId), [selectedNodeId]);
+  const heroNode = getTravelNode(heroNodeId) ?? currentNode;
   const route = useMemo(
     () => getTravelRoute(currentNode.id, selectedNode?.id),
     [currentNode.id, selectedNode?.id],
@@ -20,10 +22,9 @@ export default function WorldMapView({ location, onTravel }) {
 
   useEffect(() => {
     setSelectedNodeId(null);
+    setHeroNodeId(currentNode.id);
     setIsTraveling(false);
   }, [currentNode.id]);
-
-  const heroNode = isTraveling && selectedNode ? selectedNode : currentNode;
 
   function handleNodeTap(nodeId) {
     if (isTraveling) return;
@@ -31,18 +32,26 @@ export default function WorldMapView({ location, onTravel }) {
       setSelectedNodeId(null);
       return;
     }
-    if (getTravelRoute(currentNode.id, nodeId)) {
-      setSelectedNodeId(nodeId);
-    }
+    setSelectedNodeId(nodeId);
   }
 
   function handleTravel() {
     if (!route || !selectedNode || isTraveling) return;
 
     setIsTraveling(true);
-    window.setTimeout(() => {
-      onTravel?.(selectedNode.id);
-    }, route.travelMs);
+    const steps = route.nodeIds.slice(1);
+
+    function moveStep(index) {
+      if (index >= steps.length) {
+        onTravel?.(selectedNode.id);
+        return;
+      }
+
+      setHeroNodeId(steps[index]);
+      window.setTimeout(() => moveStep(index + 1), 650);
+    }
+
+    moveStep(0);
   }
 
   return (
@@ -60,37 +69,28 @@ export default function WorldMapView({ location, onTravel }) {
 
       <div className="map-frame map-frame--reference">
         <div
-          className="world-map world-map--reference world-map--travel map-art-shell"
-          aria-label="Карта первого этажа. Нажмите на доступную точку, чтобы выбрать маршрут."
+          className="world-map world-map--reference world-map--travel floor-map-art"
+          aria-label="Карта первого этажа. Все отмеченные локации доступны для выбора."
         >
-          <div className="map-fallback" aria-hidden="true">
-            <span className="world-fallback__land" />
-          </div>
+          <img className="map-art-image" src={floorOneMapArt} alt="Карта первого этажа" />
 
-          <img
-            className="map-art-image"
-            src={worldMapArt}
-            alt=""
-            aria-hidden="true"
-            onError={(event) => {
-              event.currentTarget.hidden = true;
-              event.currentTarget.style.display = "none";
-            }}
-          />
+          <div className="swamp-replacement" aria-hidden="true">
+            <span className="swamp-replacement__icon">♒</span>
+            <strong>Болото</strong>
+          </div>
 
           <svg className="travel-network" viewBox="0 0 100 100" preserveAspectRatio="none">
             {floorOneNavigation.edges.map((edge) => {
               const from = getTravelNode(edge.from);
               const to = getTravelNode(edge.to);
-              const active =
-                route &&
-                ((route.from === edge.from && route.to === edge.to) ||
-                  (route.from === edge.to && route.to === edge.from));
+              const key = `${edge.from}-${edge.to}`;
+              const active = route?.edgeKeys.includes(key);
+              if (!active) return null;
 
               return (
                 <line
-                  key={`${edge.from}-${edge.to}`}
-                  className={`travel-network__edge ${active ? "is-active" : ""}`}
+                  key={key}
+                  className="travel-network__edge is-active"
                   x1={from.x}
                   y1={from.y}
                   x2={to.x}
@@ -104,19 +104,21 @@ export default function WorldMapView({ location, onTravel }) {
             <button
               key={node.id}
               type="button"
-              className={`travel-node ${node.id === currentNode.id ? "is-current" : ""} ${
+              className={`map-hotspot ${node.id === currentNode.id ? "is-current" : ""} ${
                 node.id === selectedNodeId ? "is-selected" : ""
               }`}
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
               onClick={() => handleNodeTap(node.id)}
+              aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ""}`}
               aria-pressed={node.id === selectedNodeId}
+              disabled={isTraveling}
             >
-              <span className="travel-node__name">{node.name}</span>
+              <span className="map-hotspot__ring" aria-hidden="true" />
             </button>
           ))}
 
           <div
-            className={`travel-hero ${isTraveling ? "is-traveling" : ""}`}
+            className={`travel-hero travel-hero--floor ${isTraveling ? "is-traveling" : ""}`}
             style={{ left: `${heroNode.x}%`, top: `${heroNode.y}%` }}
             aria-live="polite"
           >
@@ -135,6 +137,9 @@ export default function WorldMapView({ location, onTravel }) {
               <strong>
                 {currentNode.name} → {selectedNode.name}
               </strong>
+              <span>
+                Путь: {route.nodeIds.map((nodeId) => getTravelNode(nodeId)?.name).join(" → ")}
+              </span>
               <span>Расстояние: {route.distanceKm.toFixed(1)} км</span>
             </div>
             <button
@@ -148,7 +153,8 @@ export default function WorldMapView({ location, onTravel }) {
           </div>
         ) : (
           <p className="travel-panel__hint">
-            Нажмите на точку «Поле», чтобы построить первый маршрут из стартового города.
+            Нажмите на любую локацию на карте: Стартовый город, Луга, Лес, Болото, Руины,
+            Поселение или Подземелье.
           </p>
         )}
       </div>
