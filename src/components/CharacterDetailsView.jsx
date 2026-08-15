@@ -14,9 +14,11 @@ const slotIcons = {
   weapon2: "⚔",
 };
 
-export default function CharacterDetailsView({ character, currentHealth, level }) {
+export default function CharacterDetailsView({ character, currentHealth, level, experience, onBack }) {
   const [slotMessage, setSlotMessage] = useState("");
   const equipment = { ...createEmptyEquipment(), ...(character.equipment ?? {}) };
+  const expLabel = experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
+  const hpPercent = character.stats.health > 0 ? (currentHealth / character.stats.health) * 100 : 0;
 
   function handleSlotClick(slot, item) {
     setSlotMessage(
@@ -27,64 +29,78 @@ export default function CharacterDetailsView({ character, currentHealth, level }
   }
 
   return (
-    <section className="game-view character-details" aria-labelledby="character-title">
-      <div className="character-profile">
-        <div className="character-summary__portrait-frame">
-          <img
-            className="character-summary__portrait"
-            src={character.skinImage}
-            alt={character.skinName}
-          />
-          <span className="character-summary__gem" aria-hidden="true">
-            ◆
+    <section className="character-page" aria-labelledby="character-title">
+      <header className="character-page__header">
+        <button className="profile-back" type="button" onClick={onBack} aria-label="Назад к карте">
+          ←
+        </button>
+        <img className="character-page__crest" src={uiCrest} alt="" aria-hidden="true" />
+        <div className="character-page__identity">
+          <h1 id="character-title">{character.nickname}</h1>
+          <span>
+            <b aria-hidden="true">⚔</b> {character.skinName}
           </span>
         </div>
+        <div className="level-shield" aria-label={`Уровень ${level}`}>
+          <span>Уровень</span>
+          <strong>{level}</strong>
+        </div>
+      </header>
 
-        <div className="character-profile__main">
-          <div className="character-summary__copy">
-            <div className="character-class-heading">
-              <img src={uiCrest} alt="" aria-hidden="true" />
-              <span className="game-view__eyebrow">{character.skinName}</span>
-            </div>
-            <h1 id="character-title">{character.nickname}</h1>
+      <div className="profile-resources">
+        <div className="profile-resource profile-resource--hp">
+          <div>
+            <span>♥ Здоровье</span>
+            <strong>
+              {currentHealth}/{character.stats.health}
+            </strong>
           </div>
-
-          <div className="character-stat-grid">
-            <div className="character-stat character-stat--level">
-              <span className="character-stat__icon" aria-hidden="true">
-                ♛
-              </span>
-              <span>Уровень героя</span>
-              <strong>{level}</strong>
-            </div>
-            <div className="character-stat character-stat--health">
-              <span className="character-stat__icon" aria-hidden="true">
-                ♥
-              </span>
-              <span>Жизни</span>
-              <strong>
-                {currentHealth} / {character.stats.health}
-              </strong>
-            </div>
-            <div className="character-stat character-stat--defense">
-              <span className="character-stat__icon" aria-hidden="true">
-                ◆
-              </span>
-              <span>Защита</span>
-              <strong>{character.stats.defense}</strong>
-            </div>
-            <div className="character-stat character-stat--attack">
-              <span className="character-stat__icon" aria-hidden="true">
-                ⚔
-              </span>
-              <span>Сила атаки</span>
-              <strong>{character.stats.attack}</strong>
-            </div>
+          <div className="profile-resource__track">
+            <i style={{ width: `${hpPercent}%` }} />
+          </div>
+        </div>
+        <div className="profile-resource profile-resource--exp">
+          <div>
+            <span>XP Опыт</span>
+            <strong>{expLabel}</strong>
+          </div>
+          <div className="profile-resource__track">
+            <i style={{ width: `${experience.percent}%` }} />
           </div>
         </div>
       </div>
 
-      <div className="equipment-section">
+      <div className="profile-portrait-frame">
+        <img className="profile-portrait" src={character.skinImage} alt={character.skinName} />
+        <span className="profile-portrait__gem" aria-hidden="true">
+          ✦
+        </span>
+      </div>
+
+      <div className="profile-stat-grid">
+        <div className="profile-stat profile-stat--level">
+          <span className="profile-stat__icon">♛</span>
+          <span>Уровень</span>
+          <strong>{level}</strong>
+        </div>
+        <div className="profile-stat profile-stat--health">
+          <span className="profile-stat__icon">♥</span>
+          <span>Здоровье</span>
+          <strong>{character.stats.health}</strong>
+        </div>
+        <div className="profile-stat profile-stat--attack">
+          <span className="profile-stat__icon">⚔</span>
+          <span>Атака</span>
+          <strong>{character.stats.attack}</strong>
+        </div>
+        <div className="profile-stat profile-stat--defense">
+          <span className="profile-stat__icon">⬡</span>
+          <span>Защита</span>
+          <strong>{character.stats.defense}</strong>
+        </div>
+      </div>
+
+      <div className="equipment-section profile-equipment">
         <div className="ornate-heading ornate-heading--equipment">
           <span aria-hidden="true">◆</span>
           <h2>Экипировка</h2>
