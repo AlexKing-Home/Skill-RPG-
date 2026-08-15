@@ -13,18 +13,21 @@ const characterScreenSource = await read("../src/screens/CharacterScreen.jsx");
 const skinCardSource = await read("../src/components/SkinCard.jsx");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
+const bottomNavSource = await read("../src/components/BottomNav.jsx");
 
 test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /setScreen\("character"\)/);
   assert.match(appSource, /<CharacterScreen character=\{character\}/);
+  assert.match(appSource, /exact-reference\.css/);
 });
 
-test("game screen contains HUD and all three main tabs", () => {
+test("game screen contains HUD maps tabs and dedicated character profile", () => {
   assert.match(characterScreenSource, /<PlayerHud/);
   assert.match(characterScreenSource, /<GameTabs/);
   assert.match(characterScreenSource, /WorldMapView/);
   assert.match(characterScreenSource, /LocationMapView/);
   assert.match(characterScreenSource, /CharacterDetailsView/);
+  assert.match(characterScreenSource, /<BottomNav/);
 });
 
 test("welcome and creation menu buttons have real click handlers", () => {
@@ -36,13 +39,19 @@ test("welcome and creation menu buttons have real click handlers", () => {
   assert.match(creationSource, /type="submit"/);
 });
 
-test("class cards, game tabs and equipment slots are clickable", () => {
+test("class cards tabs bottom navigation and equipment slots are clickable", () => {
   assert.match(skinCardSource, /onClick=\{onSelect\}/);
   assert.match(tabsSource, /onClick=\{\(\) => onChange\(tab\.id\)\}/);
+  assert.match(bottomNavSource, /onClick=/);
+  assert.match(bottomNavSource, /item\.id === "home"/);
+  assert.match(bottomNavSource, /onHome\(\)/);
+  assert.match(bottomNavSource, /onChange\(item\.id\)/);
+  assert.match(detailsSource, /onClick=\{onBack\}/);
   assert.match(detailsSource, /onClick=\{\(\) => handleSlotClick\(slot, item\)\}/);
-  assert.match(detailsSource, /<button/);
 });
 
-test("main menu return stays interactive", () => {
-  assert.match(characterScreenSource, /onClick=\{onBack\}/);
+test("bottom navigation exposes all approved destinations", () => {
+  for (const label of ["Главная", "Задания", "Карта", "Инвентарь", "Персонаж"]) {
+    assert.match(bottomNavSource, new RegExp(label));
+  }
 });
