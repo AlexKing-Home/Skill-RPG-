@@ -1,4 +1,4 @@
-const items = [
+const mainItems = [
   { id: "home", label: "Главная", icon: "♜" },
   { id: "tasks", label: "Задания", icon: "⚔" },
   { id: "map", label: "Карта", icon: "✥" },
@@ -6,9 +6,18 @@ const items = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
-export default function BottomNav({ active, onChange, onHome }) {
+const characterItems = [
+  { id: "map", label: "Карта", icon: "▧" },
+  { id: "location", label: "Локация", icon: "⌖" },
+  { id: "home", label: "Главная", icon: "♜" },
+  { id: "character", label: "Персонаж", icon: "♚" },
+];
+
+export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
+  const items = variant === "character" ? characterItems : mainItems;
+
   return (
-    <nav className="bottom-nav" aria-label="Основная навигация">
+    <nav className={`bottom-nav bottom-nav--${variant}`} aria-label="Основная навигация">
       {items.map((item) => (
         <button
           key={item.id}

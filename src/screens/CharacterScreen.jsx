@@ -24,24 +24,17 @@ export default function CharacterScreen({ character, onBack }) {
   const currentHealth = Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth));
   const location = { ...defaultLocation, ...(character.location ?? {}) };
 
-  if (activeTab === "character") {
-    return (
-      <main className="screen screen--game screen--profile">
-        <section className="game-shell game-shell--profile">
-          <CharacterDetailsView
-            character={character}
-            currentHealth={currentHealth}
-            level={level}
-            experience={experience}
-            onBack={() => setActiveTab("map")}
-          />
-        </section>
-      </main>
-    );
-  }
-
   let content;
-  if (activeTab === "location") {
+  if (activeTab === "character") {
+    content = (
+      <CharacterDetailsView
+        character={character}
+        currentHealth={currentHealth}
+        level={level}
+        experience={experience}
+      />
+    );
+  } else if (activeTab === "location") {
     content = <LocationMapView location={location} />;
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
@@ -49,25 +42,38 @@ export default function CharacterScreen({ character, onBack }) {
     content = <WorldMapView location={location} />;
   }
 
-  const topTab = activeTab === "location" ? "location" : "map";
+  const topTab = ["map", "location", "character"].includes(activeTab) ? activeTab : "map";
+  const profileMode = activeTab === "character";
 
   return (
     <main className="screen screen--game">
-      <section className="game-shell">
+      <section className={`game-shell ${profileMode ? "game-shell--character-reference" : ""}`}>
         <PlayerHud
           nickname={character.nickname}
           level={level}
           currentHealth={currentHealth}
           maxHealth={maxHealth}
           experience={experience}
+          mode={profileMode ? "character" : "default"}
         />
 
         <GameTabs activeTab={topTab} onChange={setActiveTab} />
 
-        <div className="game-content fantasy-panel">{content}</div>
+        <div
+          className={`game-content fantasy-panel ${
+            profileMode ? "game-content--character-reference" : ""
+          }`}
+        >
+          {content}
+        </div>
 
         {activeTab !== "location" ? (
-          <BottomNav active={activeTab} onChange={setActiveTab} onHome={onBack} />
+          <BottomNav
+            active={activeTab}
+            onChange={setActiveTab}
+            onHome={onBack}
+            variant={profileMode ? "character" : "main"}
+          />
         ) : null}
       </section>
     </main>

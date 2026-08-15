@@ -1,13 +1,25 @@
 import { uiCrest } from "../data/assets.js";
 
-export default function PlayerHud({ nickname, level, currentHealth, maxHealth, experience }) {
+export default function PlayerHud({
+  nickname,
+  level,
+  currentHealth,
+  maxHealth,
+  experience,
+  mode = "default",
+}) {
   const hpPercent =
     maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
   const expLabel =
     experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
+  const characterMode = mode === "character";
 
   return (
-    <header className="player-hud fantasy-panel ornate-panel">
+    <header
+      className={`player-hud fantasy-panel ornate-panel ${
+        characterMode ? "player-hud--character" : ""
+      }`}
+    >
       <div className="player-hud__crest" aria-hidden="true">
         <img src={uiCrest} alt="" />
       </div>
@@ -20,7 +32,7 @@ export default function PlayerHud({ nickname, level, currentHealth, maxHealth, e
         <div className="hud-resource hud-resource--hp">
           <div className="hud-resource__label">
             <span>
-              <b aria-hidden="true">♥</b> HP
+              <b aria-hidden="true">♥</b> {characterMode ? "ЖИЗНИ" : "HP"}
             </span>
             <strong>
               {currentHealth} / {maxHealth}
@@ -40,7 +52,7 @@ export default function PlayerHud({ nickname, level, currentHealth, maxHealth, e
         <div className="hud-resource hud-resource--exp">
           <div className="hud-resource__label">
             <span>
-              <b aria-hidden="true">XP</b> EXP
+              <b aria-hidden="true">XP</b> {characterMode ? "ОПЫТ" : "EXP"}
             </span>
             <strong>{expLabel}</strong>
           </div>

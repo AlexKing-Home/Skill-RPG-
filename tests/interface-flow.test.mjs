@@ -21,12 +21,13 @@ test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /exact-reference\.css/);
 });
 
-test("game screen contains HUD maps tabs and dedicated character profile", () => {
+test("game screen contains HUD maps tabs and integrated character profile", () => {
   assert.match(characterScreenSource, /<PlayerHud/);
   assert.match(characterScreenSource, /<GameTabs/);
   assert.match(characterScreenSource, /WorldMapView/);
   assert.match(characterScreenSource, /LocationMapView/);
   assert.match(characterScreenSource, /CharacterDetailsView/);
+  assert.match(characterScreenSource, /game-content--character-reference/);
   assert.match(characterScreenSource, /<BottomNav/);
 });
 
@@ -46,12 +47,22 @@ test("class cards tabs bottom navigation and equipment slots are clickable", () 
   assert.match(bottomNavSource, /item\.id === "home"/);
   assert.match(bottomNavSource, /onHome\(\)/);
   assert.match(bottomNavSource, /onChange\(item\.id\)/);
-  assert.match(detailsSource, /onClick=\{onBack\}/);
   assert.match(detailsSource, /onClick=\{\(\) => handleSlotClick\(slot, item\)\}/);
 });
 
-test("bottom navigation exposes all approved destinations", () => {
-  for (const label of ["Главная", "Задания", "Карта", "Инвентарь", "Персонаж"]) {
+test("bottom navigation exposes main and reference character destinations", () => {
+  for (const label of ["Главная", "Задания", "Карта", "Инвентарь", "Персонаж", "Локация"]) {
     assert.match(bottomNavSource, new RegExp(label));
   }
+  assert.match(bottomNavSource, /bottom-nav--\$\{variant\}/);
+  assert.match(bottomNavSource, /variant === "character"/);
+});
+
+test("reference character view keeps portrait stats and equipment in one integrated page", () => {
+  assert.match(detailsSource, /character-profile--reference/);
+  assert.match(detailsSource, /character-summary__portrait/);
+  assert.match(detailsSource, /character-stat-grid/);
+  assert.match(detailsSource, /equipment-grid/);
+  assert.match(detailsSource, /Уровень героя/);
+  assert.match(detailsSource, /Сила атаки/);
 });

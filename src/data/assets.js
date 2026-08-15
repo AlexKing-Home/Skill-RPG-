@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env?.BASE_URL ?? "/";
-const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=mobile-parity-v3`;
+const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=reference-parity-v4`;
 
 export const fantasyBackground = asset("/backgrounds/welcome-bg.jpg");
 
@@ -15,5 +15,4 @@ export const femaleArcher = asset("/skins/female-archer.avif");
 export const worldMapArt = asset("/ui/world-map.webp");
 export const locationMapArt = asset("/ui/location-map.webp");
 export const uiCrest = asset("/ui/crest.webp");
-// Use the same clean shield in creation. The previous creation crop contained text from the mockup.
 export const creationCrest = uiCrest;

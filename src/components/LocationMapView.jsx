@@ -47,11 +47,6 @@ export default function LocationMapView({ location }) {
               event.currentTarget.style.display = "none";
             }}
           />
-
-          <div className="map-overlay-hero" aria-hidden="true">
-            <span className="map-overlay-hero__gem">◆</span>
-            <strong>Герой</strong>
-          </div>
         </div>
       </div>
     </section>
