@@ -26,9 +26,9 @@ test("mobile polish loads after all parity layers", () => {
   );
 });
 
-test("creation uses the clean crest and reference assets use a fresh cache identity", () => {
+test("creation uses the clean crest and enhanced assets use a fresh cache identity", () => {
   assert.match(assetsSource, /export const creationCrest = uiCrest/);
-  assert.match(assetsSource, /reference-parity-v5/);
+  assert.match(assetsSource, /reference-parity-v6/);
   assert.match(assetsSource, /world-map-reference-v2\.webp/);
   assert.match(assetsSource, /location-map-reference-v2\.webp/);
 });
@@ -67,4 +67,12 @@ test("character equipment stays 3 by 3 and mobile labels remain readable", () =>
     mobilePolishCss,
     /\.profile-equipment \.equipment-slot__item[\s\S]*text-overflow: clip !important/,
   );
+});
+
+test("mobile profile keeps the full health value inside its stat card", () => {
+  assert.match(
+    mobilePolishCss,
+    /\.character-stat--health strong[\s\S]*font-size: clamp\(0\.78rem, 3\.45vw, 1rem\) !important/,
+  );
+  assert.match(mobilePolishCss, /letter-spacing: -0\.025em !important/);
 });
