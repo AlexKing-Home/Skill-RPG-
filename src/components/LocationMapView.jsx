@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { locationMapArt } from "../data/assets.js";
-import { swampLocationArt } from "../data/swampLocationArt.js";
-import EmbeddedArtCanvas from "./EmbeddedArtCanvas.jsx";
+import { locationMapArt, swampLocationArt } from "../data/assets.js";
 
 const fieldObjects = [
   {
@@ -109,6 +107,7 @@ const swampPoints = [
 export default function LocationMapView({ location, worldState = {}, onOpenChest }) {
   const [selectedId, setSelectedId] = useState(null);
   const [dialogue, setDialogue] = useState("");
+  const [swampArtStatus, setSwampArtStatus] = useState("loading");
   const isField = ["field", "meadows"].includes(location.nodeId);
   const isSwamp = location.nodeId === "swamp";
   const openedChests = worldState.openedChests ?? [];
@@ -118,6 +117,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   useEffect(() => {
     setSelectedId(null);
     setDialogue("");
+    if (location.nodeId === "swamp") setSwampArtStatus("loading");
   }, [location.nodeId]);
 
   function handleObjectTap(objectId) {
@@ -202,11 +202,24 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           )}
 
           {isSwamp ? (
-            <EmbeddedArtCanvas
-              className="map-art-image"
-              dataUrl={swampLocationArt}
-              ariaLabel="Болото"
-            />
+            <>
+              <img
+                className="map-art-image"
+                src={swampLocationArt}
+                alt="Болото"
+                loading="eager"
+                decoding="async"
+                onLoad={() => setSwampArtStatus("ready")}
+                onError={() => setSwampArtStatus("error")}
+              />
+              {swampArtStatus !== "ready" && (
+                <div className="embedded-art-status" aria-live="polite">
+                  {swampArtStatus === "error"
+                    ? "Не удалось загрузить локацию"
+                    : "Загрузка локации…"}
+                </div>
+              )}
+            </>
           ) : (
             <img
               className="map-art-image"
@@ -243,6 +256,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
             })}
 
           {isSwamp &&
+            swampArtStatus === "ready" &&
             swampPoints.map((point) => (
               <button
                 key={point.id}
@@ -284,7 +298,9 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           ) : (
             <p className="interaction-panel__hint">
               {isSwamp
-                ? "Нажмите на светящуюся точку на болоте, чтобы выбрать действие."
+                ? swampArtStatus === "ready"
+                  ? "Нажмите на светящуюся точку на болоте, чтобы выбрать действие."
+                  : "Дождитесь загрузки изображения болота."
                 : "Нажмите на Странника или сундук на локации, чтобы выбрать взаимодействие."}
             </p>
           )}
