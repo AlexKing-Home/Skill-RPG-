@@ -72,7 +72,18 @@ export default function WorldMapView({ location, onTravel }) {
           className="world-map world-map--reference world-map--travel floor-map-art"
           aria-label="Карта первого этажа. Все отмеченные локации доступны для выбора."
         >
-          <img className="map-art-image" src={floorOneMapArt} alt="Карта первого этажа" />
+          <div className="map-fallback" aria-hidden="true">
+            <span className="world-fallback__land" />
+          </div>
+
+          <img
+            className="map-art-image"
+            src={floorOneMapArt}
+            alt="Карта первого этажа"
+            onError={(event) => {
+              event.currentTarget.hidden = true;
+            }}
+          />
 
           <div className="swamp-replacement" aria-hidden="true">
             <span className="swamp-replacement__icon">♒</span>
