@@ -25,6 +25,18 @@ const pointIds = [
   "swamp-bridge",
 ];
 
+const calibratedCenters = [
+  [10.74, 20.23],
+  [46.65, 18.17],
+  [73.54, 21.26],
+  [29.27, 40.09],
+  [98.78, 44.96],
+  [1.59, 61.53],
+  [39.15, 70.13],
+  [98.25, 81.09],
+  [43.09, 90.91],
+];
+
 test("swamp node renders the exact uploaded scene as an embedded image", () => {
   assert.match(viewSource, /\.\.\/data\/swampLocationArt\.js/);
   assert.match(viewSource, /location\.nodeId === "swamp"/);
@@ -50,13 +62,14 @@ test("approved swamp scene exposes all nine clickable interest points", () => {
   assert.match(cssSource, /touch-action: manipulation/);
 });
 
-test("swamp hotspots use the exact uploaded image geometry", () => {
+test("swamp hotspots use the exact uploaded image geometry and calibrated marker centers", () => {
   assert.match(cssSource, /aspect-ratio: 768 \/ 687/);
   assert.match(cssSource, /transform: none !important/);
   assert.match(cssSource, /scale: 1 !important/);
-  assert.match(viewSource, /x: 18\.89,\s+y: 20\.44/);
-  assert.match(viewSource, /x: 88\.26,\s+y: 45\.63/);
-  assert.match(viewSource, /x: 44\.64,\s+y: 90\.71/);
+
+  for (const [x, y] of calibratedCenters) {
+    assert.match(viewSource, new RegExp(`x: ${String(x).replace(".", "\\.")},\\s+y: ${String(y).replace(".", "\\.")}`));
+  }
 });
 
 test("swamp points stay disabled until its real image is loaded", () => {
