@@ -1,0 +1,304 @@
+/* Character-screen parity layer built from the approved second reference image. */
+:root {
+  --reference-ui-sprite: url("data:image/webp;base64,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");
+}
+
+/* HUD: use the exact heart/XP art from the approved reference. */
+.hud-resource__label b {
+  display: inline-block !important;
+  width: 24px !important;
+  height: 24px !important;
+  flex: 0 0 24px !important;
+  margin-right: 7px !important;
+  overflow: hidden !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  vertical-align: middle !important;
+  background-image: var(--reference-ui-sprite) !important;
+  background-size: 400% 500% !important;
+  background-repeat: no-repeat !important;
+}
+
+.hud-resource--hp .hud-resource__label b { background-position: 33.333% 100% !important; }
+.hud-resource--exp .hud-resource__label b { background-position: 66.667% 100% !important; }
+
+.hud-resource__label > span {
+  display: flex !important;
+  align-items: center !important;
+  color: #dfc99f !important;
+}
+
+.hud-resource__track {
+  height: 10px !important;
+  border-color: #3d4448 !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.hud-resource__fill--hp {
+  background: linear-gradient(180deg, #ff675f 0%, #d3222c 55%, #8d111c 100%) !important;
+  box-shadow: 0 0 7px rgba(255, 72, 62, 0.55) !important;
+}
+
+.hud-resource__fill--exp {
+  background: linear-gradient(180deg, #54d2ff 0%, #138ee0 52%, #075893 100%) !important;
+  box-shadow: 0 0 7px rgba(35, 174, 255, 0.58) !important;
+}
+
+/* Tabs: compact ornate bar with a gold lower marker, as in the reference. */
+.game-tabs { min-height: 68px !important; }
+.game-tab {
+  position: relative !important;
+  min-height: 68px !important;
+  background: linear-gradient(180deg, #040b11, #020609) !important;
+}
+.game-tab.is-active {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(219, 152, 55, 0.22), transparent 54%),
+    linear-gradient(180deg, #493017 0%, #1c120a 100%) !important;
+  color: #f2d5a0 !important;
+  box-shadow: inset 0 0 0 1px rgba(203, 145, 70, 0.38) !important;
+}
+.game-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 13px;
+  height: 13px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 1px solid #e4aa4a;
+  background: #f8cf63;
+  box-shadow: 0 0 8px rgba(255, 185, 60, 0.72);
+  z-index: 3;
+}
+
+/* Character page proportions and decorative treatment. */
+.character-details--reference { padding: 24px 28px 30px !important; }
+.character-profile--reference {
+  grid-template-columns: minmax(0, 0.83fr) minmax(0, 1.23fr) !important;
+  gap: 20px !important;
+}
+.character-summary__portrait-frame {
+  border: 1px solid #a77738 !important;
+  outline: 1px solid rgba(212, 155, 70, 0.22) !important;
+  outline-offset: -7px !important;
+  background: #03070a !important;
+  box-shadow:
+    inset 0 0 28px rgba(0, 0, 0, 0.72),
+    0 0 0 1px rgba(17, 35, 47, 0.9) !important;
+}
+.character-summary__gem {
+  width: 42px !important;
+  height: 42px !important;
+  bottom: -21px !important;
+  border-color: #c58b3e !important;
+  background: #05111b !important;
+  color: #3fc4ff !important;
+  box-shadow: 0 0 17px rgba(47, 185, 255, 0.5) !important;
+}
+.character-summary__copy { min-height: 160px !important; }
+
+/* Exact stat medallions cropped from the approved reference. */
+.character-stat__icon {
+  width: 58px !important;
+  height: 58px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  background-color: transparent !important;
+  background-image: var(--reference-ui-sprite) !important;
+  background-size: 400% 500% !important;
+  background-repeat: no-repeat !important;
+}
+.character-stat--level .character-stat__icon { background-position: 0% 0% !important; }
+.character-stat--health .character-stat__icon { background-position: 33.333% 0% !important; }
+.character-stat--defense .character-stat__icon { background-position: 66.667% 0% !important; }
+.character-stat--attack .character-stat__icon { background-position: 100% 0% !important; }
+
+.character-stat {
+  min-height: 126px !important;
+  padding: 23px 12px 16px 84px !important;
+  border: 1px solid #665038 !important;
+  background:
+    radial-gradient(circle at 15% 45%, rgba(43, 94, 124, 0.16), transparent 43%),
+    linear-gradient(145deg, #0b141c, #05090d) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(181, 133, 70, 0.08),
+    inset 0 -3px var(--stat-accent, #3caee6) !important;
+}
+.character-stat--level { --stat-accent: #2ca9f2; }
+.character-stat--health { --stat-accent: #e84850; }
+.character-stat--defense { --stat-accent: #6bcf72; }
+.character-stat--attack { --stat-accent: #e1a43a; }
+.character-stat__icon { left: 15px !important; top: 31px !important; }
+
+/* Equipment cards: exact icon artwork from the second reference image. */
+.profile-equipment { margin-top: 42px !important; }
+.ornate-heading--equipment h2 {
+  color: #d09b54 !important;
+  font-size: clamp(1.75rem, 4.3vw, 2.35rem) !important;
+  font-weight: 500 !important;
+}
+.profile-equipment .equipment-grid { gap: 12px !important; }
+.profile-equipment .equipment-slot {
+  min-height: 108px !important;
+  padding: 13px 11px !important;
+  display: grid !important;
+  grid-template-columns: 58px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 10px !important;
+  row-gap: 4px !important;
+  align-content: center !important;
+  align-items: center !important;
+  justify-items: start !important;
+  text-align: left !important;
+  border: 1px solid #655039 !important;
+  border-radius: 2px !important;
+  background:
+    linear-gradient(135deg, rgba(27, 49, 63, 0.14), transparent 46%),
+    linear-gradient(180deg, #0b1218, #05090d) !important;
+  box-shadow: inset 0 0 0 1px rgba(199, 151, 82, 0.05) !important;
+}
+.profile-equipment .equipment-slot::before,
+.profile-equipment .equipment-slot::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+}
+.profile-equipment .equipment-slot::before {
+  left: 5px;
+  top: 5px;
+  border-left: 1px solid #8f693c;
+  border-top: 1px solid #8f693c;
+}
+.profile-equipment .equipment-slot::after {
+  right: 5px;
+  bottom: 5px;
+  border-right: 1px solid #8f693c;
+  border-bottom: 1px solid #8f693c;
+}
+.profile-equipment .equipment-slot__icon {
+  position: static !important;
+  grid-row: 1 / 3 !important;
+  width: 58px !important;
+  height: 58px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  background-color: transparent !important;
+  background-image: var(--reference-ui-sprite) !important;
+  background-size: 400% 500% !important;
+  background-repeat: no-repeat !important;
+}
+.equipment-slot--helmet .equipment-slot__icon { background-position: 0% 25% !important; }
+.equipment-slot--chest .equipment-slot__icon { background-position: 33.333% 25% !important; }
+.equipment-slot--cloak .equipment-slot__icon { background-position: 66.667% 25% !important; }
+.equipment-slot--gloves .equipment-slot__icon { background-position: 100% 25% !important; }
+.equipment-slot--pants .equipment-slot__icon { background-position: 0% 50% !important; }
+.equipment-slot--boots .equipment-slot__icon { background-position: 33.333% 50% !important; }
+.equipment-slot--ring .equipment-slot__icon { background-position: 66.667% 50% !important; }
+.equipment-slot--weapon1 .equipment-slot__icon { background-position: 100% 50% !important; }
+.equipment-slot--weapon2 .equipment-slot__icon { background-position: 0% 75% !important; }
+.profile-equipment .equipment-slot__label {
+  align-self: end !important;
+  min-height: 0 !important;
+  color: #c3a477 !important;
+  font-size: clamp(0.64rem, 1.65vw, 0.83rem) !important;
+  line-height: 1.05 !important;
+  text-align: left !important;
+  text-transform: uppercase !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+.profile-equipment .equipment-slot__item {
+  align-self: start !important;
+  margin: 0 !important;
+  color: #f0dfc3 !important;
+  font-size: clamp(1rem, 2.7vw, 1.28rem) !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+/* Character bottom navigation: exact icon artwork and blue active frame. */
+.bottom-nav--character .bottom-nav__item { min-height: 112px !important; gap: 4px !important; }
+.bottom-nav--character .bottom-nav__icon {
+  width: 54px !important;
+  height: 54px !important;
+  flex: 0 0 54px !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  background-image: var(--reference-ui-sprite) !important;
+  background-size: 400% 500% !important;
+  background-repeat: no-repeat !important;
+}
+.bottom-nav--character .bottom-nav__item:nth-child(1) .bottom-nav__icon { background-position: 33.333% 75% !important; }
+.bottom-nav--character .bottom-nav__item:nth-child(2) .bottom-nav__icon { background-position: 66.667% 75% !important; }
+.bottom-nav--character .bottom-nav__item:nth-child(3) .bottom-nav__icon { background-position: 100% 75% !important; }
+.bottom-nav--character .bottom-nav__item:nth-child(4) .bottom-nav__icon { background-position: 0% 100% !important; }
+.bottom-nav--character .bottom-nav__item.is-active {
+  color: #b9deff !important;
+  background:
+    radial-gradient(circle at 50% 60%, rgba(20, 102, 171, 0.32), transparent 66%),
+    linear-gradient(180deg, #07182a, #03101a) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(55, 143, 223, 0.78),
+    inset 0 -3px #2db8ff,
+    0 0 12px rgba(28, 144, 229, 0.3) !important;
+}
+
+@media (max-width: 600px) {
+  .player-hud {
+    min-height: 102px !important;
+    grid-template-columns: 72px 88px minmax(0, 1fr) !important;
+    gap: 7px !important;
+    padding: 9px 10px !important;
+  }
+  .player-hud__crest { width: 68px !important; height: 80px !important; }
+  .game-tabs, .game-tab { min-height: 58px !important; }
+  .character-details--reference { padding: 20px 12px 24px !important; }
+  .character-profile--reference {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr) !important;
+    gap: 9px !important;
+  }
+  .character-summary__portrait-frame,
+  .character-summary__portrait { min-height: 316px !important; }
+  .character-summary__copy { min-height: 126px !important; }
+  .character-stat-grid { gap: 7px !important; margin-top: 14px !important; }
+  .character-stat {
+    min-height: 84px !important;
+    padding: 13px 5px 10px 43px !important;
+  }
+  .character-stat__icon {
+    left: 6px !important;
+    top: 18px !important;
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .character-stat > span:not(.character-stat__icon) { font-size: 0.53rem !important; }
+  .character-stat strong { margin-top: 5px !important; font-size: 1rem !important; }
+  .character-stat--health strong { font-size: 0.82rem !important; }
+  .profile-equipment { margin-top: 32px !important; }
+  .profile-equipment .equipment-grid { gap: 7px !important; }
+  .profile-equipment .equipment-slot {
+    min-height: 82px !important;
+    padding: 9px 6px !important;
+    grid-template-columns: 38px minmax(0, 1fr) !important;
+    column-gap: 6px !important;
+  }
+  .profile-equipment .equipment-slot__icon { width: 38px !important; height: 38px !important; }
+  .profile-equipment .equipment-slot__label {
+    font-size: clamp(0.45rem, 1.95vw, 0.58rem) !important;
+    line-height: 1 !important;
+  }
+  .profile-equipment .equipment-slot__item {
+    font-size: clamp(0.78rem, 3.15vw, 0.96rem) !important;
+  }
+  .bottom-nav--character .bottom-nav__item { min-height: 80px !important; font-size: 0.48rem !important; }
+  .bottom-nav--character .bottom-nav__icon { width: 40px !important; height: 40px !important; flex-basis: 40px !important; }
+}
