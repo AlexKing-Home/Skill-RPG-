@@ -19,15 +19,36 @@ export default function CharacterScreen({ character, onBack }) {
     ...defaultLocation,
     ...(character.location ?? {}),
   }));
+  const [worldState, setWorldState] = useState(() => character.worldState ?? {});
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
   const maxHealth = character.stats.health;
   const currentHealth = Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth));
 
+  function persist(nextLocation = location, nextWorldState = worldState) {
+    saveCharacter({
+      ...character,
+      location: nextLocation,
+      worldState: nextWorldState,
+    });
+  }
+
   function handleTravel(nodeId) {
     const nextLocation = locationFromNode(nodeId);
     setLocation(nextLocation);
-    saveCharacter({ ...character, location: nextLocation });
+    persist(nextLocation, worldState);
+  }
+
+  function handleOpenChest(chestId) {
+    const openedChests = worldState.openedChests ?? [];
+    if (openedChests.includes(chestId)) return;
+
+    const nextWorldState = {
+      ...worldState,
+      openedChests: [...openedChests, chestId],
+    };
+    setWorldState(nextWorldState);
+    persist(location, nextWorldState);
   }
 
   let content;
@@ -41,7 +62,13 @@ export default function CharacterScreen({ character, onBack }) {
       />
     );
   } else if (activeTab === "location") {
-    content = <LocationMapView location={location} />;
+    content = (
+      <LocationMapView
+        location={location}
+        worldState={worldState}
+        onOpenChest={handleOpenChest}
+      />
+    );
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
   } else {
