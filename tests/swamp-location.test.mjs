@@ -7,8 +7,9 @@ async function read(relativePath) {
 }
 
 const viewSource = await read("../src/components/LocationMapView.jsx");
-const artSource = await read("../src/data/swampLocationArt.js");
-const canvasSource = await read("../src/components/EmbeddedArtCanvas.jsx");
+const assetSource = await read("../src/data/assets.js");
+const materializeSource = await read("../scripts/materialize-swamp-art.mjs");
+const packageSource = await read("../package.json");
 const cssSource = await read("../src/swamp-location.css");
 const mainSource = await read("../src/main.jsx");
 
@@ -24,15 +25,16 @@ const pointIds = [
   "swamp-bridge",
 ];
 
-test("swamp node renders approved art through an embedded canvas", () => {
+test("swamp node renders the approved scene as a normal public image", () => {
   assert.match(viewSource, /swampLocationArt/);
   assert.match(viewSource, /location\.nodeId === "swamp"/);
-  assert.match(viewSource, /<EmbeddedArtCanvas/);
-  assert.match(viewSource, /dataUrl=\{swampLocationArt\}/);
-  assert.match(artSource, /data:image\/webp;base64/);
-  assert.match(canvasSource, /window\.atob/);
-  assert.match(canvasSource, /createImageBitmap/);
-  assert.match(canvasSource, /context\.drawImage/);
+  assert.match(viewSource, /src=\{swampLocationArt\}/);
+  assert.match(viewSource, /onLoad=\{\(\) => setSwampArtStatus\("ready"\)\}/);
+  assert.match(assetSource, /swamp-location\.webp/);
+  assert.match(materializeSource, /Buffer\.from\(base64, "base64"\)/);
+  assert.match(materializeSource, /public\/ui/);
+  assert.match(packageSource, /assets:prepare/);
+  assert.match(packageSource, /npm run assets:prepare && vite build/);
   assert.match(mainSource, /import "\.\/swamp-location\.css"/);
 });
 
@@ -43,16 +45,16 @@ test("approved swamp scene exposes all nine clickable interest points", () => {
 
   assert.match(viewSource, /className={`swamp-point/);
   assert.match(viewSource, /onClick=\{\(\) => handleObjectTap\(point\.id\)\}/);
+  assert.match(viewSource, /swampArtStatus === "ready"/);
   assert.match(viewSource, /Нажмите на светящуюся точку на болоте/);
   assert.match(cssSource, /\.swamp-point/);
   assert.match(cssSource, /touch-action: manipulation/);
 });
 
-test("swamp rendering never falls back to a blank hidden image", () => {
-  assert.doesNotMatch(viewSource, /src=\{sceneArt\}/);
-  assert.match(canvasSource, /Загрузка локации/);
-  assert.match(canvasSource, /Не удалось загрузить локацию/);
-  assert.match(cssSource, /\.embedded-art-status/);
+test("swamp points stay disabled until its real image is loaded", () => {
+  assert.match(viewSource, /swampArtStatus !== "ready"/);
+  assert.match(viewSource, /Дождитесь загрузки изображения болота/);
+  assert.match(viewSource, /Не удалось загрузить локацию/);
 });
 
 test("existing meadow npc and chest interactions remain in place", () => {
