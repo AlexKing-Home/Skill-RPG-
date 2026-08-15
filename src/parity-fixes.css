@@ -1,0 +1,595 @@
+/* Mobile parity fixes based on the approved reference screens and the latest device screenshots. */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.screen--creation,
+.screen--game,
+.creation-panel,
+.game-shell,
+.game-content,
+.game-view,
+.character-page {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Creation: keep the approved compact 2x2 composition and remove the cropped crest artifact. */
+.creation-emblem-image,
+.player-hud__crest img,
+.character-page__crest {
+  object-fit: contain;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 58%, rgba(0, 0, 0, 0.92) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse at center, #000 58%, rgba(0, 0, 0, 0.92) 72%, transparent 100%);
+}
+
+.creation-header--reference .section-title {
+  white-space: nowrap;
+}
+
+.skin-card__portrait-shell {
+  width: 100%;
+  margin: 0;
+}
+
+.skin-card__image {
+  aspect-ratio: 0.9 !important;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.skin-card--selected .skin-card__footer {
+  min-width: 0;
+  width: calc(100% - 28px);
+  max-width: 190px;
+  margin: -50px auto 8px;
+  padding: 0 10px;
+}
+
+/* HUD: never allow bars or identity to force horizontal overflow. */
+.player-hud {
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: 96px minmax(84px, 0.36fr) minmax(0, 1fr) !important;
+  overflow: hidden;
+}
+
+.player-hud__identity,
+.player-hud__resources,
+.hud-resource,
+.hud-resource__label,
+.hud-resource__track {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.hud-resource__label > span,
+.hud-resource__label > strong {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.hud-resource__track {
+  width: 100%;
+}
+
+/* Top tabs: exactly three equal columns, all visible on phones. */
+.game-tabs {
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  overflow: hidden;
+}
+
+.game-tab {
+  min-width: 0;
+  width: 100%;
+  padding-inline: 4px !important;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.game-tab > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Map art is a real IMG now; the CSS map below remains visible as a fallback/overlay. */
+.map-frame--reference {
+  overflow: hidden;
+}
+
+.map-art-shell {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(36, 91, 91, 0.24), transparent 34%),
+    linear-gradient(180deg, #0b191d, #071015 72%, #050a0e);
+}
+
+.world-map--reference.map-art-shell {
+  aspect-ratio: 0.94;
+}
+
+.location-map--reference.map-art-shell {
+  aspect-ratio: 0.88;
+}
+
+.map-art-image {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.96;
+}
+
+.map-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background-image:
+    linear-gradient(rgba(168, 190, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 190, 184, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 50% 45%, rgba(31, 78, 69, 0.34), transparent 44%);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+.map-fallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.56) 100%);
+}
+
+.world-fallback__land {
+  position: absolute;
+  left: 11%;
+  top: 8%;
+  width: 78%;
+  height: 82%;
+  border: 1px solid rgba(171, 133, 72, 0.35);
+  border-radius: 44% 56% 48% 52% / 39% 43% 57% 61%;
+  transform: rotate(-4deg);
+  background:
+    radial-gradient(circle at 28% 24%, rgba(98, 104, 66, 0.45), transparent 18%),
+    radial-gradient(circle at 64% 34%, rgba(49, 77, 55, 0.7), transparent 30%),
+    radial-gradient(circle at 42% 72%, rgba(79, 74, 53, 0.5), transparent 28%),
+    linear-gradient(145deg, rgba(53, 74, 51, 0.9), rgba(34, 49, 37, 0.84));
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.5), 0 0 35px rgba(0, 0, 0, 0.44);
+}
+
+.world-fallback__land::before,
+.world-fallback__land::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: #071319;
+  box-shadow: 0 0 0 18px rgba(8, 21, 25, 0.92);
+}
+
+.world-fallback__land::before {
+  width: 30%;
+  height: 27%;
+  left: 34%;
+  top: -11%;
+}
+
+.world-fallback__land::after {
+  width: 25%;
+  height: 28%;
+  right: -8%;
+  bottom: 11%;
+}
+
+.map-overlay-label,
+.map-overlay-landmark,
+.map-overlay-hero {
+  position: absolute;
+  z-index: 4;
+}
+
+.map-overlay-landmark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(194, 153, 83, 0.7);
+  border-radius: 50%;
+  background: rgba(4, 11, 16, 0.88);
+  color: #d8ba7b;
+  font-size: 1.05rem;
+}
+
+.map-overlay-landmark--nw { left: 17%; top: 16%; }
+.map-overlay-landmark--ne { right: 18%; top: 19%; }
+.map-overlay-landmark--sw { left: 24%; bottom: 18%; }
+.map-overlay-landmark--se { right: 19%; bottom: 15%; }
+
+.map-overlay-hero {
+  left: 50%;
+  top: 51%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #efd18c;
+}
+
+.map-overlay-hero__gem {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d6a65f;
+  border-radius: 50%;
+  background: radial-gradient(circle, #154f72, #071621 70%);
+  color: #f3d27e;
+  box-shadow: 0 0 0 7px rgba(37, 157, 221, 0.12), 0 0 28px rgba(58, 184, 244, 0.54);
+}
+
+.map-overlay-hero strong {
+  margin-top: 7px;
+  padding: 5px 11px;
+  border: 1px solid #8b6638;
+  border-radius: 999px;
+  background: rgba(3, 8, 12, 0.92);
+  color: #efd19a;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.location-fallback__road {
+  position: absolute;
+  z-index: 2;
+  background: linear-gradient(90deg, rgba(104, 84, 57, 0.42), rgba(170, 136, 82, 0.68), rgba(104, 84, 57, 0.42));
+  box-shadow: 0 0 18px rgba(213, 169, 91, 0.14);
+}
+
+.location-fallback__road--h {
+  left: -6%;
+  top: 49%;
+  width: 112%;
+  height: 46px;
+  transform: rotate(-7deg);
+}
+
+.location-fallback__road--v {
+  left: 47%;
+  top: -7%;
+  width: 42px;
+  height: 114%;
+  transform: rotate(12deg);
+}
+
+.location-fallback__zone {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+  border: 1px solid rgba(155, 126, 73, 0.36);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(38, 74, 58, 0.58), rgba(14, 36, 31, 0.58));
+  color: rgba(223, 205, 167, 0.75);
+  font-size: 0.76rem;
+}
+
+.location-fallback__zone--one { left: 7%; top: 10%; width: 28%; height: 31%; }
+.location-fallback__zone--two { right: 8%; top: 12%; width: 30%; height: 28%; }
+.location-fallback__zone--three { left: 11%; bottom: 9%; width: 34%; height: 29%; }
+.location-fallback__zone--four { right: 8%; bottom: 10%; width: 27%; height: 26%; }
+
+/* Bottom nav: all five buttons must remain on one row. */
+.bottom-nav {
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  overflow: hidden;
+}
+
+.bottom-nav__item {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bottom-nav__item > span:last-child {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Character page: preserve the approved top composition, fix equipment wrapping below it. */
+.character-page__header {
+  min-width: 0;
+  grid-template-columns: 54px 70px minmax(0, 1fr) 82px !important;
+}
+
+.character-page__identity {
+  min-width: 0;
+}
+
+.character-page__identity h1,
+.character-page__identity span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-portrait {
+  aspect-ratio: 0.74 !important;
+}
+
+.profile-equipment .equipment-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.profile-equipment .equipment-slot {
+  min-width: 0;
+  min-height: 92px;
+  padding: 13px 11px !important;
+  display: grid !important;
+  grid-template-columns: 40px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-items: center;
+  gap: 3px 10px;
+}
+
+.profile-equipment .equipment-slot__icon {
+  position: static !important;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 38px !important;
+  height: 38px !important;
+  margin: 0;
+}
+
+.profile-equipment .equipment-slot__label,
+.profile-equipment .equipment-slot__item {
+  grid-column: 2;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-wrap: normal !important;
+}
+
+.profile-equipment .equipment-slot__label {
+  font-size: 0.68rem !important;
+  letter-spacing: 0.035em;
+}
+
+.profile-equipment .equipment-slot__item {
+  margin: 0 !important;
+  font-size: 1rem !important;
+}
+
+@media (max-width: 760px) {
+  .creation-header--reference {
+    min-height: 116px !important;
+    padding-top: 8px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .creation-emblem-image {
+    width: 54px !important;
+    height: 62px !important;
+    margin-bottom: -6px !important;
+  }
+
+  .creation-header--reference .section-title {
+    font-size: clamp(1.55rem, 5vw, 2.05rem) !important;
+    line-height: 1.05;
+  }
+
+  .round-back-button {
+    top: 31px !important;
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .field-label {
+    font-size: 1rem !important;
+  }
+
+  .input-shell,
+  .nickname-input {
+    min-height: 62px !important;
+    height: 62px !important;
+  }
+
+  .gender-button {
+    min-height: 64px !important;
+  }
+
+  .ornate-heading {
+    margin-top: 22px !important;
+  }
+
+  .skin-card__image {
+    aspect-ratio: 0.88 !important;
+  }
+
+  .skin-card__name {
+    min-height: 40px !important;
+    padding: 9px 4px 6px !important;
+    font-size: 0.92rem !important;
+  }
+
+  .skin-card__footer {
+    min-height: 39px !important;
+  }
+
+  .primary-button--hero {
+    min-height: 66px !important;
+  }
+
+  .creation-actions .secondary-button {
+    min-height: 58px !important;
+  }
+
+  .player-hud {
+    min-height: 106px !important;
+    grid-template-columns: 72px minmax(76px, 0.36fr) minmax(0, 1fr) !important;
+    gap: 7px !important;
+    padding: 8px 9px !important;
+  }
+
+  .player-hud__crest {
+    width: 66px !important;
+    height: 78px !important;
+  }
+
+  .player-hud__nickname {
+    font-size: 1.05rem !important;
+  }
+
+  .player-hud__level {
+    margin-top: 4px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .hud-resource {
+    padding: 3px 4px !important;
+  }
+
+  .hud-resource__label {
+    gap: 5px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .game-tabs,
+  .game-tab {
+    min-height: 58px !important;
+  }
+
+  .game-tab {
+    font-size: clamp(0.66rem, 2.6vw, 0.82rem) !important;
+    gap: 4px !important;
+  }
+
+  .game-view {
+    padding: 24px 18px 20px !important;
+  }
+
+  .game-view h1 {
+    font-size: clamp(2.15rem, 9vw, 3rem) !important;
+  }
+
+  .map-frame--reference {
+    margin-top: 18px !important;
+    padding: 4px !important;
+  }
+
+  .bottom-nav__item {
+    min-height: 78px !important;
+    padding: 8px 2px 7px !important;
+    font-size: clamp(0.48rem, 1.9vw, 0.6rem) !important;
+  }
+
+  .bottom-nav__icon {
+    font-size: 1.25rem !important;
+  }
+
+  .character-page {
+    padding: 16px 14px 30px !important;
+  }
+
+  .character-page__header {
+    grid-template-columns: 46px 58px minmax(0, 1fr) 70px !important;
+    gap: 6px !important;
+  }
+
+  .profile-back {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .character-page__crest {
+    width: 54px !important;
+    height: 66px !important;
+  }
+
+  .character-page__identity h1 {
+    font-size: clamp(1.8rem, 8vw, 2.6rem) !important;
+  }
+
+  .level-shield {
+    min-height: 72px !important;
+  }
+
+  .profile-resources {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .profile-portrait-frame {
+    margin-top: 16px !important;
+  }
+
+  .profile-stat-grid {
+    margin-top: 48px !important;
+  }
+
+  .profile-stat {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .creation-panel {
+    padding-inline: 10px !important;
+  }
+
+  .creation-header--reference {
+    margin-inline: -10px !important;
+  }
+
+  .classes-title {
+    font-size: 0.77rem !important;
+  }
+
+  .skin-card__image {
+    aspect-ratio: 0.84 !important;
+  }
+
+  .player-hud {
+    grid-template-columns: 58px 64px minmax(0, 1fr) !important;
+    padding-inline: 6px !important;
+  }
+
+  .player-hud__crest {
+    width: 54px !important;
+    height: 64px !important;
+  }
+
+  .game-tab__icon {
+    display: none !important;
+  }
+
+  .profile-equipment .equipment-slot {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    padding: 10px 8px !important;
+  }
+
+  .profile-equipment .equipment-slot__icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .profile-equipment .equipment-slot__label {
+    font-size: 0.6rem !important;
+  }
+}
