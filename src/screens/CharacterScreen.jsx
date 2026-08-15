@@ -15,10 +15,9 @@ const defaultLocation = locationFromNode(START_NODE_ID);
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
-  const [location, setLocation] = useState(() => ({
-    ...defaultLocation,
-    ...(character.location ?? {}),
-  }));
+  const [location, setLocation] = useState(() =>
+    character.location?.nodeId ? locationFromNode(character.location.nodeId) : defaultLocation,
+  );
   const [worldState, setWorldState] = useState(() => character.worldState ?? {});
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
