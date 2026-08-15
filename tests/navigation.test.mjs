@@ -20,7 +20,10 @@ test("navigation WebP files are complete RIFF images", () => {
 });
 
 test("all game tabs and the bottom navigation stay rendered", () => {
-  const screen = readFileSync(new URL("../src/screens/CharacterScreen.jsx", import.meta.url), "utf8");
+  const screen = readFileSync(
+    new URL("../src/screens/CharacterScreen.jsx", import.meta.url),
+    "utf8",
+  );
   const css = readFileSync(new URL("../src/navigation-reference-v9.css", import.meta.url), "utf8");
 
   assert.doesNotMatch(screen, /activeTab\s*!==\s*["']location["']/);
