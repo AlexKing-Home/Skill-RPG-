@@ -23,7 +23,7 @@ const fieldObjects = [
 export default function LocationMapView({ location, worldState = {}, onOpenChest }) {
   const [selectedId, setSelectedId] = useState(null);
   const [dialogue, setDialogue] = useState("");
-  const isField = location.nodeId === "field";
+  const isField = ["field", "meadows"].includes(location.nodeId);
   const openedChests = worldState.openedChests ?? [];
 
   const selectedObject = useMemo(
@@ -46,7 +46,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
 
     if (selectedObject.type === "npc") {
       setDialogue(
-        "Странник: За полем начинается дорога к лесу. Если пойдёшь дальше, держись ближе к тропе.",
+        "Странник: За лугами начинается дорога к лесу. Если пойдёшь дальше, держись ближе к тропе.",
       );
       return;
     }
@@ -78,7 +78,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           }`}
           aria-label={
             isField
-              ? "Поле. На локации есть NPC и сундук, доступные для взаимодействия."
+              ? "Луга. На локации есть NPC и сундук, доступные для взаимодействия."
               : "Карта текущей локации. Герой отмечен на перекрёстке дорог."
           }
         >
