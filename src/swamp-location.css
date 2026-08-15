@@ -27,6 +27,24 @@
   user-select: none;
 }
 
+.location-map--swamp canvas.map-art-image {
+  image-rendering: auto;
+}
+
+.embedded-art-status {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #071017;
+  color: #cdb98f;
+  font-size: 0.92rem;
+  text-align: center;
+  pointer-events: none;
+}
+
 .swamp-point {
   position: absolute;
   z-index: 20;
