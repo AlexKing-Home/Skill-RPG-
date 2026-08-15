@@ -40,6 +40,7 @@ export default function LocationMapView({ location }) {
             aria-hidden="true"
             onError={(event) => {
               event.currentTarget.hidden = true;
+              event.currentTarget.style.display = "none";
             }}
           />
 
