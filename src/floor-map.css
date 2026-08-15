@@ -167,41 +167,6 @@
   border: 0;
 }
 
-.swamp-replacement {
-  position: absolute;
-  left: 47.2%;
-  top: 46.5%;
-  z-index: 6;
-  width: 118px;
-  min-height: 70px;
-  display: grid;
-  place-items: center;
-  gap: 3px;
-  transform: translate(-50%, -50%);
-  border: 1px solid rgba(198, 151, 81, 0.92);
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 50% 25%, rgba(78, 115, 70, 0.42), transparent 58%),
-    linear-gradient(180deg, rgba(17, 31, 24, 0.98), rgba(6, 12, 11, 0.98));
-  color: #e5c887;
-  box-shadow:
-    0 0 0 3px rgba(3, 9, 12, 0.72),
-    0 5px 18px rgba(0, 0, 0, 0.55);
-  text-align: center;
-  pointer-events: none;
-}
-
-.swamp-replacement__icon {
-  color: #94b66c;
-  font-size: 1.05rem;
-  line-height: 1;
-}
-
-.swamp-replacement strong {
-  font-size: 0.78rem;
-  font-weight: 500;
-}
-
 .travel-hero--floor {
   z-index: 30;
   pointer-events: none;
@@ -244,15 +209,6 @@
   .map-hotspot__ring {
     width: 25px;
     height: 25px;
-  }
-
-  .swamp-replacement {
-    width: 96px;
-    min-height: 58px;
-  }
-
-  .swamp-replacement strong {
-    font-size: 0.7rem;
   }
 
   .travel-hero--floor .travel-hero__marker {
