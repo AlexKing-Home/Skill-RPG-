@@ -34,3 +34,15 @@ test("touch tap is handled once instead of firing pointer and click travel toget
   assert.match(mapSource, /event\.detail === 0/);
   assert.doesNotMatch(mapSource, /onClick=\{\(\) => travelTo\(node\.id\)\}/);
 });
+
+test("real floor map is explicitly decoded and revealed on the first mount", () => {
+  assert.match(mapSource, /isMapReady/);
+  assert.match(mapSource, /mapImageRef/);
+  assert.match(mapSource, /image\.decode/);
+  assert.match(mapSource, /loading="eager"/);
+  assert.match(mapSource, /decoding="sync"/);
+  assert.match(mapSource, /floor-map-loading/);
+  assert.doesNotMatch(mapSource, /className="map-fallback"/);
+  assert.match(cssSource, /\.map-art-image\.is-ready/);
+  assert.match(cssSource, /\.floor-map-loading/);
+});
