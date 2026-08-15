@@ -8,17 +8,26 @@ import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getExperienceProgress } from "../data/progression.js";
-import { START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
+import {
+  FLOOR_MAP_VERSION,
+  START_NODE_ID,
+  locationFromNode,
+} from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
 
 const defaultLocation = locationFromNode(START_NODE_ID);
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
-  const [location, setLocation] = useState(() =>
-    character.location?.nodeId ? locationFromNode(character.location.nodeId) : defaultLocation,
-  );
-  const [worldState, setWorldState] = useState(() => character.worldState ?? {});
+  const [location, setLocation] = useState(() => {
+    const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
+    if (!usesCurrentMap) return defaultLocation;
+    return character.location?.nodeId ? locationFromNode(character.location.nodeId) : defaultLocation;
+  });
+  const [worldState, setWorldState] = useState(() => ({
+    ...(character.worldState ?? {}),
+    floorMapVersion: FLOOR_MAP_VERSION,
+  }));
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
   const maxHealth = character.stats.health;
@@ -34,8 +43,13 @@ export default function CharacterScreen({ character, onBack }) {
 
   function handleTravel(nodeId) {
     const nextLocation = locationFromNode(nodeId);
+    const nextWorldState = {
+      ...worldState,
+      floorMapVersion: FLOOR_MAP_VERSION,
+    };
     setLocation(nextLocation);
-    persist(nextLocation, worldState);
+    setWorldState(nextWorldState);
+    persist(nextLocation, nextWorldState);
   }
 
   function handleOpenChest(chestId) {
@@ -44,6 +58,7 @@ export default function CharacterScreen({ character, onBack }) {
 
     const nextWorldState = {
       ...worldState,
+      floorMapVersion: FLOOR_MAP_VERSION,
       openedChests: [...openedChests, chestId],
     };
     setWorldState(nextWorldState);
