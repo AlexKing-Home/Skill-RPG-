@@ -21,12 +21,51 @@
   width: 100%;
   height: 100%;
   object-fit: fill;
+  opacity: 0;
   pointer-events: none;
   user-select: none;
+  transition: opacity 120ms ease;
 }
 
-.floor-map-art .map-fallback {
-  pointer-events: none;
+.floor-map-art .map-art-image.is-ready {
+  opacity: 1;
+}
+
+.floor-map-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(17, 47, 64, 0.34), transparent 46%),
+    #071017;
+  color: #dfc48e;
+  text-align: center;
+  pointer-events: all;
+}
+
+.floor-map-loading strong {
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.floor-map-loading__spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(211, 173, 106, 0.24);
+  border-top-color: #d8b56e;
+  border-radius: 50%;
+  animation: floorMapSpin 700ms linear infinite;
+}
+
+@keyframes floorMapSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .floor-map-art .travel-network {
