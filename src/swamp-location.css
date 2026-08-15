@@ -4,10 +4,11 @@
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  aspect-ratio: 768 / 687 !important;
+  aspect-ratio: 775 / 695 !important;
   overflow: hidden;
   box-sizing: border-box;
   background: #071017;
+  touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -17,13 +18,7 @@
   content: none !important;
 }
 
-/*
- * The swamp art and its functional hotspots must share exactly the same
- * responsive coordinate system. Older reference styles tried to keep map art
- * at its intrinsic pixel size, which made the picture overflow horizontally
- * on phones while hotspot percentages were calculated from the visible box.
- * These declarations deliberately override every inherited sizing/transform.
- */
+/* The approved swamp image and its hotspots share one exact coordinate space. */
 .location-map--swamp > .map-art-image {
   position: absolute !important;
   inset: 0 !important;
@@ -69,27 +64,34 @@
 }
 
 .swamp-point {
-  position: absolute;
+  position: absolute !important;
   z-index: 20;
-  width: 84px;
-  height: 84px;
-  padding: 0;
-  transform: translate(-50%, -50%);
-  border: 0;
+  width: 92px;
+  height: 92px;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  transform-origin: 50% 50% !important;
+  border: 0 !important;
   border-radius: 50%;
-  background: transparent;
+  background: transparent !important;
+  box-shadow: none !important;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   user-select: none;
-  pointer-events: auto;
+  pointer-events: auto !important;
+}
+
+.swamp-point::before {
+  content: none !important;
 }
 
 .swamp-point::after {
   content: "";
   position: absolute;
-  inset: 5px;
+  inset: 4px;
   border-radius: 50%;
   background: transparent;
   transition: background 100ms ease;
@@ -150,9 +152,8 @@
 
 @media (max-width: 640px) {
   .swamp-point {
-    /* Big touch target, but its centre stays exactly on the painted marker. */
-    width: 96px;
-    height: 96px;
+    width: 108px;
+    height: 108px;
   }
 
   .swamp-point__pulse {
