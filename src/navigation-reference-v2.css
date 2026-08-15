@@ -1,0 +1,285 @@
+/* Navigation parity pass: based only on the supplied reference screenshots. */
+
+/* ---------- TOP GAME TABS ---------- */
+.game-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  position: relative !important;
+  overflow: visible !important;
+  border-top: 1px solid rgba(151, 105, 48, 0.72) !important;
+  border-bottom: 1px solid rgba(151, 105, 48, 0.72) !important;
+  background: #02090f !important;
+  box-shadow:
+    inset 0 1px rgba(239, 195, 111, 0.08),
+    inset 0 -1px rgba(0, 0, 0, 0.75) !important;
+}
+
+.game-tab {
+  min-width: 0 !important;
+  min-height: 78px !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(124, 87, 43, 0.65) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(26, 43, 55, 0.26), transparent 58%),
+    linear-gradient(180deg, #04101a 0%, #02090f 100%) !important;
+  box-shadow: none !important;
+  color: #c9b898 !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(15px, 4vw, 22px) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.055em !important;
+  text-transform: uppercase !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.game-tab:last-child {
+  border-right: 0 !important;
+}
+
+/* remove the large decorative diamond/symbol currently sitting above the label */
+.game-tab__icon {
+  display: none !important;
+}
+
+/* fine ornamental corner cuts, not detached square brackets */
+.game-tab::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 5px 7px !important;
+  pointer-events: none !important;
+  opacity: 0.72 !important;
+  background:
+    linear-gradient(#b9965b, #b9965b) left top / 20px 1px no-repeat,
+    linear-gradient(#b9965b, #b9965b) left top / 1px 11px no-repeat,
+    linear-gradient(#b9965b, #b9965b) right top / 20px 1px no-repeat,
+    linear-gradient(#b9965b, #b9965b) right top / 1px 11px no-repeat !important;
+}
+
+.game-tab.is-active {
+  color: #f1d79f !important;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(157, 91, 28, 0.34) 0%, rgba(86, 49, 20, 0.36) 42%, transparent 75%),
+    linear-gradient(180deg, #2e1b0c 0%, #171007 100%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(213, 158, 79, 0.34),
+    inset 0 -3px rgba(194, 139, 56, 0.45),
+    0 0 15px rgba(166, 102, 31, 0.11) !important;
+  z-index: 2 !important;
+}
+
+.game-tab.is-active::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  bottom: -7px !important;
+  width: 11px !important;
+  height: 11px !important;
+  transform: translateX(-50%) rotate(45deg) !important;
+  border: 1px solid #e8b95d !important;
+  background: #f1c568 !important;
+  box-shadow:
+    0 0 0 2px rgba(64, 35, 13, 0.92),
+    0 0 8px rgba(255, 183, 62, 0.72),
+    0 0 14px rgba(62, 177, 255, 0.16) !important;
+  z-index: 5 !important;
+}
+
+/* ---------- BOTTOM NAV: ONE INTEGRATED BAR ---------- */
+.bottom-nav {
+  --nav-gold: #b99a65;
+  --nav-border: rgba(124, 88, 45, 0.78);
+  display: grid !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow: visible !important;
+  background: #02080d !important;
+  border-top: 1px solid var(--nav-border) !important;
+  border-bottom: 1px solid var(--nav-border) !important;
+  box-shadow:
+    inset 0 1px rgba(224, 174, 96, 0.08),
+    0 -8px 22px rgba(0, 0, 0, 0.18) !important;
+}
+
+.bottom-nav--main {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.bottom-nav--character {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.bottom-nav__item,
+.bottom-nav--character .bottom-nav__item {
+  min-width: 0 !important;
+  min-height: 102px !important;
+  height: 102px !important;
+  margin: 0 !important;
+  padding: 9px 3px 8px !important;
+  gap: 3px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--nav-border) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(20, 34, 44, 0.24), transparent 54%),
+    linear-gradient(180deg, #030c12 0%, #02070b 100%) !important;
+  box-shadow: none !important;
+  color: #b7a27d !important;
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(10px, 2.65vw, 14px) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.025em !important;
+  text-transform: uppercase !important;
+}
+
+.bottom-nav__item:last-child {
+  border-right: 0 !important;
+}
+
+/* remove the detached corner-bracket treatment from the previous pass */
+.bottom-nav__item::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 5px !important;
+  pointer-events: none !important;
+  opacity: 0.58 !important;
+  background:
+    linear-gradient(#9f8151, #9f8151) left top / 13px 1px no-repeat,
+    linear-gradient(#9f8151, #9f8151) left top / 1px 8px no-repeat,
+    linear-gradient(#9f8151, #9f8151) right bottom / 13px 1px no-repeat,
+    linear-gradient(#9f8151, #9f8151) right bottom / 1px 8px no-repeat !important;
+}
+
+.bottom-nav__item::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: 3px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Real object-shaped vector icons drawn to match the supplied reference; no generated imagery. */
+.bottom-nav__icon,
+.bottom-nav--character .bottom-nav__icon {
+  display: block !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  flex: 0 0 48px !important;
+  margin: 0 auto !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.1)) drop-shadow(0 2px 3px rgba(0,0,0,.65)) !important;
+}
+
+/* MAIN: castle */
+.bottom-nav--main .bottom-nav__item:nth-child(1) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3' stroke-linejoin='round'%3E%3Cpath d='M10 52h44M14 52V28h10v24M40 52V28h10v24M24 52V20h16v32M12 28l5-7 5 7M42 28l5-7 5 7M25 20l7-9 7 9'/%3E%3Cpath d='M29 52V40h6v12M18 35h3M43 35h3M29 28h6'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+/* MAIN: crossed swords */
+.bottom-nav--main .bottom-nav__item:nth-child(2) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 11l30 34M49 11L19 45M11 50l8-5 4 4-6 7zM53 50l-8-5-4 4 6 7z'/%3E%3Cpath d='M13 13l7 2-5 5M51 13l-7 2 5 5'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+/* MAIN: compass */
+.bottom-nav--main .bottom-nav__item:nth-child(3) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23c2a66d' stroke-width='2.5'%3E%3Ccircle cx='32' cy='32' r='18'/%3E%3Ccircle cx='32' cy='32' r='5'/%3E%3Cpath d='M32 5v16M32 43v16M5 32h16M43 32h16M32 13l5 14 14 5-14 5-5 14-5-14-14-5 14-5z'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+/* MAIN: backpack */
+.bottom-nav--main .bottom-nav__item:nth-child(4) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 22c0-8 24-8 24 0v32H20zM25 17v-5h14v5M20 30h24M25 36h14v10H25zM16 28v18M48 28v18'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+/* MAIN: helmet */
+.bottom-nav--main .bottom-nav__item:nth-child(5) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3' stroke-linejoin='round'%3E%3Cpath d='M14 30C14 16 22 8 32 8s18 8 18 22v20l-11-7-7 13-7-13-11 7z'/%3E%3Cpath d='M14 30h36M32 8v48M19 31l13 8 13-8'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+/* CHARACTER BAR: map, location, home crest, helmet */
+.bottom-nav--character .bottom-nav__item:nth-child(1) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='2.8' stroke-linejoin='round'%3E%3Cpath d='M8 14l15-5 18 6 15-5v40l-15 5-18-6-15 5zM23 9v40M41 15v40'/%3E%3Cpath d='M12 19l9 9M27 18l10 12M44 20l8 8M11 39l9 8M27 35l10 10M45 39l7 7'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.bottom-nav--character .bottom-nav__item:nth-child(2) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 57S15 41 15 25a17 17 0 1 1 34 0c0 16-17 32-17 32z'/%3E%3Ccircle cx='32' cy='25' r='6'/%3E%3Cellipse cx='32' cy='57' rx='18' ry='4'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.bottom-nav--character .bottom-nav__item:nth-child(3) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='2.8' stroke-linejoin='round'%3E%3Cpath d='M32 6l20 8v16c0 13-8 22-20 29C20 52 12 43 12 30V14z'/%3E%3Cpath d='M21 26l11-9 11 9v17H21zM27 43V31h10v12'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+.bottom-nav--character .bottom-nav__item:nth-child(4) .bottom-nav__icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23bda16c' stroke-width='3' stroke-linejoin='round'%3E%3Cpath d='M14 30C14 16 22 8 32 8s18 8 18 22v20l-11-7-7 13-7-13-11 7z'/%3E%3Cpath d='M14 30h36M32 8v48M19 31l13 8 13-8'/%3E%3C/g%3E%3C/svg%3E") !important;
+}
+
+.bottom-nav__item.is-active {
+  color: #ead6aa !important;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(14, 99, 157, 0.34) 0%, rgba(6, 45, 75, 0.38) 44%, transparent 75%),
+    linear-gradient(180deg, #071522 0%, #03101a 100%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(71, 144, 194, 0.28),
+    inset 0 0 16px rgba(16, 95, 151, 0.22),
+    0 0 13px rgba(31, 138, 211, 0.08) !important;
+  z-index: 2 !important;
+}
+
+.bottom-nav__item.is-active::before {
+  opacity: 1 !important;
+  background:
+    linear-gradient(#4cbcf4, #4cbcf4) left top / 18px 1px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) left top / 1px 11px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) right top / 18px 1px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) right top / 1px 11px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) left bottom / 18px 1px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) left bottom / 1px 11px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) right bottom / 18px 1px no-repeat,
+    linear-gradient(#4cbcf4, #4cbcf4) right bottom / 1px 11px no-repeat !important;
+  filter: drop-shadow(0 0 5px rgba(59, 177, 240, 0.45)) !important;
+}
+
+.bottom-nav__item.is-active::after {
+  background: #39b9ee !important;
+  box-shadow: 0 -1px 7px rgba(41, 183, 239, 0.72) !important;
+}
+
+.bottom-nav__item.is-active .bottom-nav__icon {
+  filter:
+    drop-shadow(0 0 3px rgba(33, 177, 242, 0.75))
+    drop-shadow(0 0 10px rgba(26, 130, 205, 0.46)) !important;
+}
+
+@media (max-width: 520px) {
+  .game-tab {
+    min-height: 70px !important;
+    font-size: 14px !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .bottom-nav__item,
+  .bottom-nav--character .bottom-nav__item {
+    min-height: 88px !important;
+    height: 88px !important;
+    padding-top: 7px !important;
+    font-size: 9.5px !important;
+  }
+
+  .bottom-nav__icon,
+  .bottom-nav--character .bottom-nav__icon {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    flex-basis: 40px !important;
+  }
+}
