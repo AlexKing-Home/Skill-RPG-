@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { locationMapArt } from "../data/assets.js";
 import { swampLocationArt } from "../data/swampLocationArt.js";
+import EmbeddedArtCanvas from "./EmbeddedArtCanvas.jsx";
 
 const fieldObjects = [
   {
@@ -113,7 +114,6 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   const openedChests = worldState.openedChests ?? [];
   const sceneObjects = isSwamp ? swampPoints : isField ? fieldObjects : [];
   const selectedObject = sceneObjects.find((object) => object.id === selectedId) ?? null;
-  const sceneArt = isSwamp ? swampLocationArt : locationMapArt;
 
   useEffect(() => {
     setSelectedId(null);
@@ -201,16 +201,24 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
             </div>
           )}
 
-          <img
-            className="map-art-image"
-            src={sceneArt}
-            alt={isSwamp ? "Болото" : ""}
-            aria-hidden={!isSwamp}
-            onError={(event) => {
-              event.currentTarget.hidden = true;
-              event.currentTarget.style.display = "none";
-            }}
-          />
+          {isSwamp ? (
+            <EmbeddedArtCanvas
+              className="map-art-image"
+              dataUrl={swampLocationArt}
+              ariaLabel="Болото"
+            />
+          ) : (
+            <img
+              className="map-art-image"
+              src={locationMapArt}
+              alt=""
+              aria-hidden="true"
+              onError={(event) => {
+                event.currentTarget.hidden = true;
+                event.currentTarget.style.display = "none";
+              }}
+            />
+          )}
 
           {isField &&
             fieldObjects.map((object) => {
