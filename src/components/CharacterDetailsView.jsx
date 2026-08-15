@@ -14,10 +14,17 @@ const slotIcons = {
   weapon2: "⚔",
 };
 
-export default function CharacterDetailsView({ character, currentHealth, level, experience, onBack }) {
+export default function CharacterDetailsView({
+  character,
+  currentHealth,
+  level,
+  experience,
+  onBack,
+}) {
   const [slotMessage, setSlotMessage] = useState("");
   const equipment = { ...createEmptyEquipment(), ...(character.equipment ?? {}) };
-  const expLabel = experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
+  const expLabel =
+    experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
   const hpPercent = character.stats.health > 0 ? (currentHealth / character.stats.health) * 100 : 0;
 
   function handleSlotClick(slot, item) {
