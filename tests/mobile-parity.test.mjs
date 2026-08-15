@@ -24,9 +24,11 @@ test("final reference parity CSS loads after all earlier fix layers", () => {
   );
 });
 
-test("creation uses the clean crest and the asset cache key is advanced", () => {
+test("creation uses the clean crest and reference assets use a fresh cache identity", () => {
   assert.match(assetsSource, /export const creationCrest = uiCrest/);
-  assert.match(assetsSource, /reference-parity-v4/);
+  assert.match(assetsSource, /reference-parity-v5/);
+  assert.match(assetsSource, /world-map-reference-v2\.webp/);
+  assert.match(assetsSource, /location-map-reference-v2\.webp/);
 });
 
 test("map views render real images with clean fallbacks and no duplicate overlays", () => {
