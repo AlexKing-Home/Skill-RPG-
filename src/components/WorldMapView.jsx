@@ -164,11 +164,6 @@ export default function WorldMapView({ location, onTravel }) {
 
           {isMapReady && (
             <>
-              <div className="swamp-replacement" aria-hidden="true">
-                <span className="swamp-replacement__icon">♒</span>
-                <strong>Болото</strong>
-              </div>
-
               <svg className="travel-network" viewBox="0 0 100 100" preserveAspectRatio="none">
                 {floorOneNavigation.edges.map((edge) => {
                   const from = getTravelNode(edge.from);
