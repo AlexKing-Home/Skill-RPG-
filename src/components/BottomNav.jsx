@@ -17,7 +17,10 @@ export default function BottomNav({ active, onChange, onHome, variant = "main" }
   const items = variant === "character" ? characterItems : mainItems;
 
   return (
-    <nav className={`bottom-nav bottom-nav--${variant}`} aria-label="Основная навигация">
+    <nav
+      className={`bottom-nav bottom-nav--${variant} bottom-nav--active-${active}`}
+      aria-label="Основная навигация"
+    >
       {items.map((item) => (
         <button
           key={item.id}
