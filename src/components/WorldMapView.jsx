@@ -50,6 +50,12 @@ export default function WorldMapView({ location, onTravel }) {
     moveStep(0);
   }
 
+  function handlePointerUp(event, nodeId) {
+    if (event.pointerType === "mouse") return;
+    event.preventDefault();
+    travelTo(nodeId);
+  }
+
   return (
     <section className="game-view" aria-labelledby="world-map-title">
       <div className="game-view__heading">
@@ -100,21 +106,44 @@ export default function WorldMapView({ location, onTravel }) {
             })}
           </svg>
 
-          {floorOneNavigation.nodes.map((node) => (
-            <button
-              key={node.id}
-              type="button"
-              className={`map-hotspot map-hotspot--${node.kind} ${
-                node.id === currentNode.id ? "is-current" : ""
-              } ${node.id === selectedNodeId ? "is-selected" : ""}`}
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              onClick={() => travelTo(node.id)}
-              aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ", перейти"}`}
-              disabled={isTraveling || node.id === currentNode.id}
-            >
-              <span className="map-hotspot__ring" aria-hidden="true" />
-            </button>
-          ))}
+          {floorOneNavigation.nodes.map((node) => {
+            const hitbox = node.hitbox ?? {
+              x: node.x,
+              y: node.y,
+              width: 18,
+              height: 14,
+            };
+
+            return (
+              <button
+                key={node.id}
+                type="button"
+                className={`map-hotspot map-hotspot--${node.kind} ${
+                  node.id === currentNode.id ? "is-current" : ""
+                } ${node.id === selectedNodeId ? "is-selected" : ""}`}
+                style={{
+                  left: `${hitbox.x}%`,
+                  top: `${hitbox.y}%`,
+                  width: `${hitbox.width}%`,
+                  height: `${hitbox.height}%`,
+                }}
+                onPointerUp={(event) => handlePointerUp(event, node.id)}
+                onClick={() => travelTo(node.id)}
+                aria-label={`${node.name}${node.id === currentNode.id ? ", текущее местоположение" : ", перейти"}`}
+                disabled={isTraveling || node.id === currentNode.id}
+              >
+                <span
+                  className="map-hotspot__ring"
+                  style={{
+                    left: `${((node.x - (hitbox.x - hitbox.width / 2)) / hitbox.width) * 100}%`,
+                    top: `${((node.y - (hitbox.y - hitbox.height / 2)) / hitbox.height) * 100}%`,
+                  }}
+                  aria-hidden="true"
+                />
+                <span className="map-hotspot__sr-label">{node.name}</span>
+              </button>
+            );
+          })}
 
           <div
             className={`travel-hero travel-hero--floor ${isTraveling ? "is-traveling" : ""}`}
@@ -145,7 +174,7 @@ export default function WorldMapView({ location, onTravel }) {
           </div>
         ) : (
           <p className="travel-panel__hint">
-            Тапните прямо по точке или названию нужной локации — герой сразу начнёт движение.
+            Тапните по значку, точке или названию нужной локации — вся область вокруг подписи кликабельна.
           </p>
         )}
       </div>
