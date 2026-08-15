@@ -1,3 +1,5 @@
+import { locationMapArt } from "../data/assets.js";
+
 export default function LocationMapView({ location }) {
   return (
     <section className="game-view" aria-labelledby="location-map-title">
@@ -12,31 +14,13 @@ export default function LocationMapView({ location }) {
         </span>
       </div>
 
-      <div className="map-frame">
-        <div className="location-map" aria-label="Карта текущей локации">
-          <div className="location-map__path location-map__path--horizontal" />
-          <div className="location-map__path location-map__path--vertical" />
-          <div className="location-map__zone location-map__zone--one">
-            <span>Лесная чаща</span>
-          </div>
-          <div className="location-map__zone location-map__zone--two">
-            <span>Заброшенные руины</span>
-          </div>
-          <div className="location-map__zone location-map__zone--three">
-            <span>Каменные холмы</span>
-          </div>
-          <div className="location-map__zone location-map__zone--four">
-            <span>Туманные топи</span>
-          </div>
-          <div
-            className="hero-marker hero-marker--local"
-            style={{ left: `${location.x}%`, top: `${location.y}%` }}
-            title="Положение героя внутри локации"
-          >
-            <span>◆</span>
-            <strong>Герой</strong>
-          </div>
-        </div>
+      <div className="map-frame map-frame--reference">
+        <div
+          className="location-map location-map--reference"
+          style={{ backgroundImage: `url("${locationMapArt}")` }}
+          aria-label="Карта текущей локации. Герой отмечен на перекрёстке дорог."
+          role="img"
+        />
       </div>
     </section>
   );

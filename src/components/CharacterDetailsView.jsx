@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { uiCrest } from "../data/assets.js";
 import { EQUIPMENT_SLOTS, createEmptyEquipment } from "../data/equipment.js";
 
 const slotIcons = {
@@ -27,7 +28,7 @@ export default function CharacterDetailsView({ character, currentHealth, level }
 
   return (
     <section className="game-view character-details" aria-labelledby="character-title">
-      <div className="character-summary">
+      <div className="character-profile">
         <div className="character-summary__portrait-frame">
           <img
             className="character-summary__portrait"
@@ -38,46 +39,48 @@ export default function CharacterDetailsView({ character, currentHealth, level }
             ◆
           </span>
         </div>
-        <div className="character-summary__copy">
-          <span className="game-view__eyebrow">{character.skinName}</span>
-          <h1 id="character-title">{character.nickname}</h1>
-          <div className="character-class-badge">
-            <span aria-hidden="true">⚔</span>
-            {character.skinName}
-          </div>
-        </div>
-      </div>
 
-      <div className="character-stat-grid">
-        <div className="character-stat character-stat--level">
-          <span className="character-stat__icon" aria-hidden="true">
-            ♛
-          </span>
-          <span>Уровень героя</span>
-          <strong>{level}</strong>
-        </div>
-        <div className="character-stat character-stat--health">
-          <span className="character-stat__icon" aria-hidden="true">
-            ♥
-          </span>
-          <span>Жизни</span>
-          <strong>
-            {currentHealth} / {character.stats.health}
-          </strong>
-        </div>
-        <div className="character-stat character-stat--defense">
-          <span className="character-stat__icon" aria-hidden="true">
-            ◆
-          </span>
-          <span>Защита</span>
-          <strong>{character.stats.defense}</strong>
-        </div>
-        <div className="character-stat character-stat--attack">
-          <span className="character-stat__icon" aria-hidden="true">
-            ⚔
-          </span>
-          <span>Сила атаки</span>
-          <strong>{character.stats.attack}</strong>
+        <div className="character-profile__main">
+          <div className="character-summary__copy">
+            <div className="character-class-heading">
+              <img src={uiCrest} alt="" aria-hidden="true" />
+              <span className="game-view__eyebrow">{character.skinName}</span>
+            </div>
+            <h1 id="character-title">{character.nickname}</h1>
+          </div>
+
+          <div className="character-stat-grid">
+            <div className="character-stat character-stat--level">
+              <span className="character-stat__icon" aria-hidden="true">
+                ♛
+              </span>
+              <span>Уровень героя</span>
+              <strong>{level}</strong>
+            </div>
+            <div className="character-stat character-stat--health">
+              <span className="character-stat__icon" aria-hidden="true">
+                ♥
+              </span>
+              <span>Жизни</span>
+              <strong>
+                {currentHealth} / {character.stats.health}
+              </strong>
+            </div>
+            <div className="character-stat character-stat--defense">
+              <span className="character-stat__icon" aria-hidden="true">
+                ◆
+              </span>
+              <span>Защита</span>
+              <strong>{character.stats.defense}</strong>
+            </div>
+            <div className="character-stat character-stat--attack">
+              <span className="character-stat__icon" aria-hidden="true">
+                ⚔
+              </span>
+              <span>Сила атаки</span>
+              <strong>{character.stats.attack}</strong>
+            </div>
+          </div>
         </div>
       </div>
 

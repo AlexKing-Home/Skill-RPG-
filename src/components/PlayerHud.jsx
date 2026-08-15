@@ -1,3 +1,5 @@
+import { uiCrest } from "../data/assets.js";
+
 export default function PlayerHud({ nickname, level, currentHealth, maxHealth, experience }) {
   const hpPercent =
     maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
@@ -7,7 +9,7 @@ export default function PlayerHud({ nickname, level, currentHealth, maxHealth, e
   return (
     <header className="player-hud fantasy-panel ornate-panel">
       <div className="player-hud__crest" aria-hidden="true">
-        ◆
+        <img src={uiCrest} alt="" />
       </div>
       <div className="player-hud__identity">
         <strong className="player-hud__nickname">{nickname}</strong>
@@ -38,7 +40,7 @@ export default function PlayerHud({ nickname, level, currentHealth, maxHealth, e
         <div className="hud-resource hud-resource--exp">
           <div className="hud-resource__label">
             <span>
-              <b aria-hidden="true">◆</b> EXP
+              <b aria-hidden="true">XP</b> EXP
             </span>
             <strong>{expLabel}</strong>
           </div>

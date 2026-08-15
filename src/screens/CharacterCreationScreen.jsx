@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import SkinCard from "../components/SkinCard.jsx";
+import { creationCrest } from "../data/assets.js";
 import { createCharacter, getSkinsByGender } from "../data/skins.js";
 
 export default function CharacterCreationScreen({ onBack, onCreate }) {
@@ -35,17 +36,12 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
         style={{ "--gender-accent": accent }}
         onSubmit={submit}
       >
-        <header className="creation-header">
+        <header className="creation-header creation-header--reference">
           <button className="round-back-button" type="button" onClick={onBack} aria-label="Назад">
-            ‹
+            ←
           </button>
-          <div className="creation-emblem" aria-hidden="true">
-            ◆
-          </div>
-          <div>
-            <span className="creation-kicker">Создай своего героя</span>
-            <h1 className="section-title">Создание персонажа</h1>
-          </div>
+          <img className="creation-emblem-image" src={creationCrest} alt="" aria-hidden="true" />
+          <h1 className="section-title">Создание персонажа</h1>
         </header>
 
         <section className="creation-section">
