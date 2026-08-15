@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./styles.css";
 import "./welcome-background.css";
 import "./parity-fixes.css";
+import "./device-regression-fixes.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
