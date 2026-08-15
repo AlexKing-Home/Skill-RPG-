@@ -8,32 +8,34 @@ import {
   locationFromNode,
 } from "../src/data/worldNavigation.js";
 
-test("first floor starts with city and field", () => {
+test("first floor exposes every clickable map location", () => {
   assert.equal(floorOneNavigation.name, "Этаж 1");
-  assert.equal(getTravelNode(START_NODE_ID)?.name, "Стартовый город");
-  assert.equal(getTravelNode("field")?.name, "Поле");
+  assert.deepEqual(
+    floorOneNavigation.nodes.map((node) => node.name),
+    ["Стартовый город", "Луга", "Лес", "Болото", "Руины", "Поселение", "Подземелье"],
+  );
 });
 
-test("city and field are connected in both directions", () => {
-  const outward = getTravelRoute(START_NODE_ID, "field");
-  const returnRoute = getTravelRoute("field", START_NODE_ID);
-
-  assert.ok(outward);
-  assert.ok(returnRoute);
-  assert.equal(outward.distanceKm, 1.2);
-  assert.equal(returnRoute.distanceKm, 1.2);
-  assert.equal(outward.to, "field");
-  assert.equal(returnRoute.to, START_NODE_ID);
+test("legacy field saves migrate to meadows", () => {
+  assert.equal(getTravelNode("field")?.id, "meadows");
+  assert.equal(locationFromNode("field").areaName, "Луга");
 });
 
-test("travel location is converted to persistent character location", () => {
-  const field = locationFromNode("field");
+test("route finder builds multi-location paths", () => {
+  const route = getTravelRoute(START_NODE_ID, "dungeon");
 
-  assert.deepEqual(field, {
-    worldName: "Этаж 1",
-    areaName: "Поле",
-    nodeId: "field",
-    x: 63,
-    y: 39,
-  });
+  assert.ok(route);
+  assert.equal(route.from, START_NODE_ID);
+  assert.equal(route.to, "dungeon");
+  assert.equal(route.nodeIds[0], START_NODE_ID);
+  assert.equal(route.nodeIds.at(-1), "dungeon");
+  assert.ok(route.nodeIds.length >= 3);
+  assert.ok(route.distanceKm > 0);
+});
+
+test("every floor location can be reached from the start city", () => {
+  for (const node of floorOneNavigation.nodes) {
+    if (node.id === START_NODE_ID) continue;
+    assert.ok(getTravelRoute(START_NODE_ID, node.id), `${node.name} must be reachable`);
+  }
 });
