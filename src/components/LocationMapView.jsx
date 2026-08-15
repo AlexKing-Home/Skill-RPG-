@@ -21,14 +21,19 @@ const fieldObjects = [
   },
 ];
 
+/*
+ * Coordinates are measured from the centres of the painted blue/gold markers
+ * in the approved 768 x 687 swamp image. Keep these values in the same
+ * percentage coordinate system as the responsive image itself.
+ */
 const swampPoints = [
   {
     id: "swamp-arch",
     type: "inspect",
     name: "Затопленная арка",
     action: "Осмотреть",
-    x: 10.74,
-    y: 20.23,
+    x: 19.26,
+    y: 20.531,
     text: "Старая каменная арка почти ушла под воду. На камнях заметны стёртые символы.",
   },
   {
@@ -36,8 +41,8 @@ const swampPoints = [
     type: "move",
     name: "Тропа в глубь болота",
     action: "Перейти",
-    x: 46.65,
-    y: 18.17,
+    x: 47.388,
+    y: 18.511,
     text: "Топкая тропа уходит дальше в густой туман. Путь обнаружен.",
   },
   {
@@ -45,8 +50,8 @@ const swampPoints = [
     type: "inspect",
     name: "Искажённое дерево",
     action: "Осмотреть",
-    x: 73.54,
-    y: 21.26,
+    x: 68.314,
+    y: 21.569,
     text: "Из полого ствола сочится слабое зелёное свечение.",
   },
   {
@@ -54,8 +59,8 @@ const swampPoints = [
     type: "inspect",
     name: "Ядовитая заводь",
     action: "Осмотреть",
-    x: 29.27,
-    y: 40.09,
+    x: 33.803,
+    y: 40.316,
     text: "Вода здесь пузырится и светится изнутри. Прикасаться к ней опасно.",
   },
   {
@@ -63,8 +68,8 @@ const swampPoints = [
     type: "move",
     name: "Нора среди корней",
     action: "Перейти",
-    x: 98.78,
-    y: 44.96,
+    x: 88.275,
+    y: 45.127,
     text: "Между корнями виднеется узкий тёмный проход. Путь обнаружен.",
   },
   {
@@ -72,8 +77,8 @@ const swampPoints = [
     type: "inspect",
     name: "Затонувшая статуя",
     action: "Осмотреть",
-    x: 1.59,
-    y: 61.53,
+    x: 12.104,
+    y: 61.571,
     text: "Каменное лицо выступает из воды. Кто-то оставил здесь древний идол.",
   },
   {
@@ -81,8 +86,8 @@ const swampPoints = [
     type: "inspect",
     name: "Останки путника",
     action: "Осмотреть",
-    x: 39.15,
-    y: 70.13,
+    x: 41.488,
+    y: 70.116,
     text: "Кости лежат прямо в воде. Рядом могут остаться полезные вещи.",
   },
   {
@@ -90,8 +95,8 @@ const swampPoints = [
     type: "inspect",
     name: "Корни у топи",
     action: "Осмотреть",
-    x: 98.25,
-    y: 81.09,
+    x: 87.595,
+    y: 81.204,
     text: "Корни образуют естественное укрытие. Внутри что-то блеснуло.",
   },
   {
@@ -99,8 +104,8 @@ const swampPoints = [
     type: "move",
     name: "Гнилой мост",
     action: "Перейти",
-    x: 43.09,
-    y: 90.91,
+    x: 44.703,
+    y: 90.802,
     text: "Старый настил ещё держится и ведёт к другой части болота. Путь обнаружен.",
   },
 ];
