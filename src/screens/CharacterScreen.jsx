@@ -8,21 +8,27 @@ import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getExperienceProgress } from "../data/progression.js";
+import { START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
+import { saveCharacter } from "../utils/storage.js";
 
-const defaultLocation = {
-  worldName: "Текущая местность",
-  areaName: "Текущая локация",
-  x: 50,
-  y: 50,
-};
+const defaultLocation = locationFromNode(START_NODE_ID);
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
+  const [location, setLocation] = useState(() => ({
+    ...defaultLocation,
+    ...(character.location ?? {}),
+  }));
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
   const maxHealth = character.stats.health;
   const currentHealth = Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth));
-  const location = { ...defaultLocation, ...(character.location ?? {}) };
+
+  function handleTravel(nodeId) {
+    const nextLocation = locationFromNode(nodeId);
+    setLocation(nextLocation);
+    saveCharacter({ ...character, location: nextLocation });
+  }
 
   let content;
   if (activeTab === "character") {
@@ -39,7 +45,7 @@ export default function CharacterScreen({ character, onBack }) {
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
   } else {
-    content = <WorldMapView location={location} />;
+    content = <WorldMapView location={location} onTravel={handleTravel} />;
   }
 
   const topTab = ["map", "location", "character"].includes(activeTab) ? activeTab : "map";
