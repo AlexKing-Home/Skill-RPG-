@@ -10,7 +10,7 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
 
   const visibleSkins = useMemo(() => getSkinsByGender(gender), [gender]);
   const selectedSkin = visibleSkins.find((skin) => skin.id === selectedSkinId) ?? visibleSkins[0];
-  const accent = gender === "male" ? "#4dccff" : "#ec78a2";
+  const accent = gender === "male" ? "#52c7ff" : "#ef6aa4";
 
   function chooseGender(nextGender) {
     setGender(nextGender);
@@ -30,59 +30,92 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
 
   return (
     <main className="screen screen--creation">
-      <form className="creation-panel fantasy-panel" onSubmit={submit}>
-        <h1 className="section-title">Создание персонажа</h1>
-
-        <label className="field-label" htmlFor="nickname">Никнейм</label>
-        <input
-          id="nickname"
-          className="nickname-input"
-          value={nickname}
-          onChange={(event) => setNickname(event.target.value)}
-          maxLength={20}
-          autoComplete="off"
-          placeholder="Введите никнейм..."
-        />
-
-        <span className="field-label">Пол</span>
-        <div className="gender-grid">
-          <button
-            type="button"
-            className={`gender-button gender-button--male ${gender === "male" ? "is-active" : ""}`}
-            onClick={() => chooseGender("male")}
-          >
-            <span>♂</span> Мужской
+      <form
+        className={`creation-panel fantasy-panel ornate-panel creation-panel--${gender}`}
+        style={{ "--gender-accent": accent }}
+        onSubmit={submit}
+      >
+        <header className="creation-header">
+          <button className="round-back-button" type="button" onClick={onBack} aria-label="Назад">
+            ‹
           </button>
-          <button
-            type="button"
-            className={`gender-button gender-button--female ${gender === "female" ? "is-active" : ""}`}
-            onClick={() => chooseGender("female")}
-          >
-            <span>♀</span> Женский
-          </button>
-        </div>
+          <div className="creation-emblem" aria-hidden="true">◆</div>
+          <div>
+            <span className="creation-kicker">Создай своего героя</span>
+            <h1 className="section-title">Создание персонажа</h1>
+          </div>
+        </header>
 
-        <h2 className="classes-title">Выберите класс / внешность</h2>
-        <div className="skins-grid">
-          {visibleSkins.map((skin) => (
-            <SkinCard
-              key={skin.id}
-              skin={skin}
-              selected={selectedSkin.id === skin.id}
-              accent={accent}
-              onSelect={() => {
-                setSelectedSkinId(skin.id);
-                setError("");
-              }}
+        <section className="creation-section">
+          <label className="field-label" htmlFor="nickname">Никнейм</label>
+          <div className="input-shell">
+            <input
+              id="nickname"
+              className="nickname-input"
+              value={nickname}
+              onChange={(event) => setNickname(event.target.value)}
+              maxLength={20}
+              autoComplete="off"
+              placeholder="Введите никнейм..."
             />
-          ))}
-        </div>
+            <span aria-hidden="true">◇</span>
+          </div>
+        </section>
 
-        {error ? <p className="form-error">{error}</p> : null}
+        <section className="creation-section">
+          <span className="field-label">Пол</span>
+          <div className="gender-grid">
+            <button
+              type="button"
+              className={`gender-button gender-button--male ${gender === "male" ? "is-active" : ""}`}
+              onClick={() => chooseGender("male")}
+              aria-pressed={gender === "male"}
+            >
+              <span className="gender-button__symbol">♂</span>
+              <strong>Мужской</strong>
+            </button>
+            <button
+              type="button"
+              className={`gender-button gender-button--female ${gender === "female" ? "is-active" : ""}`}
+              onClick={() => chooseGender("female")}
+              aria-pressed={gender === "female"}
+            >
+              <span className="gender-button__symbol">♀</span>
+              <strong>Женский</strong>
+            </button>
+          </div>
+        </section>
+
+        <section className="creation-section creation-section--classes">
+          <div className="ornate-heading">
+            <span aria-hidden="true">◆</span>
+            <h2 className="classes-title">Выберите класс / внешность</h2>
+            <span aria-hidden="true">◆</span>
+          </div>
+          <div className="skins-grid">
+            {visibleSkins.map((skin) => (
+              <SkinCard
+                key={skin.id}
+                skin={skin}
+                selected={selectedSkin.id === skin.id}
+                accent={accent}
+                onSelect={() => {
+                  setSelectedSkinId(skin.id);
+                  setError("");
+                }}
+              />
+            ))}
+          </div>
+        </section>
+
+        {error ? <p className="form-error" role="alert">{error}</p> : null}
 
         <div className="creation-actions">
+          <button type="submit" className="primary-button primary-button--hero">
+            <span aria-hidden="true">✦</span>
+            Создать персонажа
+          </button>
           <button type="button" className="secondary-button" onClick={onBack}>← Назад</button>
-          <button type="submit" className="primary-button">Создать персонажа</button>
         </div>
       </form>
     </main>

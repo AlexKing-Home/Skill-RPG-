@@ -1,7 +1,7 @@
 const tabs = [
-  { id: "map", label: "Карта" },
-  { id: "location", label: "Локация" },
-  { id: "character", label: "Персонаж" },
+  { id: "map", label: "Карта", icon: "◇" },
+  { id: "location", label: "Локация", icon: "⌖" },
+  { id: "character", label: "Персонаж", icon: "♜" },
 ];
 
 export default function GameTabs({ activeTab, onChange }) {
@@ -13,8 +13,10 @@ export default function GameTabs({ activeTab, onChange }) {
           type="button"
           className={`game-tab ${activeTab === tab.id ? "is-active" : ""}`}
           onClick={() => onChange(tab.id)}
+          aria-pressed={activeTab === tab.id}
         >
-          {tab.label}
+          <span className="game-tab__icon" aria-hidden="true">{tab.icon}</span>
+          <span>{tab.label}</span>
         </button>
       ))}
     </nav>
