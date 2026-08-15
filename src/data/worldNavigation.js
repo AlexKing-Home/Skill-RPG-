@@ -38,8 +38,7 @@ export function getTravelRoute(fromId, toId) {
 
   const edge = floorOneNavigation.edges.find(
     (item) =>
-      (item.from === fromId && item.to === toId) ||
-      (item.from === toId && item.to === fromId),
+      (item.from === fromId && item.to === toId) || (item.from === toId && item.to === fromId),
   );
 
   if (!edge) return null;
