@@ -8,11 +8,7 @@ import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getExperienceProgress } from "../data/progression.js";
-import {
-  FLOOR_MAP_VERSION,
-  START_NODE_ID,
-  locationFromNode,
-} from "../data/worldNavigation.js";
+import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
 
 const defaultLocation = locationFromNode(START_NODE_ID);
@@ -22,7 +18,9 @@ export default function CharacterScreen({ character, onBack }) {
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
     if (!usesCurrentMap) return defaultLocation;
-    return character.location?.nodeId ? locationFromNode(character.location.nodeId) : defaultLocation;
+    return character.location?.nodeId
+      ? locationFromNode(character.location.nodeId)
+      : defaultLocation;
   });
   const [worldState, setWorldState] = useState(() => ({
     ...(character.worldState ?? {}),
