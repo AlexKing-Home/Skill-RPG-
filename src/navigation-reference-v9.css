@@ -3,11 +3,11 @@
    while transparent React buttons remain on top for interaction. */
 
 :root {
-  --nav-tabs-map: url("/ui/navigation/tabs-map.webp?v=10");
-  --nav-tabs-location: url("/ui/navigation/tabs-location.webp?v=10");
-  --nav-tabs-character: url("/ui/navigation/tabs-character.webp?v=10");
-  --nav-bottom-main-map: url("/ui/navigation/bottom-main-map.webp?v=10");
-  --nav-bottom-character: url("/ui/navigation/bottom-character.webp?v=10");
+  --nav-tabs-map: url("/ui/navigation/tabs-map.webp?v=11");
+  --nav-tabs-location: url("/ui/navigation/tabs-location.webp?v=11");
+  --nav-tabs-character: url("/ui/navigation/tabs-character.webp?v=11");
+  --nav-bottom-main-map: url("/ui/navigation/bottom-main-map.webp?v=11");
+  --nav-bottom-character: url("/ui/navigation/bottom-character.webp?v=11");
 }
 
 .game-tabs {

@@ -67,14 +67,12 @@ export default function CharacterScreen({ character, onBack }) {
           {content}
         </div>
 
-        {activeTab !== "location" ? (
-          <BottomNav
-            active={activeTab}
-            onChange={setActiveTab}
-            onHome={onBack}
-            variant={profileMode ? "character" : "main"}
-          />
-        ) : null}
+        <BottomNav
+          active={activeTab}
+          onChange={setActiveTab}
+          onHome={onBack}
+          variant={profileMode ? "character" : "main"}
+        />
       </section>
     </main>
   );
