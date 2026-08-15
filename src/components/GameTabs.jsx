@@ -6,7 +6,7 @@ const tabs = [
 
 export default function GameTabs({ activeTab, onChange }) {
   return (
-    <nav className="game-tabs" aria-label="Разделы героя">
+    <nav className={`game-tabs game-tabs--${activeTab}`} aria-label="Разделы героя">
       {tabs.map((tab) => (
         <button
           key={tab.id}
