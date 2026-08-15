@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env?.BASE_URL ?? "/";
-const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=reference-parity-v6`;
+const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=reference-parity-v7`;
 
 export const fantasyBackground = asset("/backgrounds/welcome-bg.jpg");
 
@@ -14,5 +14,6 @@ export const femaleArcher = asset("/skins/female-archer.avif");
 
 export const worldMapArt = asset("/ui/world-map-reference-v2.webp");
 export const locationMapArt = asset("/ui/location-map-reference-v2.webp");
+export const swampLocationArt = asset("/ui/swamp-location.webp");
 export const uiCrest = asset("/ui/crest.webp");
 export const creationCrest = uiCrest;
