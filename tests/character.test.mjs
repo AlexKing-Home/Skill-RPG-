@@ -103,8 +103,14 @@ test("navigation remains driven by the approved reference crops", () => {
   }
 
   assert.match(css, /\.game-tabs--map\s*\{[^}]*background-image:\s*var\(--nav-tabs-map\)/s);
-  assert.match(css, /\.bottom-nav--main\s*\{[^}]*background-image:\s*var\(--nav-bottom-main-map\)/s);
-  assert.match(css, /\.bottom-nav--character\s*\{[^}]*background-image:\s*var\(--nav-bottom-character\)/s);
+  assert.match(
+    css,
+    /\.bottom-nav--main\s*\{[^}]*background-image:\s*var\(--nav-bottom-main-map\)/s,
+  );
+  assert.match(
+    css,
+    /\.bottom-nav--character\s*\{[^}]*background-image:\s*var\(--nav-bottom-character\)/s,
+  );
   assert.match(css, /\.game-tab > span[\s\S]*visibility:\s*hidden/);
   assert.match(css, /\.bottom-nav--main \.bottom-nav__item > span[\s\S]*visibility:\s*hidden/);
 });
