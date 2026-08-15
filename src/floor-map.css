@@ -5,6 +5,8 @@
   aspect-ratio: 520 / 500;
   overflow: hidden;
   background: #071017;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .floor-map-art::before,
@@ -42,17 +44,34 @@
 .map-hotspot {
   position: absolute;
   z-index: 20;
-  min-width: 56px;
-  min-height: 48px;
+  min-width: 72px;
+  min-height: 58px;
   padding: 0;
   transform: translate(-50%, -50%);
   border: 0;
-  border-radius: 18px;
+  border-radius: 20px;
   background: transparent;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
   pointer-events: auto;
+}
+
+.map-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 16px;
+  background: transparent;
+  transition: background 90ms ease;
+  pointer-events: none;
+}
+
+.map-hotspot:active::after,
+.map-hotspot.is-selected::after {
+  background: rgba(78, 192, 244, 0.09);
 }
 
 .map-hotspot__ring {
@@ -68,6 +87,7 @@
     border-color 130ms ease,
     box-shadow 130ms ease,
     background 130ms ease;
+  pointer-events: none;
 }
 
 .map-hotspot:hover .map-hotspot__ring,
@@ -178,13 +198,13 @@
 
 @media (max-width: 640px) {
   .map-hotspot {
-    min-width: 64px;
-    min-height: 52px;
+    min-width: 82px;
+    min-height: 64px;
   }
 
   .map-hotspot__ring {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
   }
 
   .swamp-replacement {
