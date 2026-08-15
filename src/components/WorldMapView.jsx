@@ -170,11 +170,14 @@ export default function WorldMapView({ location, onTravel }) {
               </span>
               <span>Расстояние: {activeRoute.distanceKm.toFixed(1)} км</span>
             </div>
-            <span className="travel-panel__status">{isTraveling ? "Перемещение..." : "Прибытие"}</span>
+            <span className="travel-panel__status">
+              {isTraveling ? "Перемещение..." : "Прибытие"}
+            </span>
           </div>
         ) : (
           <p className="travel-panel__hint">
-            Тапните по значку, точке или названию нужной локации — вся область вокруг подписи кликабельна.
+            Тапните по значку, точке или названию нужной локации — вся область вокруг подписи
+            кликабельна.
           </p>
         )}
       </div>
