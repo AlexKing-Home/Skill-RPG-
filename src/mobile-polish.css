@@ -16,6 +16,7 @@
   }
 
   .character-stat {
+    min-width: 0 !important;
     padding-right: 7px !important;
   }
 
@@ -24,6 +25,11 @@
     font-size: clamp(1rem, 4.2vw, 1.35rem) !important;
     line-height: 1.05 !important;
     white-space: nowrap !important;
+  }
+
+  .character-stat--health strong {
+    font-size: clamp(0.78rem, 3.45vw, 1rem) !important;
+    letter-spacing: -0.025em !important;
   }
 
   .profile-equipment .equipment-slot {
@@ -72,9 +78,20 @@
     font-size: clamp(0.78rem, 3.6vw, 1rem) !important;
     line-height: 1.05 !important;
   }
+
+  .map-art-image,
+  .character-summary__portrait,
+  .skin-card img {
+    image-rendering: auto !important;
+    backface-visibility: hidden;
+  }
 }
 
 @media (max-width: 390px) {
+  .character-stat--health strong {
+    font-size: 0.74rem !important;
+  }
+
   .profile-equipment .equipment-slot {
     min-height: 106px !important;
     padding-inline: 3px !important;
