@@ -50,6 +50,15 @@ test("approved swamp scene exposes all nine clickable interest points", () => {
   assert.match(cssSource, /touch-action: manipulation/);
 });
 
+test("swamp hotspots use the exact uploaded image geometry", () => {
+  assert.match(cssSource, /aspect-ratio: 768 \/ 687/);
+  assert.match(cssSource, /transform: none !important/);
+  assert.match(cssSource, /scale: 1 !important/);
+  assert.match(viewSource, /x: 18\.89,\s+y: 20\.44/);
+  assert.match(viewSource, /x: 88\.26,\s+y: 45\.63/);
+  assert.match(viewSource, /x: 44\.64,\s+y: 90\.71/);
+});
+
 test("swamp points stay disabled until its real image is loaded", () => {
   assert.match(viewSource, /swampArtStatus !== "ready"/);
   assert.match(viewSource, /Дождитесь загрузки изображения болота/);
