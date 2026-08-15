@@ -39,9 +39,7 @@
   place-content: center;
   justify-items: center;
   gap: 12px;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(17, 47, 64, 0.34), transparent 46%),
-    #071017;
+  background: radial-gradient(circle at 50% 45%, rgba(17, 47, 64, 0.34), transparent 46%), #071017;
   color: #dfc48e;
   text-align: center;
   pointer-events: all;
