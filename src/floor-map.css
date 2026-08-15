@@ -19,10 +19,17 @@
   width: 100%;
   height: 100%;
   object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.floor-map-art .map-fallback {
+  pointer-events: none;
 }
 
 .floor-map-art .travel-network {
   z-index: 5;
+  pointer-events: none;
 }
 
 .floor-map-art .travel-network__edge.is-active {
@@ -34,25 +41,32 @@
 
 .map-hotspot {
   position: absolute;
-  z-index: 8;
-  width: 52px;
-  height: 52px;
+  z-index: 20;
+  width: 112px;
+  height: 72px;
   padding: 0;
   transform: translate(-50%, -50%);
   border: 0;
-  border-radius: 50%;
+  border-radius: 18px;
   background: transparent;
   cursor: pointer;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
 }
 
 .map-hotspot__ring {
   position: absolute;
-  inset: 12px;
+  left: 50%;
+  top: 50%;
+  width: 27px;
+  height: 27px;
+  transform: translate(-50%, -50%);
   border: 2px solid transparent;
   border-radius: 50%;
   transition:
-    inset 130ms ease,
+    width 130ms ease,
+    height 130ms ease,
     border-color 130ms ease,
     box-shadow 130ms ease,
     background 130ms ease;
@@ -61,7 +75,8 @@
 .map-hotspot:hover .map-hotspot__ring,
 .map-hotspot:focus-visible .map-hotspot__ring,
 .map-hotspot.is-selected .map-hotspot__ring {
-  inset: 8px;
+  width: 36px;
+  height: 36px;
   border-color: #70cffc;
   background: rgba(5, 28, 42, 0.38);
   box-shadow:
@@ -70,7 +85,8 @@
 }
 
 .map-hotspot.is-current .map-hotspot__ring {
-  border-color: rgba(239, 197, 113, 0.9);
+  border-color: rgba(239, 197, 113, 0.92);
+  background: rgba(60, 42, 15, 0.18);
 }
 
 .map-hotspot:focus-visible {
@@ -102,6 +118,7 @@
     0 0 0 3px rgba(3, 9, 12, 0.72),
     0 5px 18px rgba(0, 0, 0, 0.55);
   text-align: center;
+  pointer-events: none;
 }
 
 .swamp-replacement__icon {
@@ -116,7 +133,8 @@
 }
 
 .travel-hero--floor {
-  z-index: 10;
+  z-index: 30;
+  pointer-events: none;
   transition:
     left 560ms ease-in-out,
     top 560ms ease-in-out;
@@ -134,10 +152,28 @@
   font-size: 0.64rem;
 }
 
+.travel-panel__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgba(206, 163, 92, 0.7);
+  border-radius: 8px;
+  color: #efd49a;
+  background: rgba(43, 31, 18, 0.76);
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   .map-hotspot {
-    width: 46px;
-    height: 46px;
+    width: 96px;
+    height: 64px;
+  }
+
+  .map-hotspot__ring {
+    width: 24px;
+    height: 24px;
   }
 
   .swamp-replacement {
