@@ -33,9 +33,10 @@ test("creation uses the clean crest and enhanced assets use a fresh cache identi
   assert.match(assetsSource, /location-map-reference-v2\.webp/);
 });
 
-test("map views render real images with clean fallbacks and no duplicate overlays", () => {
-  assert.match(worldSource, /className="map-art-image"/);
-  assert.match(worldSource, /map-fallback/);
+test("map views render real images without duplicate overlays", () => {
+  assert.match(worldSource, /map-art-image/);
+  assert.match(worldSource, /floor-map-loading/);
+  assert.doesNotMatch(worldSource, /className="map-fallback"/);
   assert.doesNotMatch(worldSource, /map-overlay-hero/);
   assert.match(locationSource, /className="map-art-image"/);
   assert.match(locationSource, /location-fallback__road/);
