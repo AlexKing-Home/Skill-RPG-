@@ -63,11 +63,7 @@ export default function CharacterScreen({ character, onBack }) {
     );
   } else if (activeTab === "location") {
     content = (
-      <LocationMapView
-        location={location}
-        worldState={worldState}
-        onOpenChest={handleOpenChest}
-      />
+      <LocationMapView location={location} worldState={worldState} onOpenChest={handleOpenChest} />
     );
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
