@@ -15,20 +15,28 @@ export default function WelcomeScreen({ hasSave, message, onContinue, onCreate }
 
         <div className="welcome-actions">
           <button className="menu-button menu-button--continue" type="button" onClick={onContinue}>
-            <span className="menu-button__icon" aria-hidden="true">↻</span>
+            <span className="menu-button__icon" aria-hidden="true">
+              ↻
+            </span>
             <span className="menu-button__copy">
               <strong>Продолжить</strong>
               <small>Продолжить сохранение</small>
             </span>
-            <span className="menu-button__arrow" aria-hidden="true">›</span>
+            <span className="menu-button__arrow" aria-hidden="true">
+              ›
+            </span>
           </button>
           <button className="menu-button menu-button--create" type="button" onClick={onCreate}>
-            <span className="menu-button__icon" aria-hidden="true">✦</span>
+            <span className="menu-button__icon" aria-hidden="true">
+              ✦
+            </span>
             <span className="menu-button__copy">
               <strong>Создать персонажа</strong>
               <small>Начать новую историю</small>
             </span>
-            <span className="menu-button__arrow" aria-hidden="true">›</span>
+            <span className="menu-button__arrow" aria-hidden="true">
+              ›
+            </span>
           </button>
         </div>
 

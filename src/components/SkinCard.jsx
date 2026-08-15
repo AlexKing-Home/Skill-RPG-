@@ -8,7 +8,9 @@ export default function SkinCard({ skin, selected, accent, onSelect }) {
       aria-pressed={selected}
       aria-label={`Выбрать класс ${skin.name}`}
     >
-      <span className="skin-card__ornament" aria-hidden="true">◆</span>
+      <span className="skin-card__ornament" aria-hidden="true">
+        ◆
+      </span>
       <span className="skin-card__name">{skin.name}</span>
       <span className="skin-card__portrait-shell">
         <img

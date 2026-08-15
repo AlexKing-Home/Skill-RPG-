@@ -15,7 +15,9 @@ export default function GameTabs({ activeTab, onChange }) {
           onClick={() => onChange(tab.id)}
           aria-pressed={activeTab === tab.id}
         >
-          <span className="game-tab__icon" aria-hidden="true">{tab.icon}</span>
+          <span className="game-tab__icon" aria-hidden="true">
+            {tab.icon}
+          </span>
           <span>{tab.label}</span>
         </button>
       ))}

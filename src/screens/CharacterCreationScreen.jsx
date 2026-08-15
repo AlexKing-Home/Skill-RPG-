@@ -39,7 +39,9 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
           <button className="round-back-button" type="button" onClick={onBack} aria-label="Назад">
             ‹
           </button>
-          <div className="creation-emblem" aria-hidden="true">◆</div>
+          <div className="creation-emblem" aria-hidden="true">
+            ◆
+          </div>
           <div>
             <span className="creation-kicker">Создай своего героя</span>
             <h1 className="section-title">Создание персонажа</h1>
@@ -47,7 +49,9 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
         </header>
 
         <section className="creation-section">
-          <label className="field-label" htmlFor="nickname">Никнейм</label>
+          <label className="field-label" htmlFor="nickname">
+            Никнейм
+          </label>
           <div className="input-shell">
             <input
               id="nickname"
@@ -108,14 +112,20 @@ export default function CharacterCreationScreen({ onBack, onCreate }) {
           </div>
         </section>
 
-        {error ? <p className="form-error" role="alert">{error}</p> : null}
+        {error ? (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <div className="creation-actions">
           <button type="submit" className="primary-button primary-button--hero">
             <span aria-hidden="true">✦</span>
             Создать персонажа
           </button>
-          <button type="button" className="secondary-button" onClick={onBack}>← Назад</button>
+          <button type="button" className="secondary-button" onClick={onBack}>
+            ← Назад
+          </button>
         </div>
       </form>
     </main>

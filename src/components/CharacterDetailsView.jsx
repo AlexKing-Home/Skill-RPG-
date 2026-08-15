@@ -34,33 +34,48 @@ export default function CharacterDetailsView({ character, currentHealth, level }
             src={character.skinImage}
             alt={character.skinName}
           />
-          <span className="character-summary__gem" aria-hidden="true">◆</span>
+          <span className="character-summary__gem" aria-hidden="true">
+            ◆
+          </span>
         </div>
         <div className="character-summary__copy">
           <span className="game-view__eyebrow">{character.skinName}</span>
           <h1 id="character-title">{character.nickname}</h1>
-          <div className="character-class-badge"><span aria-hidden="true">⚔</span>{character.skinName}</div>
+          <div className="character-class-badge">
+            <span aria-hidden="true">⚔</span>
+            {character.skinName}
+          </div>
         </div>
       </div>
 
       <div className="character-stat-grid">
         <div className="character-stat character-stat--level">
-          <span className="character-stat__icon" aria-hidden="true">♛</span>
+          <span className="character-stat__icon" aria-hidden="true">
+            ♛
+          </span>
           <span>Уровень героя</span>
           <strong>{level}</strong>
         </div>
         <div className="character-stat character-stat--health">
-          <span className="character-stat__icon" aria-hidden="true">♥</span>
+          <span className="character-stat__icon" aria-hidden="true">
+            ♥
+          </span>
           <span>Жизни</span>
-          <strong>{currentHealth} / {character.stats.health}</strong>
+          <strong>
+            {currentHealth} / {character.stats.health}
+          </strong>
         </div>
         <div className="character-stat character-stat--defense">
-          <span className="character-stat__icon" aria-hidden="true">◆</span>
+          <span className="character-stat__icon" aria-hidden="true">
+            ◆
+          </span>
           <span>Защита</span>
           <strong>{character.stats.defense}</strong>
         </div>
         <div className="character-stat character-stat--attack">
-          <span className="character-stat__icon" aria-hidden="true">⚔</span>
+          <span className="character-stat__icon" aria-hidden="true">
+            ⚔
+          </span>
           <span>Сила атаки</span>
           <strong>{character.stats.attack}</strong>
         </div>
@@ -83,14 +98,20 @@ export default function CharacterDetailsView({ character, currentHealth, level }
                 onClick={() => handleSlotClick(slot, item)}
                 aria-label={`${slot.label}: ${item?.name ?? "пусто"}`}
               >
-                <span className="equipment-slot__icon" aria-hidden="true">{slotIcons[slot.id] ?? "◇"}</span>
+                <span className="equipment-slot__icon" aria-hidden="true">
+                  {slotIcons[slot.id] ?? "◇"}
+                </span>
                 <span className="equipment-slot__label">{slot.label}</span>
                 <strong className="equipment-slot__item">{item?.name ?? "Пусто"}</strong>
               </button>
             );
           })}
         </div>
-        {slotMessage ? <p className="equipment-message" role="status">{slotMessage}</p> : null}
+        {slotMessage ? (
+          <p className="equipment-message" role="status">
+            {slotMessage}
+          </p>
+        ) : null}
       </div>
     </section>
   );
