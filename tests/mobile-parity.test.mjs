@@ -13,14 +13,16 @@ const locationSource = await read("../src/components/LocationMapView.jsx");
 const parityCss = await read("../src/parity-fixes.css");
 const deviceCss = await read("../src/device-regression-fixes.css");
 const finalCss = await read("../src/reference-parity-final.css");
+const mobilePolishCss = await read("../src/mobile-polish.css");
 
-test("final reference parity CSS loads after all earlier fix layers", () => {
+test("mobile polish loads after all parity layers", () => {
   assert.match(mainSource, /import "\.\/parity-fixes\.css"/);
   assert.match(mainSource, /import "\.\/device-regression-fixes\.css"/);
   assert.match(mainSource, /import "\.\/reference-parity-final\.css"/);
+  assert.match(mainSource, /import "\.\/mobile-polish\.css"/);
   assert.ok(
-    mainSource.indexOf('import "./reference-parity-final.css"') >
-      mainSource.indexOf('import "./device-regression-fixes.css"'),
+    mainSource.indexOf('import "./mobile-polish.css"') >
+      mainSource.indexOf('import "./reference-parity-final.css"'),
   );
 });
 
@@ -49,7 +51,7 @@ test("phone navigation cannot overflow three five or four column layouts", () =>
   assert.match(finalCss, /repeat\(4, minmax\(0, 1fr\)\)/);
 });
 
-test("game shell is constrained and character equipment is a 3 by 3 reference grid", () => {
+test("character equipment stays 3 by 3 and mobile labels remain readable", () => {
   assert.match(finalCss, /\.game-shell[\s\S]*min-width: 0 !important/);
   assert.match(finalCss, /contain: inline-size/);
   assert.match(finalCss, /overflow-x: hidden !important/);
@@ -58,7 +60,11 @@ test("game shell is constrained and character equipment is a 3 by 3 reference gr
     /\.profile-equipment \.equipment-grid[\s\S]*repeat\(3, minmax\(0, 1fr\)\)/,
   );
   assert.match(
-    finalCss,
-    /\.profile-equipment \.equipment-slot__label[\s\S]*white-space: nowrap !important/,
+    mobilePolishCss,
+    /\.profile-equipment \.equipment-slot__label[\s\S]*white-space: normal !important/,
+  );
+  assert.match(
+    mobilePolishCss,
+    /\.profile-equipment \.equipment-slot__item[\s\S]*text-overflow: clip !important/,
   );
 });
