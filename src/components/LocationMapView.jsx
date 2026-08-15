@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { locationMapArt, swampLocationArt } from "../data/assets.js";
+import { locationMapArt } from "../data/assets.js";
+import { swampLocationArt } from "../data/swampLocationArt.js";
 
 const fieldObjects = [
   {
