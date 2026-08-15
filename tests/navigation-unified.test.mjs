@@ -17,7 +17,10 @@ test("unified tab skin loads after state-specific navigation artwork", () => {
 });
 
 test("map location and character share one top navigation geometry", () => {
-  assert.match(navCss, /\.game-tabs--map,[\s\S]*\.game-tabs--location,[\s\S]*\.game-tabs--character/);
+  assert.match(
+    navCss,
+    /\.game-tabs--map,[\s\S]*\.game-tabs--location,[\s\S]*\.game-tabs--character/,
+  );
   assert.match(navCss, /grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(navCss, /background-image:\s*none !important/);
 });
