@@ -13,6 +13,7 @@ import "./navigation-reference-v9.css";
 import "./navigation-unified.css";
 import "./movement.css";
 import "./floor-map.css";
+import "./swamp-location.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
