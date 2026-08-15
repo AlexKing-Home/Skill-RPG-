@@ -32,7 +32,9 @@ export default function App() {
 
   let content;
   if (screen === "create") {
-    content = <CharacterCreationScreen onBack={() => setScreen("welcome")} onCreate={handleCreate} />;
+    content = (
+      <CharacterCreationScreen onBack={() => setScreen("welcome")} onCreate={handleCreate} />
+    );
   } else if (screen === "character" && character) {
     content = <CharacterScreen character={character} onBack={() => setScreen("welcome")} />;
   } else {
