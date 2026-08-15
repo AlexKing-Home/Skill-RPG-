@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  CITY_NODE_ID,
   START_NODE_ID,
   floorOneNavigation,
   getTravelNode,
@@ -16,6 +17,12 @@ test("first floor exposes every clickable map location", () => {
   );
 });
 
+test("hero starts on the swamp, not in the start city", () => {
+  assert.equal(START_NODE_ID, "swamp");
+  assert.equal(locationFromNode(START_NODE_ID).areaName, "Болото");
+  assert.equal(getTravelNode(CITY_NODE_ID)?.name, "Стартовый город");
+});
+
 test("legacy field saves migrate to meadows", () => {
   assert.equal(getTravelNode("field")?.id, "meadows");
   assert.equal(locationFromNode("field").areaName, "Луга");
@@ -29,11 +36,11 @@ test("route finder builds multi-location paths", () => {
   assert.equal(route.to, "dungeon");
   assert.equal(route.nodeIds[0], START_NODE_ID);
   assert.equal(route.nodeIds.at(-1), "dungeon");
-  assert.ok(route.nodeIds.length >= 3);
+  assert.ok(route.nodeIds.length >= 2);
   assert.ok(route.distanceKm > 0);
 });
 
-test("every floor location can be reached from the start city", () => {
+test("every floor location can be reached from the swamp start", () => {
   for (const node of floorOneNavigation.nodes) {
     if (node.id === START_NODE_ID) continue;
     assert.ok(getTravelRoute(START_NODE_ID, node.id), `${node.name} must be reachable`);
