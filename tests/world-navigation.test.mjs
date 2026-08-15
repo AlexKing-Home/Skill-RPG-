@@ -23,6 +23,24 @@ test("hero starts on the swamp, not in the start city", () => {
   assert.equal(getTravelNode(CITY_NODE_ID)?.name, "Стартовый город");
 });
 
+test("every visible map node has a generous responsive tap area", () => {
+  for (const node of floorOneNavigation.nodes) {
+    assert.ok(node.hitbox, `${node.name} must define a hitbox`);
+    assert.ok(node.hitbox.width >= 20, `${node.name} tap width must be at least 20%`);
+    assert.ok(node.hitbox.height >= 17, `${node.name} tap height must be at least 17%`);
+  }
+});
+
+test("swamp can travel to the start city", () => {
+  const route = getTravelRoute(START_NODE_ID, CITY_NODE_ID);
+
+  assert.ok(route);
+  assert.equal(route.from, START_NODE_ID);
+  assert.equal(route.to, CITY_NODE_ID);
+  assert.equal(route.nodeIds[0], START_NODE_ID);
+  assert.equal(route.nodeIds.at(-1), CITY_NODE_ID);
+});
+
 test("legacy field saves migrate to meadows", () => {
   assert.equal(getTravelNode("field")?.id, "meadows");
   assert.equal(locationFromNode("field").areaName, "Луга");
