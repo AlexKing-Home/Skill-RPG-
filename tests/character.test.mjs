@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { fantasyBackground, femaleSwordsman, maleAssassin } from "../src/data/assets.js";
 import { createEmptyEquipment, EQUIPMENT_SLOTS } from "../src/data/equipment.js";
@@ -80,4 +81,30 @@ test("experience bar uses progress inside the active level range", () => {
   assert.equal(getExperienceProgress(150).percent, 50);
   assert.equal(getExperienceProgress(300).percent, 50);
   assert.equal(getExperienceProgress(600).percent, 50);
+});
+
+test("navigation remains driven by the approved reference crops", () => {
+  const css = readFileSync(new URL("../src/navigation-reference-v9.css", import.meta.url), "utf8");
+  const navigationAssets = [
+    "tabs-map.webp",
+    "tabs-location.webp",
+    "tabs-character.webp",
+    "bottom-main-map.webp",
+    "bottom-character.webp",
+  ];
+
+  for (const asset of navigationAssets) {
+    assert.match(css, new RegExp(asset.replace(".", "\\.")), `${asset} is no longer referenced`);
+    assert.equal(
+      existsSync(new URL(`../public/ui/navigation/${asset}`, import.meta.url)),
+      true,
+      `${asset} is missing`,
+    );
+  }
+
+  assert.match(css, /\.game-tabs--map\s*\{[^}]*background-image:\s*var\(--nav-tabs-map\)/s);
+  assert.match(css, /\.bottom-nav--main\s*\{[^}]*background-image:\s*var\(--nav-bottom-main-map\)/s);
+  assert.match(css, /\.bottom-nav--character\s*\{[^}]*background-image:\s*var\(--nav-bottom-character\)/s);
+  assert.match(css, /\.game-tab > span[\s\S]*visibility:\s*hidden/);
+  assert.match(css, /\.bottom-nav--main \.bottom-nav__item > span[\s\S]*visibility:\s*hidden/);
 });
