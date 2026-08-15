@@ -51,6 +51,12 @@ test("game shell is constrained and character equipment is a 3 by 3 reference gr
   assert.match(finalCss, /\.game-shell[\s\S]*min-width: 0 !important/);
   assert.match(finalCss, /contain: inline-size/);
   assert.match(finalCss, /overflow-x: hidden !important/);
-  assert.match(finalCss, /\.profile-equipment \.equipment-grid[\s\S]*repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.match(finalCss, /\.profile-equipment \.equipment-slot__label[\s\S]*white-space: nowrap !important/);
+  assert.match(
+    finalCss,
+    /\.profile-equipment \.equipment-grid[\s\S]*repeat\(3, minmax\(0, 1fr\)\)/,
+  );
+  assert.match(
+    finalCss,
+    /\.profile-equipment \.equipment-slot__label[\s\S]*white-space: nowrap !important/,
+  );
 });
