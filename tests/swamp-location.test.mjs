@@ -68,7 +68,10 @@ test("swamp hotspots use the exact uploaded image geometry and calibrated marker
   assert.match(cssSource, /scale: 1 !important/);
 
   for (const [x, y] of calibratedCenters) {
-    assert.match(viewSource, new RegExp(`x: ${String(x).replace(".", "\\.")},\\s+y: ${String(y).replace(".", "\\.")}`));
+    assert.match(
+      viewSource,
+      new RegExp(`x: ${String(x).replace(".", "\\.")},\\s+y: ${String(y).replace(".", "\\.")}`),
+    );
   }
 });
 
