@@ -7,9 +7,9 @@ async function read(relativePath) {
 }
 
 const viewSource = await read("../src/components/LocationMapView.jsx");
-const assetSource = await read("../src/data/assets.js");
-const materializeSource = await read("../scripts/materialize-swamp-art.mjs");
-const packageSource = await read("../package.json");
+const artSource = await read("../src/data/swampLocationArt.js");
+const firstChunkSource = await read("../src/data/swampLocationChunks/swamp-01.js");
+const lastChunkSource = await read("../src/data/swampLocationChunks/swamp-06.js");
 const cssSource = await read("../src/swamp-location.css");
 const mainSource = await read("../src/main.jsx");
 
@@ -25,16 +25,15 @@ const pointIds = [
   "swamp-bridge",
 ];
 
-test("swamp node renders the approved scene as a normal public image", () => {
-  assert.match(viewSource, /swampLocationArt/);
+test("swamp node renders the exact uploaded scene as an embedded image", () => {
+  assert.match(viewSource, /\.\.\/data\/swampLocationArt\.js/);
   assert.match(viewSource, /location\.nodeId === "swamp"/);
   assert.match(viewSource, /src=\{swampLocationArt\}/);
   assert.match(viewSource, /onLoad=\{\(\) => setSwampArtStatus\("ready"\)\}/);
-  assert.match(assetSource, /swamp-location\.webp/);
-  assert.match(materializeSource, /Buffer\.from\(base64, "base64"\)/);
-  assert.match(materializeSource, /public\/ui/);
-  assert.match(packageSource, /assets:prepare/);
-  assert.match(packageSource, /npm run assets:prepare && vite build/);
+  assert.match(artSource, /data:image\/webp;base64/);
+  assert.match(artSource, /c1.*c2.*c3.*c4.*c5.*c6/);
+  assert.match(firstChunkSource, /UklGRgjIAABXRUJQVlA4IPzH/);
+  assert.match(lastChunkSource, /MWX5Ru2qOHRdzapWsFK4B1KQNSAAAA/);
   assert.match(mainSource, /import "\.\/swamp-location\.css"/);
 });
 
