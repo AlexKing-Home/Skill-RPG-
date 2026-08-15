@@ -12,6 +12,7 @@ import "./navigation-reference-v2.css";
 import "./navigation-reference-v9.css";
 import "./navigation-unified.css";
 import "./movement.css";
+import "./floor-map.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
