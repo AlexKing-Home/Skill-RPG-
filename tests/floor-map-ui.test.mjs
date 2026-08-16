@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { floorOneMapArt } from "../src/data/floorOneMapArt.js";
 
 async function read(path) {
   return readFile(new URL(path, import.meta.url), "utf8");
@@ -14,13 +13,9 @@ const cssSource = await read("../src/floor-map.css");
 
 test("approved floor map art is used by the world map", () => {
   assert.match(mapSource, /floorOneMapArt/);
-  assert.match(mapArtSource, /data:image\/webp;base64/);
-
-  const encoded = floorOneMapArt.replace("data:image/webp;base64,", "");
-  const image = Buffer.from(encoded, "base64");
-  assert.equal(image.subarray(0, 4).toString("ascii"), "RIFF");
-  assert.equal(image.subarray(8, 12).toString("ascii"), "WEBP");
-  assert.ok(image.length > 80000);
+  assert.match(mapArtSource, /world-map-reference-v2\.webp/);
+  assert.match(mapArtSource, /original-art-v2/);
+  assert.doesNotMatch(mapArtSource, /data:image\/webp;base64/);
 });
 
 test("approved map contains swamp as the real central location", () => {
