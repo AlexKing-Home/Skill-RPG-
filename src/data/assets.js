@@ -1,5 +1,5 @@
 const baseUrl = import.meta.env?.BASE_URL ?? "/";
-const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=reference-parity-v6`;
+const asset = (path) => `${baseUrl}${path.replace(/^\//, "")}?v=image-quality-v1`;
 
 export const fantasyBackground = asset("/backgrounds/welcome-bg.jpg");
 
