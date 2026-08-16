@@ -14,6 +14,7 @@ import "./navigation-unified.css";
 import "./movement.css";
 import "./floor-map.css";
 import "./swamp-location.css";
+import "./image-quality.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
