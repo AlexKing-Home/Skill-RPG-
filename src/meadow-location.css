@@ -1,0 +1,26 @@
+.location-map--meadow {
+  position: relative;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #02080d;
+}
+
+.location-map--meadow .meadow-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+}
+
+.location-map--meadow .field-object {
+  z-index: 7;
+}
