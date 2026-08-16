@@ -8,9 +8,11 @@ async function read(relativePath) {
 
 const viewSource = await read("../src/components/LocationMapView.jsx");
 const artSource = await read("../src/data/swampLocationArt.js");
-const deepPathArtSource = await read("../src/data/swampDeepPathArt.js");
-const rootsBurrowArtSource = await read("../src/data/swampRootsBurrowArt.js");
 const subLocationsSource = await read("../src/data/swampSubLocations.js");
+const deepChunk1 = await read("../src/data/swampSubLocationChunks/deep-01.js");
+const deepChunk2 = await read("../src/data/swampSubLocationChunks/deep-02.js");
+const rootsChunk1 = await read("../src/data/swampSubLocationChunks/roots-01.js");
+const rootsChunk2 = await read("../src/data/swampSubLocationChunks/roots-02.js");
 const firstChunkSource = await read("../src/data/swampLocationChunks/swamp-01.js");
 const lastChunkSource = await read("../src/data/swampLocationChunks/swamp-06.js");
 const cssSource = await read("../src/swamp-location.css");
@@ -75,10 +77,20 @@ test("swamp transition actions switch to their supplied sublocation scenes", () 
   assert.match(viewSource, /title: "Тропа в глубь болота"/);
   assert.match(viewSource, /title: "Нора среди корней"/);
   assert.match(viewSource, /Вернуться на Болото/);
-  assert.match(subLocationsSource, /swampDeepPathArt/);
-  assert.match(subLocationsSource, /swampRootsBurrowArt/);
-  assert.match(deepPathArtSource, /data:image\/webp;base64/);
-  assert.match(rootsBurrowArtSource, /data:image\/webp;base64/);
+});
+
+test("both swamp sublocations use valid embedded WebP data instead of external paths", () => {
+  assert.match(subLocationsSource, /swampSubLocationChunks\/deep-01\.js/);
+  assert.match(subLocationsSource, /swampSubLocationChunks\/deep-02\.js/);
+  assert.match(subLocationsSource, /swampSubLocationChunks\/roots-01\.js/);
+  assert.match(subLocationsSource, /swampSubLocationChunks\/roots-02\.js/);
+  assert.match(subLocationsSource, /data:image\/webp;base64,\$\{deep1\}\$\{deep2\}/);
+  assert.match(subLocationsSource, /data:image\/webp;base64,\$\{roots1\}\$\{roots2\}/);
+  assert.match(deepChunk1, /UklGRhA9AABXRUJQVlA4IAQ9/);
+  assert.match(deepChunk2, /AC1gXyAACOcAAA==/);
+  assert.match(rootsChunk1, /UklGRuA9AABXRUJQVlA4INQ9/);
+  assert.match(rootsChunk2, /gCsYQAG7DYAAAAA=/);
+  assert.doesNotMatch(subLocationsSource, /\/assets\/swamp-/);
 });
 
 test("swamp art and hotspots share the exact approved crop geometry", () => {
