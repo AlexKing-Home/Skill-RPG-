@@ -26,9 +26,9 @@ test("mobile polish loads after all parity layers", () => {
   );
 });
 
-test("creation uses the clean crest and enhanced assets use a fresh cache identity", () => {
+test("creation uses the clean crest and approved assets use the original-art cache identity", () => {
   assert.match(assetsSource, /export const creationCrest = uiCrest/);
-  assert.match(assetsSource, /reference-parity-v6/);
+  assert.match(assetsSource, /original-art-v2/);
   assert.match(assetsSource, /world-map-reference-v2\.webp/);
   assert.match(assetsSource, /location-map-reference-v2\.webp/);
 });
