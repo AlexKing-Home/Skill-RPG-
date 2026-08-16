@@ -10,7 +10,8 @@ const meadowObjects = [
     x: 22.5,
     y: 17.8,
     action: "Осмотреть",
-    description: "Среди высокой травы и цветов заметны примятые следы, уходящие к северной части лугов.",
+    description:
+      "Среди высокой травы и цветов заметны примятые следы, уходящие к северной части лугов.",
   },
   {
     id: "field-point-north-trail",
@@ -37,7 +38,8 @@ const meadowObjects = [
     x: 20.4,
     y: 40.8,
     action: "Осмотреть",
-    description: "Низкая каменная стена давно разрушена, но рядом можно заметить следы недавнего привала.",
+    description:
+      "Низкая каменная стена давно разрушена, но рядом можно заметить следы недавнего привала.",
   },
   {
     id: "field-npc-wanderer",
@@ -62,7 +64,8 @@ const meadowObjects = [
     x: 31.1,
     y: 65.8,
     action: "Осмотреть",
-    description: "Небольшой мост перекинут через ручей. Доски старые, но пока выдерживают вес путника.",
+    description:
+      "Небольшой мост перекинут через ручей. Доски старые, но пока выдерживают вес путника.",
   },
   {
     id: "field-point-signpost",
@@ -196,9 +199,7 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
               type="button"
               className="interaction-panel__button"
               onClick={interact}
-              disabled={
-                selectedObject.type === "chest" && openedChests.includes(selectedObject.id)
-              }
+              disabled={selectedObject.type === "chest" && openedChests.includes(selectedObject.id)}
             >
               {selectedObject.type === "chest" && openedChests.includes(selectedObject.id)
                 ? "Открыт"
