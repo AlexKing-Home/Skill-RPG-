@@ -6,6 +6,7 @@ on:
       - rebuild/character-entry-clean
     paths:
       - scripts/enhance-images.py
+      - .github/workflows/enhance-images.yml
   workflow_dispatch:
 
 permissions:
@@ -32,26 +33,28 @@ jobs:
       - name: Enhance approved assets
         run: python scripts/enhance-images.py
 
-      - name: Commit enhanced binaries
+      - name: Commit enhanced binaries and embedded art
         shell: bash
         run: |
-          if git diff --quiet -- public/skins public/ui; then
+          if git diff --quiet -- \
+            public/backgrounds \
+            public/skins \
+            public/ui \
+            src/data/mapChunks \
+            src/data/swampLocationChunks \
+            src/data/swampSubLocationChunks; then
             echo "No image changes to commit."
             exit 0
           fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- public/skins/male-swordsman.jpg \
-            public/skins/male-spearman.jpg \
-            public/skins/male-assassin.jpg \
-            public/skins/male-archer.jpg \
-            public/skins/female-swordsman.jpg \
-            public/skins/female-spearman.avif \
-            public/skins/female-assassin.avif \
-            public/skins/female-archer.avif \
-            public/ui/world-map-reference-v2.webp \
-            public/ui/world-map.webp \
-            public/ui/location-map-reference-v2.webp \
-            public/ui/location-map.webp
-          git commit -m "assets: upscale RPG artwork"
+          git add -- \
+            public/backgrounds \
+            public/skins \
+            public/ui \
+            src/data/mapChunks \
+            src/data/swampLocationChunks \
+            src/data/swampSubLocationChunks
+          git commit -m "assets: upscale and sharpen all RPG artwork"
           git push origin HEAD:rebuild/character-entry-clean
