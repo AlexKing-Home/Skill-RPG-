@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { locationMapArt } from "../data/assets.js";
 import { swampLocationArt } from "../data/swampLocationArt.js";
+import { swampDeepPathArt, swampRootsBurrowArt } from "../data/swampSubLocations.js";
 
 const fieldObjects = [
   {
@@ -21,11 +22,6 @@ const fieldObjects = [
   },
 ];
 
-/*
- * Exact pixel coordinate system of the approved swamp scene crop.
- * The functional points below are measured from the actual painted blue/gold
- * marker centres in that image, not from screenshots of the rendered page.
- */
 const SWAMP_ART_WIDTH = 775;
 const SWAMP_ART_HEIGHT = 695;
 const SWAMP_TAP_RADIUS = 72;
@@ -47,6 +43,7 @@ const swampPoints = [
     action: "Перейти",
     sourceX: 368,
     sourceY: 130,
+    targetScene: "deep-path",
     text: "Топкая тропа уходит дальше в густой туман. Путь обнаружен.",
   },
   {
@@ -74,6 +71,7 @@ const swampPoints = [
     action: "Перейти",
     sourceX: 681,
     sourceY: 316,
+    targetScene: "roots-burrow",
     text: "Между корнями виднеется узкий тёмный проход. Путь обнаружен.",
   },
   {
@@ -114,6 +112,21 @@ const swampPoints = [
   },
 ];
 
+const swampScenes = {
+  swamp: {
+    title: "Болото",
+    art: swampLocationArt,
+  },
+  "deep-path": {
+    title: "Тропа в глубь болота",
+    art: swampDeepPathArt,
+  },
+  "roots-burrow": {
+    title: "Нора среди корней",
+    art: swampRootsBurrowArt,
+  },
+};
+
 function swampPointStyle(point) {
   return {
     left: `${(point.sourceX / SWAMP_ART_WIDTH) * 100}%`,
@@ -125,19 +138,32 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   const [selectedId, setSelectedId] = useState(null);
   const [dialogue, setDialogue] = useState("");
   const [swampArtStatus, setSwampArtStatus] = useState("loading");
+  const [swampSceneId, setSwampSceneId] = useState("swamp");
   const swampPointerStart = useRef(null);
+
   const isField = ["field", "meadows"].includes(location.nodeId);
   const isSwamp = location.nodeId === "swamp";
+  const isBaseSwamp = isSwamp && swampSceneId === "swamp";
+  const swampScene = swampScenes[swampSceneId] ?? swampScenes.swamp;
   const openedChests = worldState.openedChests ?? [];
-  const sceneObjects = isSwamp ? swampPoints : isField ? fieldObjects : [];
+  const sceneObjects = isBaseSwamp ? swampPoints : isField ? fieldObjects : [];
   const selectedObject = sceneObjects.find((object) => object.id === selectedId) ?? null;
 
   useEffect(() => {
     setSelectedId(null);
     setDialogue("");
+    setSwampSceneId("swamp");
+    setSwampArtStatus("loading");
     swampPointerStart.current = null;
-    if (location.nodeId === "swamp") setSwampArtStatus("loading");
   }, [location.nodeId]);
+
+  useEffect(() => {
+    if (!isSwamp) return;
+    setSelectedId(null);
+    setDialogue("");
+    setSwampArtStatus("loading");
+    swampPointerStart.current = null;
+  }, [isSwamp, swampSceneId]);
 
   function handleObjectTap(objectId) {
     setSelectedId(objectId);
@@ -145,7 +171,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   }
 
   function handleSwampPointerDown(event) {
-    if (!isSwamp || swampArtStatus !== "ready") return;
+    if (!isBaseSwamp || swampArtStatus !== "ready") return;
 
     swampPointerStart.current = {
       pointerId: event.pointerId,
@@ -155,7 +181,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   }
 
   function handleSwampPointerUp(event) {
-    if (!isSwamp || swampArtStatus !== "ready") return;
+    if (!isBaseSwamp || swampArtStatus !== "ready") return;
 
     const start = swampPointerStart.current;
     swampPointerStart.current = null;
@@ -193,7 +219,12 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
   function handleInteract() {
     if (!selectedObject) return;
 
-    if (isSwamp) {
+    if (isBaseSwamp) {
+      if (selectedObject.type === "move" && selectedObject.targetScene) {
+        setSwampSceneId(selectedObject.targetScene);
+        return;
+      }
+
       setDialogue(selectedObject.text);
       return;
     }
@@ -212,12 +243,18 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
     }
   }
 
+  function returnToSwamp() {
+    setSwampSceneId("swamp");
+  }
+
   function getObjectType(object) {
     if (object.type === "npc") return "NPC";
     if (object.type === "chest") return "Объект";
     if (object.type === "move") return "Переход";
     return "Точка интереса";
   }
+
+  const title = isSwamp ? swampScene.title : location.areaName;
 
   return (
     <section className="game-view" aria-labelledby="location-map-title">
@@ -226,7 +263,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           <span className="game-view__eyebrow">
             {isSwamp ? "Местоположение героя" : "Текущая локация"}
           </span>
-          <h1 id="location-map-title">{location.areaName}</h1>
+          <h1 id="location-map-title">{title}</h1>
         </div>
         <span className="location-badge">
           <span aria-hidden="true">⌖</span>
@@ -241,14 +278,18 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           } ${isSwamp ? "location-map--swamp" : ""}`}
           aria-label={
             isSwamp
-              ? "Болото. Нажмите на светящуюся точку для взаимодействия."
+              ? `${swampScene.title}. ${
+                  isBaseSwamp
+                    ? "Нажмите на светящуюся точку для взаимодействия."
+                    : "Подлокация болота."
+                }`
               : isField
                 ? "Луга. На локации есть NPC и сундук, доступные для взаимодействия."
                 : "Карта текущей локации."
           }
-          onPointerDown={isSwamp ? handleSwampPointerDown : undefined}
-          onPointerUp={isSwamp ? handleSwampPointerUp : undefined}
-          onPointerCancel={isSwamp ? handleSwampPointerCancel : undefined}
+          onPointerDown={isBaseSwamp ? handleSwampPointerDown : undefined}
+          onPointerUp={isBaseSwamp ? handleSwampPointerUp : undefined}
+          onPointerCancel={isBaseSwamp ? handleSwampPointerCancel : undefined}
         >
           {!isSwamp && (
             <div className="map-fallback" aria-hidden="true">
@@ -272,9 +313,10 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
           {isSwamp ? (
             <>
               <img
+                key={swampSceneId}
                 className="map-art-image"
-                src={swampLocationArt}
-                alt="Болото"
+                src={swampScene.art}
+                alt={swampScene.title}
                 loading="eager"
                 decoding="async"
                 onLoad={() => setSwampArtStatus("ready")}
@@ -323,7 +365,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
               );
             })}
 
-          {isSwamp &&
+          {isBaseSwamp &&
             swampArtStatus === "ready" &&
             swampPoints.map((point) => (
               <button
@@ -344,7 +386,21 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
 
       {(isField || isSwamp) && (
         <div className="interaction-panel" aria-live="polite">
-          {selectedObject ? (
+          {isSwamp && !isBaseSwamp ? (
+            <>
+              <div className="interaction-panel__info">
+                <span className="interaction-panel__type">Подлокация</span>
+                <strong>{swampScene.title}</strong>
+              </div>
+              <button
+                type="button"
+                className="interaction-panel__button"
+                onClick={returnToSwamp}
+              >
+                Вернуться на Болото
+              </button>
+            </>
+          ) : selectedObject ? (
             <>
               <div className="interaction-panel__info">
                 <span className="interaction-panel__type">{getObjectType(selectedObject)}</span>
