@@ -1,9 +1,6 @@
 /*
- * Final, non-generative image-quality pass.
- *
- * Artwork is enhanced at source resolution by scripts/enhance-images.py.
- * These rules only make sure the browser does not add avoidable blur while
- * scaling the approved images on high-density mobile displays.
+ * Preserve approved artwork as-is.
+ * No sharpening, contrast mode or browser-specific image processing is used.
  */
 
 img,
@@ -15,23 +12,12 @@ img,
   backface-visibility: hidden;
 }
 
-/* Chromium/WebKit can use a sharper down-sampling path for large artwork. */
-@supports (image-rendering: -webkit-optimize-contrast) {
-  .map-art-image,
-  .skin-card__image,
-  .player-hud__crest img {
-    image-rendering: -webkit-optimize-contrast;
-  }
-}
-
-/* Keep the already-approved crops and hotspot geometry unchanged. */
+/* Keep the approved crops and hotspot geometry unchanged. */
 .floor-map-art .map-art-image,
 .location-map--swamp > .map-art-image {
   object-position: 50% 50% !important;
 }
 
-/* Fixed backgrounds are frequently rasterised at a reduced resolution on
-   mobile Chromium. Scrolling the same source image keeps it sharper. */
 @media (max-width: 900px) {
   .screen,
   .screen--welcome {
