@@ -24,3 +24,43 @@
 .location-map--meadow .field-object {
   z-index: 7;
 }
+
+.meadow-hotspot {
+  position: absolute;
+  z-index: 6;
+  width: 10%;
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.meadow-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.meadow-hotspot:hover::after,
+.meadow-hotspot:focus-visible::after,
+.meadow-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.meadow-hotspot:focus-visible {
+  outline: none;
+}
