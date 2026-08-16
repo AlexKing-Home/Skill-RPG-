@@ -1,2 +1,4 @@
-export const swampDeepPathArt = "/assets/swamp-deep-path.png";
-export const swampRootsBurrowArt = "/assets/swamp-roots-burrow.png";
+import { swampDeepPathArt } from "./swampDeepPathArt.js";
+import { swampRootsBurrowArt } from "./swampRootsBurrowArt.js";
+
+export { swampDeepPathArt, swampRootsBurrowArt };
