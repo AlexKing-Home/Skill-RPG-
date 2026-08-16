@@ -4,11 +4,47 @@ import "../meadow-location.css";
 
 const meadowObjects = [
   {
+    id: "field-point-flower-meadow",
+    type: "point",
+    name: "Цветочная поляна",
+    x: 22.5,
+    y: 17.8,
+    action: "Осмотреть",
+    description: "Среди высокой травы и цветов заметны примятые следы, уходящие к северной части лугов.",
+  },
+  {
+    id: "field-point-north-trail",
+    type: "point",
+    name: "Северная тропа",
+    x: 59.2,
+    y: 20.4,
+    action: "Осмотреть",
+    description: "Старая тропа уходит между холмами. По ней часто ходят путники и торговцы.",
+  },
+  {
+    id: "field-point-old-fence",
+    type: "point",
+    name: "Старая ограда",
+    x: 86.4,
+    y: 26.8,
+    action: "Осмотреть",
+    description: "Деревянная ограда почти заросла травой. За ней видна узкая боковая тропинка.",
+  },
+  {
+    id: "field-point-stone-wall",
+    type: "point",
+    name: "Каменная ограда",
+    x: 20.4,
+    y: 40.8,
+    action: "Осмотреть",
+    description: "Низкая каменная стена давно разрушена, но рядом можно заметить следы недавнего привала.",
+  },
+  {
     id: "field-npc-wanderer",
     type: "npc",
     name: "Странник",
-    x: 56,
-    y: 36.5,
+    x: 56.3,
+    y: 37.1,
     action: "Поговорить",
   },
   {
@@ -18,6 +54,33 @@ const meadowObjects = [
     x: 84,
     y: 51.5,
     action: "Открыть",
+  },
+  {
+    id: "field-point-bridge",
+    type: "point",
+    name: "Деревянный мостик",
+    x: 31.1,
+    y: 65.8,
+    action: "Осмотреть",
+    description: "Небольшой мост перекинут через ручей. Доски старые, но пока выдерживают вес путника.",
+  },
+  {
+    id: "field-point-signpost",
+    type: "point",
+    name: "Указатель",
+    x: 16.8,
+    y: 81.7,
+    action: "Осмотреть",
+    description: "На выцветших табличках ещё можно разобрать направления к ближайшим дорогам.",
+  },
+  {
+    id: "field-point-well",
+    type: "point",
+    name: "Колодец",
+    x: 78.5,
+    y: 81.3,
+    action: "Осмотреть",
+    description: "Каменный колодец выглядит старым. Внизу слышно тихое журчание воды.",
   },
 ];
 
@@ -42,6 +105,11 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
       return;
     }
 
+    if (selectedObject.type === "point") {
+      setDialogue(selectedObject.description);
+      return;
+    }
+
     const isOpened = openedChests.includes(selectedObject.id);
     if (!isOpened) onOpenChest?.(selectedObject.id);
     setDialogue(isOpened ? "Сундук уже открыт." : "Вы открыли старинный сундук.");
@@ -63,7 +131,7 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
       <div className="map-frame map-frame--reference">
         <div
           className="location-map location-map--interactive location-map--meadow"
-          aria-label="Луга. Нажмите на Странника или сундук для взаимодействия."
+          aria-label="Луга. Все отмеченные синим точки доступны для взаимодействия."
         >
           <img
             className="map-art-image meadow-location__image"
@@ -75,6 +143,21 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
 
           {meadowObjects.map((object) => {
             const opened = object.type === "chest" && openedChests.includes(object.id);
+
+            if (object.type === "point") {
+              return (
+                <button
+                  key={object.id}
+                  type="button"
+                  className={`meadow-hotspot ${selectedId === object.id ? "is-selected" : ""}`}
+                  style={{ left: `${object.x}%`, top: `${object.y}%` }}
+                  onClick={() => selectObject(object.id)}
+                  aria-label={object.name}
+                  aria-pressed={selectedId === object.id}
+                />
+              );
+            }
+
             return (
               <button
                 key={object.id}
@@ -101,7 +184,11 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
           <>
             <div className="interaction-panel__info">
               <span className="interaction-panel__type">
-                {selectedObject.type === "npc" ? "NPC" : "Объект"}
+                {selectedObject.type === "npc"
+                  ? "NPC"
+                  : selectedObject.type === "point"
+                    ? "Точка интереса"
+                    : "Объект"}
               </span>
               <strong>{selectedObject.name}</strong>
             </div>
@@ -120,7 +207,7 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
           </>
         ) : (
           <p className="interaction-panel__hint">
-            Нажмите на Странника или сундук на локации, чтобы выбрать взаимодействие.
+            Нажмите на любую синюю точку на локации, чтобы выбрать взаимодействие.
           </p>
         )}
 
