@@ -4,6 +4,7 @@ import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import LocationMapView from "../components/LocationMapView.jsx";
+import MeadowLocationView from "../components/MeadowLocationView.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
@@ -74,7 +75,10 @@ export default function CharacterScreen({ character, onBack }) {
       />
     );
   } else if (activeTab === "location") {
-    content = (
+    const isMeadows = ["field", "meadows"].includes(location.nodeId);
+    content = isMeadows ? (
+      <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />
+    ) : (
       <LocationMapView location={location} worldState={worldState} onOpenChest={handleOpenChest} />
     );
   } else if (activeTab === "tasks" || activeTab === "inventory") {
