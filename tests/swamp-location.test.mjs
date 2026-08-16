@@ -8,6 +8,9 @@ async function read(relativePath) {
 
 const viewSource = await read("../src/components/LocationMapView.jsx");
 const artSource = await read("../src/data/swampLocationArt.js");
+const deepPathArtSource = await read("../src/data/swampDeepPathArt.js");
+const rootsBurrowArtSource = await read("../src/data/swampRootsBurrowArt.js");
+const subLocationsSource = await read("../src/data/swampSubLocations.js");
 const firstChunkSource = await read("../src/data/swampLocationChunks/swamp-01.js");
 const lastChunkSource = await read("../src/data/swampLocationChunks/swamp-06.js");
 const cssSource = await read("../src/swamp-location.css");
@@ -37,10 +40,11 @@ const paintedMarkerPixels = [
   [346, 627],
 ];
 
-test("swamp node renders the exact uploaded scene as an embedded image", () => {
+test("swamp node renders the approved base scene", () => {
   assert.match(viewSource, /\.\.\/data\/swampLocationArt\.js/);
   assert.match(viewSource, /location\.nodeId === "swamp"/);
-  assert.match(viewSource, /src=\{swampLocationArt\}/);
+  assert.match(viewSource, /art: swampLocationArt/);
+  assert.match(viewSource, /src=\{swampScene\.art\}/);
   assert.match(viewSource, /onLoad=\{\(\) => setSwampArtStatus\("ready"\)\}/);
   assert.match(artSource, /data:image\/webp;base64/);
   assert.match(artSource, /c1.*c2.*c3.*c4.*c5.*c6/);
@@ -56,12 +60,25 @@ test("approved swamp scene exposes all nine clickable interest points", () => {
 
   assert.match(viewSource, /className={`swamp-point/);
   assert.match(viewSource, /onClick=\{\(\) => handleObjectTap\(point\.id\)\}/);
-  assert.match(viewSource, /onPointerDown=\{isSwamp \? handleSwampPointerDown : undefined\}/);
-  assert.match(viewSource, /onPointerUp=\{isSwamp \? handleSwampPointerUp : undefined\}/);
+  assert.match(viewSource, /onPointerDown=\{isBaseSwamp \? handleSwampPointerDown : undefined\}/);
+  assert.match(viewSource, /onPointerUp=\{isBaseSwamp \? handleSwampPointerUp : undefined\}/);
   assert.match(viewSource, /SWAMP_TAP_RADIUS = 72/);
   assert.match(viewSource, /nearestDistance <= SWAMP_TAP_RADIUS/);
   assert.match(cssSource, /\.swamp-point/);
   assert.match(cssSource, /touch-action: manipulation/);
+});
+
+test("swamp transition actions switch to their supplied sublocation scenes", () => {
+  assert.match(viewSource, /targetScene: "deep-path"/);
+  assert.match(viewSource, /targetScene: "roots-burrow"/);
+  assert.match(viewSource, /setSwampSceneId\(selectedObject\.targetScene\)/);
+  assert.match(viewSource, /title: "Тропа в глубь болота"/);
+  assert.match(viewSource, /title: "Нора среди корней"/);
+  assert.match(viewSource, /Вернуться на Болото/);
+  assert.match(subLocationsSource, /swampDeepPathArt/);
+  assert.match(subLocationsSource, /swampRootsBurrowArt/);
+  assert.match(deepPathArtSource, /data:image\/webp;base64/);
+  assert.match(rootsBurrowArtSource, /data:image\/webp;base64/);
 });
 
 test("swamp art and hotspots share the exact approved crop geometry", () => {
@@ -83,7 +100,7 @@ test("all functional swamp hotspots are pinned to measured painted marker pixels
   assert.match(viewSource, /point\.sourceY \/ SWAMP_ART_HEIGHT/);
 });
 
-test("swamp points stay disabled until its real image is loaded", () => {
+test("swamp points stay disabled until its scene image is loaded", () => {
   assert.match(viewSource, /swampArtStatus !== "ready"/);
   assert.match(viewSource, /Дождитесь загрузки изображения болота/);
   assert.match(viewSource, /Не удалось загрузить локацию/);
