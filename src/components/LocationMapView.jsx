@@ -392,11 +392,7 @@ export default function LocationMapView({ location, worldState = {}, onOpenChest
                 <span className="interaction-panel__type">Подлокация</span>
                 <strong>{swampScene.title}</strong>
               </div>
-              <button
-                type="button"
-                className="interaction-panel__button"
-                onClick={returnToSwamp}
-              >
+              <button type="button" className="interaction-panel__button" onClick={returnToSwamp}>
                 Вернуться на Болото
               </button>
             </>
