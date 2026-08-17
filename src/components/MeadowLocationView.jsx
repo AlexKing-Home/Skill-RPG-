@@ -7,8 +7,8 @@ const meadowObjects = [
     id: "field-point-flower-meadow",
     type: "point",
     name: "Цветочная поляна",
-    x: 22.5,
-    y: 17.8,
+    x: 22.59,
+    y: 17.76,
     action: "Осмотреть",
     description:
       "Среди высокой травы и цветов заметны примятые следы, уходящие к северной части лугов.",
@@ -17,8 +17,8 @@ const meadowObjects = [
     id: "field-point-north-trail",
     type: "point",
     name: "Северная тропа",
-    x: 59.2,
-    y: 20.4,
+    x: 59.1,
+    y: 20.5,
     action: "Осмотреть",
     description: "Старая тропа уходит между холмами. По ней часто ходят путники и торговцы.",
   },
@@ -26,8 +26,8 @@ const meadowObjects = [
     id: "field-point-old-fence",
     type: "point",
     name: "Старая ограда",
-    x: 86.4,
-    y: 26.8,
+    x: 86.41,
+    y: 27.1,
     action: "Осмотреть",
     description: "Деревянная ограда почти заросла травой. За ней видна узкая боковая тропинка.",
   },
@@ -35,8 +35,8 @@ const meadowObjects = [
     id: "field-point-stone-wall",
     type: "point",
     name: "Каменная ограда",
-    x: 20.4,
-    y: 40.8,
+    x: 20.44,
+    y: 40.82,
     action: "Осмотреть",
     description:
       "Низкая каменная стена давно разрушена, но рядом можно заметить следы недавнего привала.",
@@ -45,24 +45,24 @@ const meadowObjects = [
     id: "field-npc-wanderer",
     type: "npc",
     name: "Странник",
-    x: 56.3,
-    y: 37.1,
+    x: 56.22,
+    y: 36.94,
     action: "Поговорить",
   },
   {
     id: "field-chest-01",
     type: "chest",
     name: "Старинный сундук",
-    x: 84,
-    y: 51.5,
+    x: 83.99,
+    y: 51.7,
     action: "Открыть",
   },
   {
     id: "field-point-bridge",
     type: "point",
     name: "Деревянный мостик",
-    x: 31.1,
-    y: 65.8,
+    x: 31.04,
+    y: 65.94,
     action: "Осмотреть",
     description:
       "Небольшой мост перекинут через ручей. Доски старые, но пока выдерживают вес путника.",
@@ -71,8 +71,8 @@ const meadowObjects = [
     id: "field-point-signpost",
     type: "point",
     name: "Указатель",
-    x: 16.8,
-    y: 81.7,
+    x: 16.87,
+    y: 81.44,
     action: "Осмотреть",
     description: "На выцветших табличках ещё можно разобрать направления к ближайшим дорогам.",
   },
@@ -80,12 +80,15 @@ const meadowObjects = [
     id: "field-point-well",
     type: "point",
     name: "Колодец",
-    x: 78.5,
-    y: 81.3,
+    x: 78.23,
+    y: 81.23,
     action: "Осмотреть",
     description: "Каменный колодец выглядит старым. Внизу слышно тихое журчание воды.",
   },
 ];
+
+const MEADOW_ASPECT_RATIO = 960 / 768;
+const MAP_TAP_RADIUS = 12.5;
 
 export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -96,6 +99,32 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
   function selectObject(objectId) {
     setSelectedId(objectId);
     setDialogue("");
+  }
+
+  function handleMapTap(event) {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+
+    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+
+    let nearest = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    for (const object of meadowObjects) {
+      const dx = x - object.x;
+      const dy = (y - object.y) * MEADOW_ASPECT_RATIO;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance < nearestDistance) {
+        nearest = object;
+        nearestDistance = distance;
+      }
+    }
+
+    if (nearest && nearestDistance <= MAP_TAP_RADIUS) {
+      selectObject(nearest.id);
+    }
   }
 
   function interact() {
@@ -135,6 +164,7 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
         <div
           className="location-map location-map--interactive location-map--meadow"
           aria-label="Луга. Все отмеченные синим точки доступны для взаимодействия."
+          onClick={handleMapTap}
         >
           <img
             className="map-art-image meadow-location__image"
@@ -142,6 +172,7 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
             alt="Луга"
             loading="eager"
             decoding="async"
+            draggable="false"
           />
 
           {meadowObjects.map((object) => {
@@ -154,7 +185,10 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
                   type="button"
                   className={`meadow-hotspot ${selectedId === object.id ? "is-selected" : ""}`}
                   style={{ left: `${object.x}%`, top: `${object.y}%` }}
-                  onClick={() => selectObject(object.id)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    selectObject(object.id);
+                  }}
                   aria-label={object.name}
                   aria-pressed={selectedId === object.id}
                 />
@@ -169,7 +203,10 @@ export default function MeadowLocationView({ worldState = {}, onOpenChest }) {
                   selectedId === object.id ? "is-selected" : ""
                 } ${opened ? "is-opened" : ""}`}
                 style={{ left: `${object.x}%`, top: `${object.y}%` }}
-                onClick={() => selectObject(object.id)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  selectObject(object.id);
+                }}
                 aria-pressed={selectedId === object.id}
               >
                 <span className="field-object__icon" aria-hidden="true">
