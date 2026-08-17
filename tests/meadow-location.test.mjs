@@ -26,7 +26,7 @@ test("NPC and chest interactions remain available", () => {
   assert.match(view, /field-chest-01/);
 });
 
-test("all remaining blue meadow markers are clickable points of interest", () => {
+test("all blue meadow markers remain interactive", () => {
   const pointIds = [
     "field-point-flower-meadow",
     "field-point-north-trail",
@@ -40,6 +40,15 @@ test("all remaining blue meadow markers are clickable points of interest", () =>
   for (const pointId of pointIds) assert.match(view, new RegExp(pointId));
   assert.match(view, /className={`meadow-hotspot/);
   assert.match(view, /Нажмите на любую синюю точку/);
-  assert.match(styles, /\.meadow-hotspot/);
+});
+
+test("meadow taps use nearest-marker fallback and large mobile hit targets", () => {
+  assert.match(view, /function handleMapTap/);
+  assert.match(view, /getBoundingClientRect/);
+  assert.match(view, /MAP_TAP_RADIUS = 12\.5/);
+  assert.match(view, /onClick={handleMapTap}/);
+  assert.match(view, /MEADOW_ASPECT_RATIO = 960 \/ 768/);
+  assert.match(styles, /width: clamp\(64px, 15%, 104px\)/);
   assert.match(styles, /touch-action: manipulation/);
+  assert.match(styles, /-webkit-tap-highlight-color: transparent/);
 });
