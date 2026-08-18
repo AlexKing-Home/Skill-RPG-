@@ -8,6 +8,7 @@ import LocationMapView from "../components/LocationMapView.jsx";
 import MeadowLocationView from "../components/MeadowLocationView.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
+import RuinsLocationView from "../components/RuinsLocationView.jsx";
 import StartCityLocationView from "../components/StartCityLocationView.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
@@ -80,12 +81,15 @@ export default function CharacterScreen({ character, onBack }) {
   } else if (activeTab === "location") {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
+    const isRuins = location.nodeId === "ruins";
     const dedicatedLocation = getDedicatedLocation(location.nodeId);
 
     if (isStartCity) {
       content = <StartCityLocationView />;
     } else if (isMeadows) {
       content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
+    } else if (isRuins) {
+      content = <RuinsLocationView />;
     } else if (dedicatedLocation) {
       content = <DedicatedLocationView location={location} />;
     } else {
