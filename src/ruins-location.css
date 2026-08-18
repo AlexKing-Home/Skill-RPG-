@@ -2,9 +2,16 @@
   position: relative;
   aspect-ratio: 4 / 5 !important;
   overflow: hidden;
+  isolation: isolate;
   border-radius: 15px;
   background: #02080d;
   touch-action: manipulation;
+}
+
+.location-map--ruins::before,
+.location-map--ruins::after {
+  content: none !important;
+  display: none !important;
 }
 
 .location-map--ruins .ruins-location__image {
@@ -17,9 +24,12 @@
   max-width: none !important;
   object-fit: contain !important;
   object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   transform: none !important;
   scale: 1 !important;
   translate: none !important;
+  pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
 }

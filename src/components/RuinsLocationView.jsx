@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ruinsLocationArt from "../assets/ruins-location.webp";
+import ruinsLocationArt from "../assets/ruins-location.webp?inline";
 import "../ruins-location.css";
 
 const ruinsPoints = [

@@ -13,9 +13,18 @@ const styles = await read("../src/ruins-location.css");
 test("ruins node opens the dedicated approved location art", () => {
   assert.match(screen, /RuinsLocationView/);
   assert.match(screen, /location\.nodeId === "ruins"/);
-  assert.match(view, /assets\/ruins-location\.webp/);
+  assert.match(view, /assets\/ruins-location\.webp\?inline/);
   assert.match(view, /location-map--ruins/);
   assert.match(view, /<h1 id="ruins-location-title">Руины<\/h1>/);
+});
+
+test("ruins art stays visible and is not covered by generic map layers", () => {
+  assert.match(styles, /\.location-map--ruins::before/);
+  assert.match(styles, /\.location-map--ruins::after/);
+  assert.match(styles, /content: none !important/);
+  assert.match(styles, /opacity: 1 !important/);
+  assert.match(styles, /visibility: visible !important/);
+  assert.match(styles, /isolation: isolate/);
 });
 
 test("all eight painted ruins markers are clickable", () => {
