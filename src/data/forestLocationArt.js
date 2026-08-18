@@ -1,0 +1,22 @@
+import c01 from "./forestLocationChunks/forest-01.js";
+import c02 from "./forestLocationChunks/forest-02.js";
+import c03 from "./forestLocationChunks/forest-03.js";
+import c04 from "./forestLocationChunks/forest-04.js";
+import c05 from "./forestLocationChunks/forest-05.js";
+import c06 from "./forestLocationChunks/forest-06.js";
+import c07 from "./forestLocationChunks/forest-07.js";
+import c08 from "./forestLocationChunks/forest-08.js";
+import c09 from "./forestLocationChunks/forest-09.js";
+import c10 from "./forestLocationChunks/forest-10.js";
+import c11 from "./forestLocationChunks/forest-11.js";
+import c12 from "./forestLocationChunks/forest-12.js";
+import c13 from "./forestLocationChunks/forest-13.js";
+import c14 from "./forestLocationChunks/forest-14.js";
+import c15 from "./forestLocationChunks/forest-15.js";
+import c16 from "./forestLocationChunks/forest-16.js";
+import c17 from "./forestLocationChunks/forest-17.js";
+import c18 from "./forestLocationChunks/forest-18.js";
+import c19 from "./forestLocationChunks/forest-19.js";
+import c20 from "./forestLocationChunks/forest-20.js";
+
+export const forestLocationArt = `data:image/webp;base64,${c01}${c02}${c03}${c04}${c05}${c06}${c07}${c08}${c09}${c10}${c11}${c12}${c13}${c14}${c15}${c16}${c17}${c18}${c19}${c20}`;
