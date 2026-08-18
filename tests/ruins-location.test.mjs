@@ -9,19 +9,23 @@ async function read(path) {
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/RuinsLocationView.jsx");
 const styles = await read("../src/ruins-location.css");
-const ruinsImage = await readFile(new URL("../public/ui/ruins-location.webp", import.meta.url));
+const generatedRuinsArt = await read("../src/data/generated/ruinsLocationArt.js");
 
 test("ruins node opens the dedicated approved location art", () => {
   assert.match(screen, /RuinsLocationView/);
   assert.match(screen, /location\.nodeId === "ruins"/);
-  assert.match(view, /import\.meta\.env\.BASE_URL/);
-  assert.match(view, /ui\/ruins-location\.webp/);
-  assert.doesNotMatch(view, /ruins-location\.webp\?inline/);
+  assert.match(view, /data\/generated\/ruinsLocationArt\.js/);
+  assert.doesNotMatch(view, /import\.meta\.env\.BASE_URL/);
+  assert.doesNotMatch(view, /ui\/ruins-location\.webp/);
   assert.match(view, /location-map--ruins/);
   assert.match(view, /<h1 id="ruins-location-title">Руины<\/h1>/);
 });
 
-test("materialized ruins artwork is a valid WebP file", () => {
+test("ruins artwork is embedded as a valid WebP data URI like meadow and swamp", () => {
+  const match = generatedRuinsArt.match(/data:image\/webp;base64,([A-Za-z0-9+/=]+)/);
+  assert.ok(match, "generated ruins art must be a WebP data URI");
+
+  const ruinsImage = Buffer.from(match[1], "base64");
   assert.ok(ruinsImage.length > 12);
   assert.equal(ruinsImage.subarray(0, 4).toString("ascii"), "RIFF");
   assert.equal(ruinsImage.subarray(8, 12).toString("ascii"), "WEBP");
