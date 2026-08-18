@@ -1,0 +1,71 @@
+.location-map--start-city {
+  position: relative;
+  aspect-ratio: 561 / 701 !important;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #02080d;
+}
+
+.location-map--start-city .start-city-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.city-hotspot {
+  position: absolute;
+  z-index: 7;
+  width: clamp(58px, 11%, 92px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.city-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 16%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.city-hotspot:hover::after,
+.city-hotspot:focus-visible::after,
+.city-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.city-hotspot:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 520px) {
+  .city-hotspot {
+    width: clamp(60px, 15%, 82px);
+  }
+}

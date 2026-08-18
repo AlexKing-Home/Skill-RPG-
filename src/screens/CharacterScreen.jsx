@@ -7,6 +7,7 @@ import LocationMapView from "../components/LocationMapView.jsx";
 import MeadowLocationView from "../components/MeadowLocationView.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
+import StartCityLocationView from "../components/StartCityLocationView.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getExperienceProgress } from "../data/progression.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
@@ -75,12 +76,18 @@ export default function CharacterScreen({ character, onBack }) {
       />
     );
   } else if (activeTab === "location") {
+    const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
-    content = isMeadows ? (
-      <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />
-    ) : (
-      <LocationMapView location={location} worldState={worldState} onOpenChest={handleOpenChest} />
-    );
+
+    if (isStartCity) {
+      content = <StartCityLocationView />;
+    } else if (isMeadows) {
+      content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
+    } else {
+      content = (
+        <LocationMapView location={location} worldState={worldState} onOpenChest={handleOpenChest} />
+      );
+    }
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
   } else {
