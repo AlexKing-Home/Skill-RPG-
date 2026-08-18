@@ -7,5 +7,4 @@ import city6 from "./startCityLocationChunksV2/city-v2-06.js";
 import city7 from "./startCityLocationChunksV2/city-v2-07.js";
 import city8 from "./startCityLocationChunksV2/city-v2-08.js";
 
-export const startCityLocationArt =
-  `data:image/webp;base64,${city1}${city2}${city3}${city4}${city5}${city6}${city7}${city8}`;
+export const startCityLocationArt = `data:image/webp;base64,${city1}${city2}${city3}${city4}${city5}${city6}${city7}${city8}`;
