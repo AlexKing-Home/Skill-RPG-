@@ -2,6 +2,7 @@ import "../game-interface.css";
 import { useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
+import DedicatedLocationView from "../components/DedicatedLocationView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import LocationMapView from "../components/LocationMapView.jsx";
 import MeadowLocationView from "../components/MeadowLocationView.jsx";
@@ -9,6 +10,7 @@ import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import StartCityLocationView from "../components/StartCityLocationView.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
+import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
@@ -78,11 +80,14 @@ export default function CharacterScreen({ character, onBack }) {
   } else if (activeTab === "location") {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
+    const dedicatedLocation = getDedicatedLocation(location.nodeId);
 
     if (isStartCity) {
       content = <StartCityLocationView />;
     } else if (isMeadows) {
       content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
+    } else if (dedicatedLocation) {
+      content = <DedicatedLocationView location={location} />;
     } else {
       content = (
         <LocationMapView
