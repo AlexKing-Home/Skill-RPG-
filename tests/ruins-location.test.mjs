@@ -25,10 +25,7 @@ test("ruins node opens the dedicated approved location art", () => {
 
 test("ruins artwork uses the same committed chunk pattern as meadow and swamp", () => {
   for (let index = 1; index <= 8; index += 1) {
-    assert.match(
-      ruinsArtModule,
-      new RegExp(`ruinsLocationChunks/ruins-0${index}\\.js`),
-    );
+    assert.match(ruinsArtModule, new RegExp(`ruinsLocationChunks/ruins-0${index}\\.js`));
   }
   assert.match(ruinsArtModule, /data:image\/webp;base64/);
   assert.match(materializer, /ruinsLocationChunks/);

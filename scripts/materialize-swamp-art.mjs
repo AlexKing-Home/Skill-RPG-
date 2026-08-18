@@ -32,14 +32,8 @@ function decodeWebp(chunks, label) {
   return image;
 }
 
-const swampImage = decodeWebp(
-  await loadChunks("swampLocationChunks", "swamp", 6),
-  "Swamp",
-);
-const ruinsImage = decodeWebp(
-  await loadChunks("ruinsLocationChunks", "ruins", 8),
-  "Ruins",
-);
+const swampImage = decodeWebp(await loadChunks("swampLocationChunks", "swamp", 6), "Swamp");
+const ruinsImage = decodeWebp(await loadChunks("ruinsLocationChunks", "ruins", 8), "Ruins");
 
 await mkdir(outputDir, { recursive: true });
 await writeFile(swampOutputFile, swampImage);
