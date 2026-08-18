@@ -9,13 +9,22 @@ async function read(path) {
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/RuinsLocationView.jsx");
 const styles = await read("../src/ruins-location.css");
+const ruinsImage = await readFile(new URL("../public/ui/ruins-location.webp", import.meta.url));
 
 test("ruins node opens the dedicated approved location art", () => {
   assert.match(screen, /RuinsLocationView/);
   assert.match(screen, /location\.nodeId === "ruins"/);
-  assert.match(view, /assets\/ruins-location\.webp\?inline/);
+  assert.match(view, /import\.meta\.env\.BASE_URL/);
+  assert.match(view, /ui\/ruins-location\.webp/);
+  assert.doesNotMatch(view, /ruins-location\.webp\?inline/);
   assert.match(view, /location-map--ruins/);
   assert.match(view, /<h1 id="ruins-location-title">Руины<\/h1>/);
+});
+
+test("materialized ruins artwork is a valid WebP file", () => {
+  assert.ok(ruinsImage.length > 12);
+  assert.equal(ruinsImage.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.equal(ruinsImage.subarray(8, 12).toString("ascii"), "WEBP");
 });
 
 test("ruins art stays visible and is not covered by generic map layers", () => {
