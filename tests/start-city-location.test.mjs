@@ -17,8 +17,8 @@ test("start city uses the approved generated city scene", () => {
   assert.match(view, /startCityLocationArt/);
   assert.match(view, /location-map--start-city/);
   assert.match(art, /data:image\/webp;base64/);
-  assert.match(art, /city-01\.js/);
-  assert.match(art, /city-04\.js/);
+  assert.match(art, /city-v2-01\.js/);
+  assert.match(art, /city-v2-08\.js/);
 });
 
 test("all visible start-city markers are clickable", () => {
