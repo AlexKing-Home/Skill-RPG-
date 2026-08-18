@@ -85,7 +85,11 @@ export default function CharacterScreen({ character, onBack }) {
       content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
     } else {
       content = (
-        <LocationMapView location={location} worldState={worldState} onOpenChest={handleOpenChest} />
+        <LocationMapView
+          location={location}
+          worldState={worldState}
+          onOpenChest={handleOpenChest}
+        />
       );
     }
   } else if (activeTab === "tasks" || activeTab === "inventory") {
