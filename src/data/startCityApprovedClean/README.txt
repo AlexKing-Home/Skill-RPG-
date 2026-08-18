@@ -1,0 +1,1 @@
+Approved Start City art is now stored as a binary asset in src/assets. This directory is legacy transfer data and is no longer used by the runtime.
