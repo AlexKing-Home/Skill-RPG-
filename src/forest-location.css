@@ -1,0 +1,76 @@
+.location-map--forest {
+  position: relative;
+  aspect-ratio: 3 / 4 !important;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--forest::before,
+.location-map--forest::after {
+  content: none !important;
+  display: none !important;
+}
+
+.location-map--forest .forest-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.forest-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.forest-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.forest-hotspot:hover::after,
+.forest-hotspot:focus-visible::after,
+.forest-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.forest-hotspot:focus-visible {
+  outline: none;
+}
