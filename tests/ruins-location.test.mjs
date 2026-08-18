@@ -9,26 +9,36 @@ async function read(path) {
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/RuinsLocationView.jsx");
 const styles = await read("../src/ruins-location.css");
-const generatedRuinsArt = await read("../src/data/generated/ruinsLocationArt.js");
+const ruinsArtModule = await read("../src/data/ruinsLocationArt.js");
+const materializer = await read("../scripts/materialize-swamp-art.mjs");
 
 test("ruins node opens the dedicated approved location art", () => {
   assert.match(screen, /RuinsLocationView/);
   assert.match(screen, /location\.nodeId === "ruins"/);
-  assert.match(view, /data\/generated\/ruinsLocationArt\.js/);
+  assert.match(view, /data\/ruinsLocationArt\.js/);
+  assert.doesNotMatch(view, /data\/generated\/ruinsLocationArt\.js/);
   assert.doesNotMatch(view, /import\.meta\.env\.BASE_URL/);
   assert.doesNotMatch(view, /ui\/ruins-location\.webp/);
   assert.match(view, /location-map--ruins/);
   assert.match(view, /<h1 id="ruins-location-title">Руины<\/h1>/);
 });
 
-test("ruins artwork is embedded as a valid WebP data URI like meadow and swamp", () => {
-  const match = generatedRuinsArt.match(/data:image\/webp;base64,([A-Za-z0-9+/=]+)/);
-  assert.ok(match, "generated ruins art must be a WebP data URI");
+test("ruins artwork uses the same committed chunk pattern as meadow and swamp", () => {
+  for (let index = 1; index <= 8; index += 1) {
+    assert.match(
+      ruinsArtModule,
+      new RegExp(`ruinsLocationChunks/ruins-0${index}\\.js`),
+    );
+  }
+  assert.match(ruinsArtModule, /data:image\/webp;base64/);
+  assert.match(materializer, /ruinsLocationChunks/);
+  assert.doesNotMatch(materializer, /src\/assets\/ruins-location\.webp/);
+  assert.doesNotMatch(materializer, /src\/data\/generated/);
+});
 
-  const ruinsImage = Buffer.from(match[1], "base64");
-  assert.ok(ruinsImage.length > 12);
-  assert.equal(ruinsImage.subarray(0, 4).toString("ascii"), "RIFF");
-  assert.equal(ruinsImage.subarray(8, 12).toString("ascii"), "WEBP");
+test("materialized WebP validation rejects truncated RIFF files", () => {
+  assert.match(materializer, /image\.readUInt32LE\(4\) \+ 8/);
+  assert.match(materializer, /declaredSize !== image\.length/);
 });
 
 test("ruins art stays visible and is not covered by generic map layers", () => {

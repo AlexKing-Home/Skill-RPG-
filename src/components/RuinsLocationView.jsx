@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ruinsLocationArt } from "../data/generated/ruinsLocationArt.js";
+import { ruinsLocationArt } from "../data/ruinsLocationArt.js";
 import "../ruins-location.css";
 
 const ruinsPoints = [
@@ -69,7 +69,7 @@ const ruinsPoints = [
   },
 ];
 
-const RUINS_ASPECT_RATIO = 1120 / 896;
+const RUINS_ASPECT_RATIO = 750 / 600;
 const MAP_TAP_RADIUS = 12.5;
 
 export default function RuinsLocationView() {
