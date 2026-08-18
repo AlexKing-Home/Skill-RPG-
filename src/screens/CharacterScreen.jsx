@@ -1,8 +1,8 @@
-import "../game-interface.css";
 import { useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
 import DedicatedLocationView from "../components/DedicatedLocationView.jsx";
+import DungeonLocationView from "../components/DungeonLocationView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import LocationMapView from "../components/LocationMapView.jsx";
 import MeadowLocationView from "../components/MeadowLocationView.jsx";
@@ -15,6 +15,7 @@ import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
+import "../game-interface.css";
 
 const defaultLocation = locationFromNode(START_NODE_ID);
 
@@ -82,6 +83,7 @@ export default function CharacterScreen({ character, onBack }) {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
     const isRuins = location.nodeId === "ruins";
+    const isDungeon = location.nodeId === "dungeon";
     const dedicatedLocation = getDedicatedLocation(location.nodeId);
 
     if (isStartCity) {
@@ -90,6 +92,8 @@ export default function CharacterScreen({ character, onBack }) {
       content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
     } else if (isRuins) {
       content = <RuinsLocationView />;
+    } else if (isDungeon) {
+      content = <DungeonLocationView />;
     } else if (dedicatedLocation) {
       content = <DedicatedLocationView location={location} />;
     } else {
