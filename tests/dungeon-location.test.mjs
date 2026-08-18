@@ -54,37 +54,34 @@ test("dungeon art stays visible above generic map layers", () => {
   assert.match(styles, /isolation: isolate/);
 });
 
-test("all nine painted dungeon markers are clickable", () => {
+test("all eight painted dungeon markers are clickable", () => {
   const pointIds = [
-    "dungeon-palisade-gate",
-    "dungeon-tavern",
-    "dungeon-smithy",
-    "dungeon-village-well",
-    "dungeon-market-stall",
-    "dungeon-notice-board",
-    "dungeon-garden",
-    "dungeon-stable",
-    "dungeon-training-yard",
+    "dungeon-sealed-gate",
+    "dungeon-silent-guardian",
+    "dungeon-sarcophagus",
+    "dungeon-blue-passage",
+    "dungeon-abyss-bridge",
+    "dungeon-deep-chasm",
+    "dungeon-bone-niche",
+    "dungeon-rune-circle",
   ];
 
   for (const pointId of pointIds) assert.match(view, new RegExp(pointId));
   assert.match(view, /className={`dungeon-hotspot/);
   assert.match(view, /onClick={handleMapTap}/);
   assert.match(view, /MAP_TAP_RADIUS = 12\.5/);
-  assert.match(view, /Все девять синих точек/);
   assert.match(styles, /\.dungeon-hotspot/);
   assert.match(styles, /touch-action: manipulation/);
   assert.match(styles, /clamp\(64px, 15%, 104px\)/);
 });
 
 test("dungeon hotspot centers match the painted blue markers", () => {
-  assert.match(view, /x: 35\.57,\s*y: 15\.76/);
-  assert.match(view, /x: 72\.8,\s*y: 20\.25/);
-  assert.match(view, /x: 22\.24,\s*y: 35\.94/);
-  assert.match(view, /x: 49\.89,\s*y: 49\.13/);
-  assert.match(view, /x: 81\.22,\s*y: 46\.01/);
-  assert.match(view, /x: 22\.64,\s*y: 57\.59/);
-  assert.match(view, /x: 67\.02,\s*y: 66\.77/);
-  assert.match(view, /x: 20\.05,\s*y: 76\.96/);
-  assert.match(view, /x: 65\.03,\s*y: 86\.95/);
+  assert.match(view, /x: 45\.17,\s*y: 15\.36/);
+  assert.match(view, /x: 15\.17,\s*y: 24\.13/);
+  assert.match(view, /x: 75\.19,\s*y: 22\.37/);
+  assert.match(view, /x: 16\.31,\s*y: 50\.72/);
+  assert.match(view, /x: 78\.84,\s*y: 53\.68/);
+  assert.match(view, /x: 74\.78,\s*y: 68\.16/);
+  assert.match(view, /x: 15\.22,\s*y: 77\.52/);
+  assert.match(view, /x: 35\.52,\s*y: 82\.98/);
 });
