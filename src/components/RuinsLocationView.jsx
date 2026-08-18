@@ -1,7 +1,6 @@
 import { useState } from "react";
+import { ruinsLocationArt } from "../data/generated/ruinsLocationArt.js";
 import "../ruins-location.css";
-
-const ruinsLocationArt = `${import.meta.env.BASE_URL}ui/ruins-location.webp`;
 
 const ruinsPoints = [
   {
