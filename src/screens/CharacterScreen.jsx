@@ -9,7 +9,7 @@ import WorldMapView from "../components/WorldMapView.jsx";
 import { getMaxHealth, getWillBonuses } from "../data/characteristics.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
-import { BASE_STAMINA, normalizeCurrentStamina, normalizeMaxStamina } from "../data/stamina.js";
+import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
 import "../game-interface.css";
@@ -37,6 +37,9 @@ export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
+  const [characteristicPoints, setCharacteristicPoints] = useState(() =>
+    Math.max(0, Math.floor(Number(character.characteristicPoints) || 0)),
+  );
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
     if (!usesCurrentMap) return defaultLocation;
@@ -52,16 +55,28 @@ export default function CharacterScreen({ character, onBack }) {
   const level = experience.level;
   const maxHealth = getMaxHealth(stats);
   const willBonuses = getWillBonuses(stats);
-  const maxStamina = normalizeMaxStamina(character.maxStamina ?? BASE_STAMINA);
-  const currentStamina = normalizeCurrentStamina(character.currentStamina, maxStamina);
+  const maxStamina = getMaxStamina(stats);
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
-  const activeCharacter = { ...character, stats };
+  const [currentStamina, setCurrentStamina] = useState(() =>
+    normalizeCurrentStamina(character.currentStamina, maxStamina),
+  );
+  const activeCharacter = {
+    ...character,
+    characteristicPoints,
+    maxStamina,
+    currentStamina,
+    stats,
+  };
 
   useEffect(() => {
     setCurrentHealth((health) => Math.min(maxHealth, Math.max(0, health)));
   }, [maxHealth]);
+
+  useEffect(() => {
+    setCurrentStamina((stamina) => normalizeCurrentStamina(stamina, maxStamina));
+  }, [maxStamina]);
 
   useEffect(() => {
     if (willBonuses.regenerationPerTick <= 0) return undefined;
@@ -72,7 +87,10 @@ export default function CharacterScreen({ character, onBack }) {
         if (nextHealth !== health) {
           saveCharacter({
             ...character,
+            characteristicPoints,
             stats,
+            maxStamina,
+            currentStamina,
             currentHealth: nextHealth,
             location,
             worldState,
@@ -85,8 +103,11 @@ export default function CharacterScreen({ character, onBack }) {
     return () => window.clearInterval(intervalId);
   }, [
     character,
+    characteristicPoints,
+    currentStamina,
     location,
     maxHealth,
+    maxStamina,
     stats,
     willBonuses.regenerationIntervalMs,
     willBonuses.regenerationPerTick,
@@ -96,7 +117,10 @@ export default function CharacterScreen({ character, onBack }) {
   function persist(nextLocation = location, nextWorldState = worldState) {
     saveCharacter({
       ...character,
+      characteristicPoints,
       stats,
+      maxStamina,
+      currentStamina,
       currentHealth,
       location: nextLocation,
       worldState: nextWorldState,
@@ -105,19 +129,30 @@ export default function CharacterScreen({ character, onBack }) {
 
   function handleStatChange(key, delta) {
     const currentValue = Math.max(0, Math.floor(Number(stats[key]) || 0));
+    if (delta > 0 && characteristicPoints <= 0) return;
+    if (delta < 0 && currentValue <= 0) return;
+
     const nextValue = Math.max(0, currentValue + delta);
     if (nextValue === currentValue) return;
 
     const nextStats = { ...stats, [key]: nextValue };
+    const nextCharacteristicPoints = Math.max(0, characteristicPoints - delta);
     const nextMaxHealth = getMaxHealth(nextStats);
     const nextCurrentHealth = Math.min(nextMaxHealth, currentHealth);
+    const nextMaxStamina = getMaxStamina(nextStats);
+    const nextCurrentStamina = normalizeCurrentStamina(currentStamina, nextMaxStamina);
 
     setStats(nextStats);
+    setCharacteristicPoints(nextCharacteristicPoints);
     if (nextCurrentHealth !== currentHealth) setCurrentHealth(nextCurrentHealth);
+    if (nextCurrentStamina !== currentStamina) setCurrentStamina(nextCurrentStamina);
 
     saveCharacter({
       ...character,
+      characteristicPoints: nextCharacteristicPoints,
       stats: nextStats,
+      maxStamina: nextMaxStamina,
+      currentStamina: nextCurrentStamina,
       currentHealth: nextCurrentHealth,
       location,
       worldState,
