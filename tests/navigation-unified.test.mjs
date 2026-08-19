@@ -47,10 +47,7 @@ test("character bottom navigation switches approved high-quality artwork with fo
   assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
 
   for (const part of ["01", "02", "03", "04"]) {
-    assert.match(
-      bottomNavSource,
-      new RegExp(`character-nav-hq/part-${part}\\.b64\\?raw`),
-    );
+    assert.match(bottomNavSource, new RegExp(`character-nav-hq/part-${part}\\.b64\\?raw`));
   }
   assert.match(bottomNavSource, /data:image\/webp;base64/);
   assert.match(bottomNavSource, /--character-nav-sprite/);
