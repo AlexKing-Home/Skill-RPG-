@@ -16,6 +16,7 @@ import "./floor-map.css";
 import "./swamp-location.css";
 import "./image-quality.css";
 import "./character-navigation-art.css";
+import "./character-stats.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
