@@ -77,7 +77,14 @@ export default function CharacterScreen({ character, onBack }) {
     }, willBonuses.regenerationIntervalMs);
 
     return () => window.clearInterval(intervalId);
-  }, [character, location, maxHealth, willBonuses.regenerationIntervalMs, willBonuses.regenerationPerTick, worldState]);
+  }, [
+    character,
+    location,
+    maxHealth,
+    willBonuses.regenerationIntervalMs,
+    willBonuses.regenerationPerTick,
+    worldState,
+  ]);
 
   function persist(nextLocation = location, nextWorldState = worldState) {
     saveCharacter({
