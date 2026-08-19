@@ -68,25 +68,27 @@ export default function PlayerHud({
           </div>
         </div>
 
-        <div className="hud-resource hud-resource--stamina">
-          <div className="hud-resource__label">
-            <span>
-              <b aria-hidden="true">◆</b> ВЫНОСЛИВОСТЬ
-            </span>
-            <strong>
-              {currentStamina} / {maxStamina}
-            </strong>
+        {characterMode ? (
+          <div className="hud-resource hud-resource--stamina">
+            <div className="hud-resource__label">
+              <span>
+                <b aria-hidden="true">◆</b> ВЫНОСЛИВОСТЬ
+              </span>
+              <strong>
+                {currentStamina} / {maxStamina}
+              </strong>
+            </div>
+            <div
+              className="hud-resource__track"
+              aria-label={`Выносливость ${currentStamina} из ${maxStamina}`}
+            >
+              <span
+                className="hud-resource__fill hud-resource__fill--stamina"
+                style={{ width: `${staminaPercent}%` }}
+              />
+            </div>
           </div>
-          <div
-            className="hud-resource__track"
-            aria-label={`Выносливость ${currentStamina} из ${maxStamina}`}
-          >
-            <span
-              className="hud-resource__fill hud-resource__fill--stamina"
-              style={{ width: `${staminaPercent}%` }}
-            />
-          </div>
-        </div>
+        ) : null}
       </div>
     </header>
   );
