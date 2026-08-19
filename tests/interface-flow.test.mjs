@@ -65,7 +65,10 @@ test("character subsections stay inside the character tab", () => {
   assert.match(characterScreenSource, /characterSection === "character"/);
   assert.match(characterScreenSource, /<PlaceholderView type=\{characterSection\}/);
   assert.match(characterScreenSource, /active=\{profileMode \? characterSection : activeTab\}/);
-  assert.match(characterScreenSource, /onChange=\{profileMode \? setCharacterSection : handleTabChange\}/);
+  assert.match(
+    characterScreenSource,
+    /onChange=\{profileMode \? setCharacterSection : handleTabChange\}/,
+  );
   assert.match(placeholderSource, /title: "Навыки"/);
   assert.match(placeholderSource, /title: "Характеристики"/);
 });
