@@ -45,7 +45,10 @@ test("character bottom navigation switches approved artwork with four real hit t
   assert.match(characterNavCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(characterNavCss, /background-image:\s*var\(--character-nav-sprite\) !important/);
   assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
-  assert.match(bottomNavSource, /import characterNavSpriteAsset from "\.\.\/assets\/character-nav-sprite\.webp"/);
+  assert.match(
+    bottomNavSource,
+    /import characterNavSpriteAsset from "\.\.\/assets\/character-nav-sprite\.webp"/,
+  );
   assert.match(bottomNavSource, /new URL\(characterNavSpriteAsset, window\.location\.href\)\.href/);
 
   for (const state of ["skills", "inventory", "stats", "character"]) {
