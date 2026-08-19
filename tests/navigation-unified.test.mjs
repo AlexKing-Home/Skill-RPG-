@@ -9,6 +9,7 @@ async function read(relativePath) {
 const mainSource = await read("../src/main.jsx");
 const navCss = await read("../src/navigation-unified.css");
 const characterNavCss = await read("../src/character-navigation-art.css");
+const bottomNavSource = await read("../src/components/BottomNav.jsx");
 
 test("unified tab skin loads after state-specific navigation artwork", () => {
   const stateSpecific = mainSource.indexOf('import "./navigation-reference-v9.css"');
@@ -44,6 +45,8 @@ test("character bottom navigation switches approved artwork with four real hit t
   assert.match(characterNavCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(characterNavCss, /background-image:\s*var\(--character-nav-sprite\) !important/);
   assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
+  assert.match(bottomNavSource, /import characterNavSpriteAsset from "\.\.\/assets\/character-nav-sprite\.webp"/);
+  assert.match(bottomNavSource, /new URL\(characterNavSpriteAsset, window\.location\.href\)\.href/);
 
   for (const state of ["skills", "inventory", "stats", "character"]) {
     assert.match(characterNavCss, new RegExp(`bottom-nav--active-${state}`));

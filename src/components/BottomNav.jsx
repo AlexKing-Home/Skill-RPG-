@@ -1,3 +1,5 @@
+import characterNavSpriteAsset from "../assets/character-nav-sprite.webp";
+
 const mainItems = [
   { id: "home", label: "Главная", icon: "♜" },
   { id: "tasks", label: "Задания", icon: "⚔" },
@@ -14,11 +16,9 @@ const characterItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
-const baseUrl = import.meta.env?.BASE_URL ?? "/";
-const characterNavSprite = `${baseUrl}ui/navigation/character-nav-sprite.webp?v=character-nav-v1`;
-
 export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
   const items = variant === "character" ? characterItems : mainItems;
+  const characterNavSprite = new URL(characterNavSpriteAsset, window.location.href).href;
   const style =
     variant === "character"
       ? { "--character-nav-sprite": `url("${characterNavSprite}")` }
