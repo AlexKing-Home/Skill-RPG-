@@ -9,6 +9,7 @@ import WorldMapView from "../components/WorldMapView.jsx";
 import { getMaxHealth, getWillBonuses } from "../data/characteristics.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
+import { BASE_STAMINA, normalizeCurrentStamina, normalizeMaxStamina } from "../data/stamina.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
 import "../game-interface.css";
@@ -51,6 +52,8 @@ export default function CharacterScreen({ character, onBack }) {
   const level = experience.level;
   const maxHealth = getMaxHealth(stats);
   const willBonuses = getWillBonuses(stats);
+  const maxStamina = normalizeMaxStamina(character.maxStamina ?? BASE_STAMINA);
+  const currentStamina = normalizeCurrentStamina(character.currentStamina, maxStamina);
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
@@ -221,6 +224,8 @@ export default function CharacterScreen({ character, onBack }) {
           level={level}
           currentHealth={currentHealth}
           maxHealth={maxHealth}
+          currentStamina={currentStamina}
+          maxStamina={maxStamina}
           experience={experience}
           mode={profileMode ? "character" : "default"}
         />
