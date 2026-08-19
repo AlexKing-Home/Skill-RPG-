@@ -14,6 +14,7 @@ const skinCardSource = await read("../src/components/SkinCard.jsx");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
+const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 
 test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /setScreen\("character"\)/);
@@ -50,12 +51,22 @@ test("class cards tabs bottom navigation and equipment slots are clickable", () 
   assert.match(detailsSource, /onClick=\{\(\) => handleSlotClick\(slot, item\)\}/);
 });
 
-test("bottom navigation exposes main and reference character destinations", () => {
-  for (const label of ["Главная", "Задания", "Карта", "Инвентарь", "Персонаж", "Локация"]) {
+test("character bottom navigation exposes profile subsections", () => {
+  for (const label of ["Навыки", "Инвентарь", "Характеристики", "Персонаж"]) {
     assert.match(bottomNavSource, new RegExp(label));
   }
-  assert.match(bottomNavSource, /bottom-nav--\$\{variant\}/);
+  assert.match(bottomNavSource, /const characterItems/);
   assert.match(bottomNavSource, /variant === "character"/);
+});
+
+test("character subsections stay inside the character tab", () => {
+  assert.match(characterScreenSource, /\[characterSection, setCharacterSection\]/);
+  assert.match(characterScreenSource, /characterSection === "character"/);
+  assert.match(characterScreenSource, /<PlaceholderView type=\{characterSection\}/);
+  assert.match(characterScreenSource, /active=\{profileMode \? characterSection : activeTab\}/);
+  assert.match(characterScreenSource, /onChange=\{profileMode \? setCharacterSection : handleTabChange\}/);
+  assert.match(placeholderSource, /title: "Навыки"/);
+  assert.match(placeholderSource, /title: "Характеристики"/);
 });
 
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {
