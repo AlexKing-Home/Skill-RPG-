@@ -31,10 +31,11 @@ export default function CharacterStatsView({ character, onStatChange }) {
       <div className="character-stats-list" role="list">
         {STAT_ROWS.map((stat) => {
           const value = Math.max(0, Number(stats[stat.key]) || 0);
+          const hasEffect = stat.key === "endurance" || stat.key === "will";
 
           return (
             <article
-              className={`character-stat-row ${stat.key === "will" ? "character-stat-row--will" : ""}`}
+              className={`character-stat-row ${hasEffect ? "character-stat-row--with-effect" : ""} ${stat.key === "will" ? "character-stat-row--will" : ""}`}
               key={stat.key}
               role="listitem"
             >
