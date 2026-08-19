@@ -8,12 +8,20 @@ async function read(relativePath) {
 
 const mainSource = await read("../src/main.jsx");
 const navCss = await read("../src/navigation-unified.css");
+const characterNavCss = await read("../src/character-navigation-art.css");
 
 test("unified tab skin loads after state-specific navigation artwork", () => {
   const stateSpecific = mainSource.indexOf('import "./navigation-reference-v9.css"');
   const unified = mainSource.indexOf('import "./navigation-unified.css"');
   assert.ok(stateSpecific >= 0);
   assert.ok(unified > stateSpecific);
+});
+
+test("character artwork override loads after unified navigation", () => {
+  const unified = mainSource.indexOf('import "./navigation-unified.css"');
+  const characterArtwork = mainSource.indexOf('import "./character-navigation-art.css"');
+  assert.ok(unified >= 0);
+  assert.ok(characterArtwork > unified);
 });
 
 test("map location and character share one top navigation geometry", () => {
@@ -31,13 +39,25 @@ test("only active tab receives the same gold highlight and diamonds", () => {
   assert.match(navCss, /transform:\s*translateX\(-50%\) rotate\(45deg\)/);
 });
 
-test("character bottom navigation renders four real subsection buttons", () => {
-  assert.match(navCss, /\.bottom-nav--character\s*\{/);
-  assert.match(navCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
-  assert.match(navCss, /\.bottom-nav--character[\s\S]*background-image:\s*none !important/);
+test("character bottom navigation switches approved artwork with four real hit targets", () => {
+  assert.match(characterNavCss, /\.bottom-nav--character\s*\{/);
+  assert.match(characterNavCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(
-    navCss,
-    /\.bottom-nav--character \.bottom-nav__item > span,[\s\S]*visibility:\s*visible !important/,
+    characterNavCss,
+    /background-image:\s*var\(--character-nav-sprite\) !important/,
   );
-  assert.match(navCss, /\.bottom-nav--character \.bottom-nav__item\.is-active\s*\{/);
+  assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
+
+  for (const state of ["skills", "inventory", "stats", "character"]) {
+    assert.match(characterNavCss, new RegExp(`bottom-nav--active-${state}`));
+  }
+
+  assert.match(
+    characterNavCss,
+    /\.bottom-nav--character \.bottom-nav__item > span,[\s\S]*opacity:\s*0 !important/,
+  );
+  assert.match(
+    characterNavCss,
+    /\.bottom-nav--character \.bottom-nav__item,[\s\S]*background:\s*transparent !important/,
+  );
 });

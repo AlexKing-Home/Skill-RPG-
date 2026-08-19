@@ -8,6 +8,7 @@ const navigationAssets = [
   "tabs-character.webp",
   "bottom-main-map.webp",
   "bottom-character.webp",
+  "character-nav-sprite.webp",
 ];
 
 test("navigation WebP files are complete RIFF images", () => {

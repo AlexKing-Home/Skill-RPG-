@@ -14,12 +14,20 @@ const characterItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
+const baseUrl = import.meta.env?.BASE_URL ?? "/";
+const characterNavSprite = `${baseUrl}ui/navigation/character-nav-sprite.webp?v=character-nav-v1`;
+
 export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
   const items = variant === "character" ? characterItems : mainItems;
+  const style =
+    variant === "character"
+      ? { "--character-nav-sprite": `url("${characterNavSprite}")` }
+      : undefined;
 
   return (
     <nav
       className={`bottom-nav bottom-nav--${variant} bottom-nav--active-${active}`}
+      style={style}
       aria-label="Основная навигация"
     >
       {items.map((item) => (
