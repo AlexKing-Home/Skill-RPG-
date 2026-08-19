@@ -6,6 +6,7 @@ const mainItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
+// Character mode has its own four-section navigation.
 const characterItems = [
   { id: "skills", label: "Навыки", icon: "✦" },
   { id: "inventory", label: "Инвентарь", icon: "▣" },
