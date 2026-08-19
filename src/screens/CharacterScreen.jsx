@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
 import CharacterStatsView from "../components/CharacterStatsView.jsx";
@@ -6,6 +6,7 @@ import GameTabs from "../components/GameTabs.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
+import { getMaxHealth, getWillBonuses } from "../data/characteristics.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
@@ -47,12 +48,41 @@ export default function CharacterScreen({ character, onBack }) {
   }));
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
-  const maxHealth = character.stats.health;
-  const currentHealth = Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth));
+  const maxHealth = getMaxHealth(character.stats);
+  const willBonuses = getWillBonuses(character.stats);
+  const [currentHealth, setCurrentHealth] = useState(() =>
+    Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
+  );
+
+  useEffect(() => {
+    setCurrentHealth((health) => Math.min(maxHealth, Math.max(0, health)));
+  }, [maxHealth]);
+
+  useEffect(() => {
+    if (willBonuses.regenerationPerTick <= 0) return undefined;
+
+    const intervalId = window.setInterval(() => {
+      setCurrentHealth((health) => {
+        const nextHealth = Math.min(maxHealth, health + willBonuses.regenerationPerTick);
+        if (nextHealth !== health) {
+          saveCharacter({
+            ...character,
+            currentHealth: nextHealth,
+            location,
+            worldState,
+          });
+        }
+        return nextHealth;
+      });
+    }, willBonuses.regenerationIntervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [character, location, maxHealth, willBonuses.regenerationIntervalMs, willBonuses.regenerationPerTick, worldState]);
 
   function persist(nextLocation = location, nextWorldState = worldState) {
     saveCharacter({
       ...character,
+      currentHealth,
       location: nextLocation,
       worldState: nextWorldState,
     });
@@ -94,12 +124,13 @@ export default function CharacterScreen({ character, onBack }) {
         <CharacterDetailsView
           character={character}
           currentHealth={currentHealth}
+          maxHealth={maxHealth}
           level={level}
           experience={experience}
         />
       );
     } else if (characterSection === "stats") {
-      content = <CharacterStatsView character={character} currentHealth={currentHealth} />;
+      content = <CharacterStatsView character={character} />;
     } else {
       content = <PlaceholderView type={characterSection} />;
     }
