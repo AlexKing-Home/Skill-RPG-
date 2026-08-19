@@ -1,4 +1,12 @@
+import { normalizeCharacteristicPoints } from "./characteristics.js";
+
 export const BASE_STAMINA = 10;
+export const STAMINA_PER_ENDURANCE_POINT = 1;
+
+export function getMaxStamina(stats = {}) {
+  const endurance = normalizeCharacteristicPoints(stats).endurance;
+  return BASE_STAMINA + endurance * STAMINA_PER_ENDURANCE_POINT;
+}
 
 export function normalizeMaxStamina(value) {
   const numeric = Number(value);
