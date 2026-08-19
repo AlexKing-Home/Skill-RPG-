@@ -7,9 +7,9 @@ const mainItems = [
 ];
 
 const characterItems = [
-  { id: "map", label: "Карта", icon: "▧" },
-  { id: "location", label: "Локация", icon: "⌖" },
-  { id: "home", label: "Главная", icon: "♜" },
+  { id: "skills", label: "Навыки", icon: "✦" },
+  { id: "inventory", label: "Инвентарь", icon: "▣" },
+  { id: "stats", label: "Характеристики", icon: "◆" },
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
