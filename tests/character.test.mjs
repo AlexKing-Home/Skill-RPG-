@@ -51,7 +51,9 @@ test("character has defense and no mana", () => {
 
 test("new character starts with HUD and equipment defaults", () => {
   const character = createCharacter("Hero", skins[0]);
+  assert.equal(character.version, 3);
   assert.equal(character.experience, 0);
+  assert.equal("level" in character, false);
   assert.equal(character.currentHealth, character.stats.health);
   assert.deepEqual(character.equipment, createEmptyEquipment());
   assert.equal(EQUIPMENT_SLOTS.length, 9);
