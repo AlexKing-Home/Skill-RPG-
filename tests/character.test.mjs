@@ -6,6 +6,7 @@ import {
   CHARACTERISTIC_KEYS,
   getMaxHealth,
   getWillBonuses,
+  STARTING_CHARACTERISTIC_POINTS,
   WILL_HP_PER_POINT,
   WILL_REGEN_INTERVAL_MS,
   WILL_REGEN_PER_POINT,
@@ -17,7 +18,13 @@ import {
   LEVEL_EXPERIENCE_RANGES,
 } from "../src/data/progression.js";
 import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
-import { BASE_STAMINA, normalizeCurrentStamina, normalizeMaxStamina } from "../src/data/stamina.js";
+import {
+  BASE_STAMINA,
+  getMaxStamina,
+  normalizeCurrentStamina,
+  normalizeMaxStamina,
+  STAMINA_PER_ENDURANCE_POINT,
+} from "../src/data/stamina.js";
 import { normalizeCharacter } from "../src/utils/storage.js";
 
 const externalUrlPattern = /^https?:\/\//;
@@ -68,6 +75,12 @@ test("all requested character characteristics start at zero", () => {
   }
 });
 
+test("first level starts with ten free characteristic points", () => {
+  const character = createCharacter("Hero", skins[0]);
+  assert.equal(STARTING_CHARACTERISTIC_POINTS, 10);
+  assert.equal(character.characteristicPoints, 10);
+});
+
 test("will grants 100 HP and 10 regeneration every 10 seconds per point", () => {
   const character = createCharacter("Hero", skins[0]);
   const baseHealth = character.stats.health;
@@ -82,13 +95,22 @@ test("will grants 100 HP and 10 regeneration every 10 seconds per point", () => 
   assert.equal(getMaxHealth(stats), baseHealth + 100);
 });
 
+test("endurance grants one stamina per point above the base ten", () => {
+  const character = createCharacter("Hero", skins[0]);
+  assert.equal(BASE_STAMINA, 10);
+  assert.equal(STAMINA_PER_ENDURANCE_POINT, 1);
+  assert.equal(getMaxStamina(character.stats), 10);
+  assert.equal(getMaxStamina({ ...character.stats, endurance: 1 }), 11);
+  assert.equal(getMaxStamina({ ...character.stats, endurance: 5 }), 15);
+});
+
 test("new character starts with 10 stamina and HUD defaults", () => {
   const character = createCharacter("Hero", skins[0]);
-  assert.equal(character.version, 6);
+  assert.equal(character.version, 7);
   assert.equal(character.experience, 0);
   assert.equal("level" in character, false);
   assert.equal(character.currentHealth, character.stats.health);
-  assert.equal(BASE_STAMINA, 10);
+  assert.equal(character.characteristicPoints, 10);
   assert.equal(character.maxStamina, 10);
   assert.equal(character.currentStamina, 10);
   assert.deepEqual(character.equipment, createEmptyEquipment());
@@ -102,58 +124,50 @@ test("stamina normalization keeps the resource between zero and maximum", () => 
   assert.equal(normalizeCurrentStamina(-3, 10), 0);
 });
 
-test("legacy saves drop stored level and preserve experience as the source of truth", () => {
+test("legacy saves receive the new ten-point characteristic pool", () => {
   const legacy = {
     ...createCharacter("Hero", skins[0]),
-    version: 2,
+    version: 6,
     level: 99,
     experience: 250,
+    characteristicPoints: 0,
+    stats: {
+      ...createCharacter("Hero", skins[0]).stats,
+      strength: 4,
+      endurance: 6,
+    },
   };
-  delete legacy.maxStamina;
-  delete legacy.currentStamina;
   const normalized = normalizeCharacter(legacy);
 
-  assert.equal(normalized.version, 6);
+  assert.equal(normalized.version, 7);
   assert.equal(normalized.experience, 250);
   assert.equal("level" in normalized, false);
+  assert.equal(normalized.characteristicPoints, 10);
+  for (const key of CHARACTERISTIC_KEYS) {
+    assert.equal(normalized.stats[key], 0, `${key} was not reset for the new point pool`);
+  }
   assert.equal(normalized.maxStamina, 10);
   assert.equal(normalized.currentStamina, 10);
   assert.equal(getLevelFromExperience(normalized.experience), 3);
 });
 
-test("version 4 saves reset old characteristic values to zero", () => {
-  const legacy = createCharacter("Hero", skins[2]);
-  legacy.version = 4;
-  legacy.stats = {
-    ...legacy.stats,
-    strength: 16,
-    agility: 15,
-    stealth: 15,
-    scouting: 10,
-    lockpicking: 14,
-    endurance: 8,
-  };
-  const normalized = normalizeCharacter(legacy);
-
-  assert.equal(normalized.version, 6);
-  for (const key of CHARACTERISTIC_KEYS) {
-    assert.equal(normalized.stats[key], 0, `${key} was not reset`);
-  }
-  assert.equal(normalized.stats.attack, 16);
-  assert.equal(normalized.stats.health, 90);
-});
-
-test("version 5 saves preserve allocated characteristic points", () => {
+test("version 7 saves preserve allocated points and derive stamina from endurance", () => {
   const current = createCharacter("Hero", skins[0]);
-  current.version = 5;
   current.stats.will = 3;
   current.stats.strength = 2;
+  current.stats.endurance = 1;
+  current.characteristicPoints = 4;
+  current.currentStamina = 11;
   const normalized = normalizeCharacter(current);
 
-  assert.equal(normalized.version, 6);
+  assert.equal(normalized.version, 7);
+  assert.equal(normalized.characteristicPoints, 4);
   assert.equal(normalized.stats.will, 3);
   assert.equal(normalized.stats.strength, 2);
+  assert.equal(normalized.stats.endurance, 1);
   assert.equal(getMaxHealth(normalized.stats), normalized.stats.health + 300);
+  assert.equal(normalized.maxStamina, 11);
+  assert.equal(normalized.currentStamina, 11);
 });
 
 test("experience thresholds match levels 1 through 5", () => {
