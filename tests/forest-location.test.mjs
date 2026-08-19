@@ -43,7 +43,10 @@ test("forest node opens its dedicated artwork view", () => {
 test("forest artwork uses the same committed data URL pattern as other locations", () => {
   for (const path of forestChunkPaths) {
     const fileName = path.split("/").at(-1);
-    assert.match(forestArtModule, new RegExp(`forestLocationChunks/${fileName.replace(".", "\\.")}`));
+    assert.match(
+      forestArtModule,
+      new RegExp(`forestLocationChunks/${fileName.replace(".", "\\.")}`),
+    );
   }
 
   assert.match(forestArtModule, /data:image\/webp;base64/);
