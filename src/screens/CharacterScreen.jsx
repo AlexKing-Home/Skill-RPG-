@@ -13,6 +13,7 @@ import "../game-interface.css";
 
 const DedicatedLocationView = lazy(() => import("../components/DedicatedLocationView.jsx"));
 const DungeonLocationView = lazy(() => import("../components/DungeonLocationView.jsx"));
+const ForestLocationView = lazy(() => import("../components/ForestLocationView.jsx"));
 const LocationMapView = lazy(() => import("../components/LocationMapView.jsx"));
 const MeadowLocationView = lazy(() => import("../components/MeadowLocationView.jsx"));
 const RuinsLocationView = lazy(() => import("../components/RuinsLocationView.jsx"));
@@ -92,6 +93,7 @@ export default function CharacterScreen({ character, onBack }) {
   } else if (activeTab === "location") {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
+    const isForest = location.nodeId === "forest";
     const isRuins = location.nodeId === "ruins";
     const isSettlement = location.nodeId === "settlement";
     const isDungeon = location.nodeId === "dungeon";
@@ -104,6 +106,8 @@ export default function CharacterScreen({ character, onBack }) {
       locationContent = (
         <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />
       );
+    } else if (isForest) {
+      locationContent = <ForestLocationView />;
     } else if (isRuins) {
       locationContent = <RuinsLocationView />;
     } else if (isSettlement) {
