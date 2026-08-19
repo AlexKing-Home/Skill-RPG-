@@ -1,4 +1,7 @@
-import { createEmptyCharacteristics, normalizeCharacteristicPoints } from "../data/characteristics.js";
+import {
+  createEmptyCharacteristics,
+  normalizeCharacteristicPoints,
+} from "../data/characteristics.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
 
 const SAVE_KEY = "skill-rpg.save.v1";
