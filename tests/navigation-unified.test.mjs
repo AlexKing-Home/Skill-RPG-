@@ -34,10 +34,7 @@ test("only active tab receives the same gold highlight and diamonds", () => {
 test("character bottom navigation renders four real subsection buttons", () => {
   assert.match(navCss, /\.bottom-nav--character\s*\{/);
   assert.match(navCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
-  assert.match(
-    navCss,
-    /\.bottom-nav--character[\s\S]*background-image:\s*none !important/,
-  );
+  assert.match(navCss, /\.bottom-nav--character[\s\S]*background-image:\s*none !important/);
   assert.match(
     navCss,
     /\.bottom-nav--character \.bottom-nav__item > span,[\s\S]*visibility:\s*visible !important/,
