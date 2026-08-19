@@ -2,6 +2,14 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { fantasyBackground, femaleSwordsman, maleAssassin } from "../src/data/assets.js";
+import {
+  CHARACTERISTIC_KEYS,
+  getMaxHealth,
+  getWillBonuses,
+  WILL_HP_PER_POINT,
+  WILL_REGEN_INTERVAL_MS,
+  WILL_REGEN_PER_POINT,
+} from "../src/data/characteristics.js";
 import { createEmptyEquipment, EQUIPMENT_SLOTS } from "../src/data/equipment.js";
 import {
   getExperienceProgress,
@@ -12,15 +20,6 @@ import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
 import { normalizeCharacter } from "../src/utils/storage.js";
 
 const externalUrlPattern = /^https?:\/\//;
-const extendedStatKeys = [
-  "strength",
-  "agility",
-  "stealth",
-  "scouting",
-  "lockpicking",
-  "endurance",
-  "health",
-];
 
 test("there are exactly eight unique skins", () => {
   assert.equal(skins.length, 8);
@@ -59,19 +58,32 @@ test("character has defense and no mana", () => {
   assert.equal("mana" in character.stats, false);
 });
 
-test("character has the requested extended characteristics", () => {
-  const character = createCharacter("Hero", skins[0]);
-  for (const key of extendedStatKeys) {
-    assert.equal(Number.isFinite(character.stats[key]), true, `${key} is missing`);
+test("all requested character characteristics start at zero", () => {
+  for (const skin of skins) {
+    const character = createCharacter("Hero", skin);
+    for (const key of CHARACTERISTIC_KEYS) {
+      assert.equal(character.stats[key], 0, `${skin.id}.${key} must start at zero`);
+    }
   }
-  assert.equal(character.stats.strength, 14);
-  assert.equal(character.stats.agility, 8);
-  assert.equal(character.stats.health, 120);
+});
+
+test("will grants 100 HP and 10 regeneration every 10 seconds per point", () => {
+  const character = createCharacter("Hero", skins[0]);
+  const baseHealth = character.stats.health;
+  const stats = { ...character.stats, will: 1 };
+  const bonuses = getWillBonuses(stats);
+
+  assert.equal(WILL_HP_PER_POINT, 100);
+  assert.equal(WILL_REGEN_PER_POINT, 10);
+  assert.equal(WILL_REGEN_INTERVAL_MS, 10_000);
+  assert.equal(bonuses.maxHealthBonus, 100);
+  assert.equal(bonuses.regenerationPerTick, 10);
+  assert.equal(getMaxHealth(stats), baseHealth + 100);
 });
 
 test("new character starts with HUD and equipment defaults", () => {
   const character = createCharacter("Hero", skins[0]);
-  assert.equal(character.version, 4);
+  assert.equal(character.version, 5);
   assert.equal(character.experience, 0);
   assert.equal("level" in character, false);
   assert.equal(character.currentHealth, character.stats.health);
@@ -88,30 +100,43 @@ test("legacy saves drop stored level and preserve experience as the source of tr
   };
   const normalized = normalizeCharacter(legacy);
 
-  assert.equal(normalized.version, 4);
+  assert.equal(normalized.version, 5);
   assert.equal(normalized.experience, 250);
   assert.equal("level" in normalized, false);
   assert.equal(getLevelFromExperience(normalized.experience), 3);
 });
 
-test("legacy saves receive missing extended stats without overwriting old values", () => {
+test("version 4 saves reset old characteristic values to zero", () => {
   const legacy = createCharacter("Hero", skins[2]);
-  legacy.version = 3;
+  legacy.version = 4;
   legacy.stats = {
-    health: 90,
-    attack: 21,
-    defense: 7,
-    agility: 18,
+    ...legacy.stats,
+    strength: 16,
+    agility: 15,
+    stealth: 15,
+    scouting: 10,
+    lockpicking: 14,
+    endurance: 8,
   };
   const normalized = normalizeCharacter(legacy);
 
-  assert.equal(normalized.version, 4);
-  assert.equal(normalized.stats.attack, 21);
-  assert.equal(normalized.stats.agility, 18);
-  assert.equal(normalized.stats.stealth, 15);
-  assert.equal(normalized.stats.scouting, 10);
-  assert.equal(normalized.stats.lockpicking, 14);
-  assert.equal(normalized.stats.endurance, 8);
+  assert.equal(normalized.version, 5);
+  for (const key of CHARACTERISTIC_KEYS) {
+    assert.equal(normalized.stats[key], 0, `${key} was not reset`);
+  }
+  assert.equal(normalized.stats.attack, 16);
+  assert.equal(normalized.stats.health, 90);
+});
+
+test("version 5 saves preserve allocated characteristic points", () => {
+  const current = createCharacter("Hero", skins[0]);
+  current.stats.will = 3;
+  current.stats.strength = 2;
+  const normalized = normalizeCharacter(current);
+
+  assert.equal(normalized.stats.will, 3);
+  assert.equal(normalized.stats.strength, 2);
+  assert.equal(getMaxHealth(normalized.stats), normalized.stats.health + 300);
 });
 
 test("experience thresholds match levels 1 through 5", () => {
