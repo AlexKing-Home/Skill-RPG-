@@ -40,16 +40,20 @@ test("only active tab receives the same gold highlight and diamonds", () => {
   assert.match(navCss, /transform:\s*translateX\(-50%\) rotate\(45deg\)/);
 });
 
-test("character bottom navigation switches approved artwork with four real hit targets", () => {
+test("character bottom navigation switches approved high-quality artwork with four real hit targets", () => {
   assert.match(characterNavCss, /\.bottom-nav--character\s*\{/);
   assert.match(characterNavCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(characterNavCss, /background-image:\s*var\(--character-nav-sprite\) !important/);
   assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
-  assert.match(
-    bottomNavSource,
-    /import characterNavSpriteAsset from "\.\.\/assets\/character-nav-sprite\.webp"/,
-  );
-  assert.match(bottomNavSource, /new URL\(characterNavSpriteAsset, window\.location\.href\)\.href/);
+
+  for (const part of ["01", "02", "03", "04"]) {
+    assert.match(
+      bottomNavSource,
+      new RegExp(`character-nav-hq/part-${part}\\.b64\\?raw`),
+    );
+  }
+  assert.match(bottomNavSource, /data:image\/webp;base64/);
+  assert.match(bottomNavSource, /--character-nav-sprite/);
 
   for (const state of ["skills", "inventory", "stats", "character"]) {
     assert.match(characterNavCss, new RegExp(`bottom-nav--active-${state}`));
