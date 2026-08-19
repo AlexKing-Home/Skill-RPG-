@@ -1,4 +1,9 @@
-import characterNavSpriteAsset from "../assets/character-nav-sprite.webp";
+import characterNavPart1 from "../assets/character-nav-hq/part-01.b64?raw";
+import characterNavPart2 from "../assets/character-nav-hq/part-02.b64?raw";
+import characterNavPart3 from "../assets/character-nav-hq/part-03.b64?raw";
+import characterNavPart4 from "../assets/character-nav-hq/part-04.b64?raw";
+
+const characterNavSprite = `data:image/webp;base64,${characterNavPart1}${characterNavPart2}${characterNavPart3}${characterNavPart4}`;
 
 const mainItems = [
   { id: "home", label: "Главная", icon: "♜" },
@@ -18,7 +23,6 @@ const characterItems = [
 
 export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
   const items = variant === "character" ? characterItems : mainItems;
-  const characterNavSprite = new URL(characterNavSpriteAsset, window.location.href).href;
   const style =
     variant === "character"
       ? { "--character-nav-sprite": `url("${characterNavSprite}")` }
