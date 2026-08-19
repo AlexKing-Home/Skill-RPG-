@@ -8,6 +8,7 @@ export const CHARACTERISTIC_KEYS = [
   "will",
 ];
 
+export const STARTING_CHARACTERISTIC_POINTS = 10;
 export const WILL_HP_PER_POINT = 100;
 export const WILL_REGEN_PER_POINT = 10;
 export const WILL_REGEN_INTERVAL_MS = 10_000;
@@ -23,6 +24,15 @@ export function normalizeCharacteristicPoints(stats = {}) {
       return [key, Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0];
     }),
   );
+}
+
+export function normalizeAvailableCharacteristicPoints(value) {
+  const raw = Number(value);
+  return Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : STARTING_CHARACTERISTIC_POINTS;
+}
+
+export function getSpentCharacteristicPoints(stats = {}) {
+  return Object.values(normalizeCharacteristicPoints(stats)).reduce((total, value) => total + value, 0);
 }
 
 export function getWillBonuses(stats = {}) {
