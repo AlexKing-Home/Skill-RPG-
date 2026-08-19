@@ -1,16 +1,9 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
-import DedicatedLocationView from "../components/DedicatedLocationView.jsx";
-import DungeonLocationView from "../components/DungeonLocationView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
-import LocationMapView from "../components/LocationMapView.jsx";
-import MeadowLocationView from "../components/MeadowLocationView.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
-import RuinsLocationView from "../components/RuinsLocationView.jsx";
-import SettlementLocationView from "../components/SettlementLocationView.jsx";
-import StartCityLocationView from "../components/StartCityLocationView.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getExperienceProgress } from "../data/progression.js";
@@ -18,7 +11,23 @@ import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worl
 import { saveCharacter } from "../utils/storage.js";
 import "../game-interface.css";
 
+const DedicatedLocationView = lazy(() => import("../components/DedicatedLocationView.jsx"));
+const DungeonLocationView = lazy(() => import("../components/DungeonLocationView.jsx"));
+const LocationMapView = lazy(() => import("../components/LocationMapView.jsx"));
+const MeadowLocationView = lazy(() => import("../components/MeadowLocationView.jsx"));
+const RuinsLocationView = lazy(() => import("../components/RuinsLocationView.jsx"));
+const SettlementLocationView = lazy(() => import("../components/SettlementLocationView.jsx"));
+const StartCityLocationView = lazy(() => import("../components/StartCityLocationView.jsx"));
+
 const defaultLocation = locationFromNode(START_NODE_ID);
+
+function LocationFallback() {
+  return (
+    <div className="embedded-art-status" role="status" aria-live="polite">
+      Загрузка локации…
+    </div>
+  );
+}
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
@@ -88,20 +97,23 @@ export default function CharacterScreen({ character, onBack }) {
     const isDungeon = location.nodeId === "dungeon";
     const dedicatedLocation = getDedicatedLocation(location.nodeId);
 
+    let locationContent;
     if (isStartCity) {
-      content = <StartCityLocationView />;
+      locationContent = <StartCityLocationView />;
     } else if (isMeadows) {
-      content = <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />;
+      locationContent = (
+        <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />
+      );
     } else if (isRuins) {
-      content = <RuinsLocationView />;
+      locationContent = <RuinsLocationView />;
     } else if (isSettlement) {
-      content = <SettlementLocationView />;
+      locationContent = <SettlementLocationView />;
     } else if (isDungeon) {
-      content = <DungeonLocationView />;
+      locationContent = <DungeonLocationView />;
     } else if (dedicatedLocation) {
-      content = <DedicatedLocationView location={location} />;
+      locationContent = <DedicatedLocationView location={location} />;
     } else {
-      content = (
+      locationContent = (
         <LocationMapView
           location={location}
           worldState={worldState}
@@ -109,6 +121,8 @@ export default function CharacterScreen({ character, onBack }) {
         />
       );
     }
+
+    content = <Suspense fallback={<LocationFallback />}>{locationContent}</Suspense>;
   } else if (activeTab === "tasks" || activeTab === "inventory") {
     content = <PlaceholderView type={activeTab} />;
   } else {
