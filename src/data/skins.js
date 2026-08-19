@@ -67,14 +67,13 @@ export function getSkinsByGender(gender) {
 
 export function createCharacter(nickname, skin) {
   return {
-    version: 2,
+    version: 3,
     nickname,
     gender: skin.gender,
     classId: skin.classId,
     skinId: skin.id,
     skinName: skin.name,
     skinImage: skin.image,
-    level: 1,
     experience: 0,
     currentHealth: skin.stats.health,
     stats: { ...skin.stats },
