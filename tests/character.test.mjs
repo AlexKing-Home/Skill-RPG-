@@ -9,6 +9,7 @@ import {
   LEVEL_EXPERIENCE_RANGES,
 } from "../src/data/progression.js";
 import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
+import { normalizeCharacter } from "../src/utils/storage.js";
 
 const externalUrlPattern = /^https?:\/\//;
 
@@ -57,6 +58,21 @@ test("new character starts with HUD and equipment defaults", () => {
   assert.equal(character.currentHealth, character.stats.health);
   assert.deepEqual(character.equipment, createEmptyEquipment());
   assert.equal(EQUIPMENT_SLOTS.length, 9);
+});
+
+test("legacy saves drop stored level and preserve experience as the source of truth", () => {
+  const legacy = {
+    ...createCharacter("Hero", skins[0]),
+    version: 2,
+    level: 99,
+    experience: 250,
+  };
+  const normalized = normalizeCharacter(legacy);
+
+  assert.equal(normalized.version, 3);
+  assert.equal(normalized.experience, 250);
+  assert.equal("level" in normalized, false);
+  assert.equal(getLevelFromExperience(normalized.experience), 3);
 });
 
 test("experience thresholds match levels 1 through 5", () => {
