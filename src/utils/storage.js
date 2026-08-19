@@ -1,13 +1,15 @@
 import {
   createEmptyCharacteristics,
+  normalizeAvailableCharacteristicPoints,
   normalizeCharacteristicPoints,
+  STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
-import { normalizeCurrentStamina, normalizeMaxStamina } from "../data/stamina.js";
+import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
 
 const SAVE_KEY = "skill-rpg.save.v1";
-const CURRENT_CHARACTER_VERSION = 6;
-const CHARACTERISTICS_RESET_VERSION = 5;
+const CURRENT_CHARACTER_VERSION = 7;
+const CHARACTERISTICS_POINT_POOL_VERSION = 7;
 
 export function normalizeCharacter(character) {
   if (!character || typeof character !== "object") return null;
@@ -20,22 +22,26 @@ export function normalizeCharacter(character) {
   const version = Math.max(CURRENT_CHARACTER_VERSION, sourceVersion);
   const defaults = getDefaultStatsForClass(rest.classId);
   const existingStats = rest.stats ?? {};
-  const characteristics =
-    sourceVersion < CHARACTERISTICS_RESET_VERSION
-      ? createEmptyCharacteristics()
-      : normalizeCharacteristicPoints(existingStats);
+  const usesPointPool = sourceVersion >= CHARACTERISTICS_POINT_POOL_VERSION;
+  const characteristics = usesPointPool
+    ? normalizeCharacteristicPoints(existingStats)
+    : createEmptyCharacteristics();
+  const characteristicPoints = usesPointPool
+    ? normalizeAvailableCharacteristicPoints(rest.characteristicPoints)
+    : STARTING_CHARACTERISTIC_POINTS;
   const stats = {
     ...defaults,
     ...existingStats,
     ...characteristics,
   };
-  const maxStamina = normalizeMaxStamina(rest.maxStamina);
+  const maxStamina = getMaxStamina(stats);
   const currentStamina = normalizeCurrentStamina(rest.currentStamina, maxStamina);
 
   return {
     ...rest,
     version,
     experience,
+    characteristicPoints,
     maxStamina,
     currentStamina,
     stats,
