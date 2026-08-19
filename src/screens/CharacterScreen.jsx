@@ -213,9 +213,7 @@ export default function CharacterScreen({ character, onBack }) {
     content = <WorldMapView location={location} onTravel={handleTravel} />;
   }
 
-  const topTab = ["map", "location", "battle", "character"].includes(activeTab)
-    ? activeTab
-    : "map";
+  const topTab = ["map", "location", "battle", "character"].includes(activeTab) ? activeTab : "map";
   const profileMode = activeTab === "character";
 
   return (
