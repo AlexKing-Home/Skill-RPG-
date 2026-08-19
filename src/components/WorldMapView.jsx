@@ -18,17 +18,40 @@ export default function WorldMapView({ location, onTravel }) {
   const [isMapReady, setIsMapReady] = useState(false);
   const pointerStartRef = useRef(null);
   const mapImageRef = useRef(null);
+  const travelTimersRef = useRef(new Set());
 
   const selectedNode = useMemo(() => getTravelNode(selectedNodeId), [selectedNodeId]);
   const heroNode = getTravelNode(heroNodeId) ?? currentNode;
 
+  function clearTravelTimers() {
+    for (const timerId of travelTimersRef.current) window.clearTimeout(timerId);
+    travelTimersRef.current.clear();
+  }
+
+  function scheduleTravelStep(callback, delay) {
+    const timerId = window.setTimeout(() => {
+      travelTimersRef.current.delete(timerId);
+      callback();
+    }, delay);
+    travelTimersRef.current.add(timerId);
+  }
+
   useEffect(() => {
+    clearTravelTimers();
     setSelectedNodeId(null);
     setHeroNodeId(currentNode.id);
     setActiveRoute(null);
     setIsTraveling(false);
     pointerStartRef.current = null;
   }, [currentNode.id]);
+
+  useEffect(
+    () => () => {
+      clearTravelTimers();
+      pointerStartRef.current = null;
+    },
+    [],
+  );
 
   useEffect(() => {
     const image = mapImageRef.current;
@@ -70,6 +93,7 @@ export default function WorldMapView({ location, onTravel }) {
     const route = getTravelRoute(currentNode.id, nodeId);
     if (!destination || !route) return;
 
+    clearTravelTimers();
     setSelectedNodeId(nodeId);
     setActiveRoute(route);
     setIsTraveling(true);
@@ -83,7 +107,7 @@ export default function WorldMapView({ location, onTravel }) {
       }
 
       setHeroNodeId(steps[index]);
-      window.setTimeout(() => moveStep(index + 1), 650);
+      scheduleTravelStep(() => moveStep(index + 1), 650);
     }
 
     moveStep(0);
