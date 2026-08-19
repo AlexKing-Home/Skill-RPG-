@@ -13,6 +13,7 @@ const characterScreenSource = await read("../src/screens/CharacterScreen.jsx");
 const skinCardSource = await read("../src/components/SkinCard.jsx");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
+const statsSource = await read("../src/components/CharacterStatsView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 
@@ -67,6 +68,17 @@ test("character subsections stay inside the character tab", () => {
   assert.match(characterScreenSource, /onChange=\{profileMode \? setCharacterSection : handleTabChange\}/);
   assert.match(placeholderSource, /title: "Навыки"/);
   assert.match(placeholderSource, /title: "Характеристики"/);
+});
+
+test("characteristic rows have plus and minus controls that persist changes", () => {
+  assert.match(statsSource, /character-stat-button--minus/);
+  assert.match(statsSource, /character-stat-button--plus/);
+  assert.match(statsSource, /onStatChange\(stat\.key, -1\)/);
+  assert.match(statsSource, /onStatChange\(stat\.key, 1\)/);
+  assert.match(statsSource, /disabled=\{value <= 0\}/);
+  assert.match(characterScreenSource, /function handleStatChange\(key, delta\)/);
+  assert.match(characterScreenSource, /stats: nextStats/);
+  assert.match(characterScreenSource, /saveCharacter\(/);
 });
 
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {
