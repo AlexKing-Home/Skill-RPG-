@@ -48,6 +48,15 @@ test("touch tap is handled once instead of firing pointer and click travel toget
   assert.doesNotMatch(mapSource, /onClick=\{\(\) => travelTo\(node\.id\)\}/);
 });
 
+test("unfinished travel timers are cancelled when map state changes or unmounts", () => {
+  assert.match(mapSource, /travelTimersRef/);
+  assert.match(mapSource, /function clearTravelTimers/);
+  assert.match(mapSource, /window\.clearTimeout/);
+  assert.match(mapSource, /function scheduleTravelStep/);
+  assert.match(mapSource, /clearTravelTimers\(\);[\s\S]*setSelectedNodeId\(null\)/);
+  assert.match(mapSource, /\(\) => \(\) => \{[\s\S]*clearTravelTimers\(\)/);
+});
+
 test("real floor map is explicitly decoded and revealed on the first mount", () => {
   assert.match(mapSource, /isMapReady/);
   assert.match(mapSource, /mapImageRef/);
