@@ -27,7 +27,9 @@ test("all game tabs and the bottom navigation stay rendered", () => {
   const css = readFileSync(new URL("../src/navigation-reference-v9.css", import.meta.url), "utf8");
 
   assert.doesNotMatch(screen, /activeTab\s*!==\s*["']location["']/);
-  assert.match(screen, /<BottomNav[\s\S]*active=\{activeTab\}/);
+  assert.match(screen, /<BottomNav/);
+  assert.match(screen, /active=\{profileMode \? characterSection : activeTab\}/);
+  assert.match(screen, /onChange=\{profileMode \? setCharacterSection : handleTabChange\}/);
   assert.match(css, /tabs-location\.webp\?v=11/);
   assert.match(css, /tabs-character\.webp\?v=11/);
   assert.match(css, /bottom-main-map\.webp\?v=11/);
