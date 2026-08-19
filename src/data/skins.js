@@ -10,6 +10,7 @@ import {
 } from "./assets.js";
 import { createEmptyCharacteristics } from "./characteristics.js";
 import { createEmptyEquipment } from "./equipment.js";
+import { BASE_STAMINA } from "./stamina.js";
 
 const classDefinitions = {
   swordsman: {
@@ -93,7 +94,7 @@ export function getDefaultStatsForClass(classId) {
 
 export function createCharacter(nickname, skin) {
   return {
-    version: 5,
+    version: 6,
     nickname,
     gender: skin.gender,
     classId: skin.classId,
@@ -102,6 +103,8 @@ export function createCharacter(nickname, skin) {
     skinImage: skin.image,
     experience: 0,
     currentHealth: skin.stats.health,
+    maxStamina: BASE_STAMINA,
+    currentStamina: BASE_STAMINA,
     stats: { ...skin.stats },
     equipment: createEmptyEquipment(),
     location: {
