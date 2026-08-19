@@ -5,11 +5,15 @@ export default function PlayerHud({
   level,
   currentHealth,
   maxHealth,
+  currentStamina,
+  maxStamina,
   experience,
   mode = "default",
 }) {
   const hpPercent =
     maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
+  const staminaPercent =
+    maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
   const expLabel =
     experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
   const characterMode = mode === "character";
@@ -60,6 +64,26 @@ export default function PlayerHud({
             <span
               className="hud-resource__fill hud-resource__fill--exp"
               style={{ width: `${experience.percent}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="hud-resource hud-resource--stamina">
+          <div className="hud-resource__label">
+            <span>
+              <b aria-hidden="true">◆</b> ВЫНОСЛИВОСТЬ
+            </span>
+            <strong>
+              {currentStamina} / {maxStamina}
+            </strong>
+          </div>
+          <div
+            className="hud-resource__track"
+            aria-label={`Выносливость ${currentStamina} из ${maxStamina}`}
+          >
+            <span
+              className="hud-resource__fill hud-resource__fill--stamina"
+              style={{ width: `${staminaPercent}%` }}
             />
           </div>
         </div>
