@@ -35,6 +35,7 @@ function LocationFallback() {
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
   const [characterSection, setCharacterSection] = useState("character");
+  const [stats, setStats] = useState(() => ({ ...character.stats }));
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
     if (!usesCurrentMap) return defaultLocation;
@@ -48,11 +49,12 @@ export default function CharacterScreen({ character, onBack }) {
   }));
   const experience = getExperienceProgress(character.experience ?? 0);
   const level = experience.level;
-  const maxHealth = getMaxHealth(character.stats);
-  const willBonuses = getWillBonuses(character.stats);
+  const maxHealth = getMaxHealth(stats);
+  const willBonuses = getWillBonuses(stats);
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
+  const activeCharacter = { ...character, stats };
 
   useEffect(() => {
     setCurrentHealth((health) => Math.min(maxHealth, Math.max(0, health)));
@@ -67,6 +69,7 @@ export default function CharacterScreen({ character, onBack }) {
         if (nextHealth !== health) {
           saveCharacter({
             ...character,
+            stats,
             currentHealth: nextHealth,
             location,
             worldState,
@@ -81,6 +84,7 @@ export default function CharacterScreen({ character, onBack }) {
     character,
     location,
     maxHealth,
+    stats,
     willBonuses.regenerationIntervalMs,
     willBonuses.regenerationPerTick,
     worldState,
@@ -89,9 +93,31 @@ export default function CharacterScreen({ character, onBack }) {
   function persist(nextLocation = location, nextWorldState = worldState) {
     saveCharacter({
       ...character,
+      stats,
       currentHealth,
       location: nextLocation,
       worldState: nextWorldState,
+    });
+  }
+
+  function handleStatChange(key, delta) {
+    const currentValue = Math.max(0, Math.floor(Number(stats[key]) || 0));
+    const nextValue = Math.max(0, currentValue + delta);
+    if (nextValue === currentValue) return;
+
+    const nextStats = { ...stats, [key]: nextValue };
+    const nextMaxHealth = getMaxHealth(nextStats);
+    const nextCurrentHealth = Math.min(nextMaxHealth, currentHealth);
+
+    setStats(nextStats);
+    if (nextCurrentHealth !== currentHealth) setCurrentHealth(nextCurrentHealth);
+
+    saveCharacter({
+      ...character,
+      stats: nextStats,
+      currentHealth: nextCurrentHealth,
+      location,
+      worldState,
     });
   }
 
@@ -129,7 +155,7 @@ export default function CharacterScreen({ character, onBack }) {
     if (characterSection === "character") {
       content = (
         <CharacterDetailsView
-          character={character}
+          character={activeCharacter}
           currentHealth={currentHealth}
           maxHealth={maxHealth}
           level={level}
@@ -137,7 +163,7 @@ export default function CharacterScreen({ character, onBack }) {
         />
       );
     } else if (characterSection === "stats") {
-      content = <CharacterStatsView character={character} />;
+      content = <CharacterStatsView character={activeCharacter} onStatChange={handleStatChange} />;
     } else {
       content = <PlaceholderView type={characterSection} />;
     }
