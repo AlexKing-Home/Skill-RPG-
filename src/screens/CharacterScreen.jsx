@@ -207,13 +207,15 @@ export default function CharacterScreen({ character, onBack }) {
     }
 
     content = <Suspense fallback={<LocationFallback />}>{locationContent}</Suspense>;
-  } else if (activeTab === "tasks" || activeTab === "inventory") {
+  } else if (["tasks", "inventory", "battle"].includes(activeTab)) {
     content = <PlaceholderView type={activeTab} />;
   } else {
     content = <WorldMapView location={location} onTravel={handleTravel} />;
   }
 
-  const topTab = ["map", "location", "character"].includes(activeTab) ? activeTab : "map";
+  const topTab = ["map", "location", "battle", "character"].includes(activeTab)
+    ? activeTab
+    : "map";
   const profileMode = activeTab === "character";
 
   return (
