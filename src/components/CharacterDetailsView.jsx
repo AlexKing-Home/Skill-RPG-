@@ -21,7 +21,7 @@ const stats = [
   { id: "attack", label: "Сила атаки", icon: "⚔" },
 ];
 
-export default function CharacterDetailsView({ character, currentHealth, level }) {
+export default function CharacterDetailsView({ character, currentHealth, maxHealth, level }) {
   const [slotMessage, setSlotMessage] = useState("");
   const equipment = { ...createEmptyEquipment(), ...(character.equipment ?? {}) };
 
@@ -35,7 +35,7 @@ export default function CharacterDetailsView({ character, currentHealth, level }
 
   function statValue(id) {
     if (id === "level") return level;
-    if (id === "health") return `${currentHealth} / ${character.stats.health}`;
+    if (id === "health") return `${currentHealth} / ${maxHealth}`;
     if (id === "defense") return character.stats.defense;
     return character.stats.attack;
   }
