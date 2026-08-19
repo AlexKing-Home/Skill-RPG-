@@ -12,6 +12,15 @@ import { createCharacter, getSkinsByGender, skins } from "../src/data/skins.js";
 import { normalizeCharacter } from "../src/utils/storage.js";
 
 const externalUrlPattern = /^https?:\/\//;
+const extendedStatKeys = [
+  "strength",
+  "agility",
+  "stealth",
+  "scouting",
+  "lockpicking",
+  "endurance",
+  "health",
+];
 
 test("there are exactly eight unique skins", () => {
   assert.equal(skins.length, 8);
@@ -50,9 +59,19 @@ test("character has defense and no mana", () => {
   assert.equal("mana" in character.stats, false);
 });
 
+test("character has the requested extended characteristics", () => {
+  const character = createCharacter("Hero", skins[0]);
+  for (const key of extendedStatKeys) {
+    assert.equal(Number.isFinite(character.stats[key]), true, `${key} is missing`);
+  }
+  assert.equal(character.stats.strength, 14);
+  assert.equal(character.stats.agility, 8);
+  assert.equal(character.stats.health, 120);
+});
+
 test("new character starts with HUD and equipment defaults", () => {
   const character = createCharacter("Hero", skins[0]);
-  assert.equal(character.version, 3);
+  assert.equal(character.version, 4);
   assert.equal(character.experience, 0);
   assert.equal("level" in character, false);
   assert.equal(character.currentHealth, character.stats.health);
@@ -69,10 +88,30 @@ test("legacy saves drop stored level and preserve experience as the source of tr
   };
   const normalized = normalizeCharacter(legacy);
 
-  assert.equal(normalized.version, 3);
+  assert.equal(normalized.version, 4);
   assert.equal(normalized.experience, 250);
   assert.equal("level" in normalized, false);
   assert.equal(getLevelFromExperience(normalized.experience), 3);
+});
+
+test("legacy saves receive missing extended stats without overwriting old values", () => {
+  const legacy = createCharacter("Hero", skins[2]);
+  legacy.version = 3;
+  legacy.stats = {
+    health: 90,
+    attack: 21,
+    defense: 7,
+    agility: 18,
+  };
+  const normalized = normalizeCharacter(legacy);
+
+  assert.equal(normalized.version, 4);
+  assert.equal(normalized.stats.attack, 21);
+  assert.equal(normalized.stats.agility, 18);
+  assert.equal(normalized.stats.stealth, 15);
+  assert.equal(normalized.stats.scouting, 10);
+  assert.equal(normalized.stats.lockpicking, 14);
+  assert.equal(normalized.stats.endurance, 8);
 });
 
 test("experience thresholds match levels 1 through 5", () => {

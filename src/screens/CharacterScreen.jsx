@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
+import CharacterStatsView from "../components/CharacterStatsView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
@@ -88,17 +89,20 @@ export default function CharacterScreen({ character, onBack }) {
 
   let content;
   if (activeTab === "character") {
-    content =
-      characterSection === "character" ? (
+    if (characterSection === "character") {
+      content = (
         <CharacterDetailsView
           character={character}
           currentHealth={currentHealth}
           level={level}
           experience={experience}
         />
-      ) : (
-        <PlaceholderView type={characterSection} />
       );
+    } else if (characterSection === "stats") {
+      content = <CharacterStatsView character={character} currentHealth={currentHealth} />;
+    } else {
+      content = <PlaceholderView type={characterSection} />;
+    }
   } else if (activeTab === "location") {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);

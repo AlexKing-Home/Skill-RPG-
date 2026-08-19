@@ -1,5 +1,7 @@
+import { getDefaultStatsForClass } from "../data/skins.js";
+
 const SAVE_KEY = "skill-rpg.save.v1";
-const CURRENT_CHARACTER_VERSION = 3;
+const CURRENT_CHARACTER_VERSION = 4;
 
 export function normalizeCharacter(character) {
   if (!character || typeof character !== "object") return null;
@@ -12,11 +14,16 @@ export function normalizeCharacter(character) {
     CURRENT_CHARACTER_VERSION,
     Number.isFinite(rawVersion) ? Math.floor(rawVersion) : 1,
   );
+  const stats = {
+    ...getDefaultStatsForClass(rest.classId),
+    ...(rest.stats ?? {}),
+  };
 
   return {
     ...rest,
     version,
     experience,
+    stats,
   };
 }
 
