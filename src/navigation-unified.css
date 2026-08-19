@@ -127,6 +127,111 @@
   outline-offset: -4px !important;
 }
 
+/* Character mode uses real React labels instead of the old reference crop. */
+.bottom-nav--character {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  aspect-ratio: 921 / 160 !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-top: 1px solid #76522c !important;
+  border-bottom: 1px solid #76522c !important;
+  border-radius: 0 !important;
+  background: linear-gradient(180deg, #061018 0%, #02070b 100%) !important;
+  background-image: none !important;
+  box-shadow: inset 0 1px rgba(232, 189, 112, 0.06) !important;
+}
+
+.bottom-nav--character .bottom-nav__item,
+.bottom-nav--character .bottom-nav__item.is-active {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 8px 3px 7px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-right: 1px solid rgba(102, 70, 37, 0.72) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #aa9b82 !important;
+  box-shadow: none !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(0.52rem, 1.75vw, 0.82rem) !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 1px 2px #000 !important;
+}
+
+.bottom-nav--character .bottom-nav__item:last-child {
+  border-right: 0 !important;
+}
+
+.bottom-nav--character .bottom-nav__item > span,
+.bottom-nav--character .bottom-nav__icon {
+  width: auto !important;
+  height: auto !important;
+  flex: none !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: inherit !important;
+  background: none !important;
+}
+
+.bottom-nav--character .bottom-nav__icon {
+  display: block !important;
+  font-size: clamp(1.2rem, 4.2vw, 2rem) !important;
+  line-height: 1 !important;
+  color: #c5aa78 !important;
+}
+
+.bottom-nav--character .bottom-nav__item > span:last-child {
+  display: block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.bottom-nav--character .bottom-nav__item.is-active {
+  color: #e7d3ad !important;
+  background:
+    radial-gradient(circle at 50% 60%, rgba(28, 118, 172, 0.28), transparent 62%),
+    linear-gradient(180deg, rgba(8, 24, 36, 0.94), rgba(3, 11, 17, 0.98)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(75, 168, 224, 0.24),
+    inset 0 -3px #2eaff4 !important;
+}
+
+.bottom-nav--character .bottom-nav__item.is-active .bottom-nav__icon {
+  color: #54c4ff !important;
+  text-shadow: 0 0 12px rgba(67, 188, 251, 0.58) !important;
+}
+
+.bottom-nav--character .bottom-nav__item:focus-visible {
+  outline: 2px solid rgba(83, 196, 255, 0.9) !important;
+  outline-offset: -5px !important;
+}
+
 @media (max-width: 600px) {
   .game-tabs,
   .game-tabs--map,
@@ -139,5 +244,20 @@
   .game-tab.is-active {
     padding-inline: 4px !important;
     font-size: clamp(14px, 3.7vw, 20px) !important;
+  }
+
+  .bottom-nav--character {
+    aspect-ratio: 921 / 160 !important;
+  }
+
+  .bottom-nav--character .bottom-nav__item,
+  .bottom-nav--character .bottom-nav__item.is-active {
+    gap: 3px !important;
+    padding-inline: 1px !important;
+    font-size: clamp(0.44rem, 1.6vw, 0.65rem) !important;
+  }
+
+  .bottom-nav--character .bottom-nav__icon {
+    font-size: clamp(1rem, 4.6vw, 1.55rem) !important;
   }
 }
