@@ -1,4 +1,5 @@
 import { getWillBonuses } from "../data/characteristics.js";
+import { BASE_STAMINA, getMaxStamina } from "../data/stamina.js";
 
 const STAT_ROWS = [
   { key: "strength", label: "Сила", icon: "⚔" },
@@ -12,12 +13,20 @@ const STAT_ROWS = [
 
 export default function CharacterStatsView({ character, onStatChange }) {
   const stats = character.stats ?? {};
+  const availablePoints = Math.max(0, Math.floor(Number(character.characteristicPoints) || 0));
   const willBonuses = getWillBonuses(stats);
+  const maxStamina = getMaxStamina(stats);
 
   return (
     <section className="game-view character-stats-view">
       <span className="game-view__eyebrow">Параметры героя</span>
-      <h1>Характеристики</h1>
+      <div className="character-stats-heading">
+        <h1>Характеристики</h1>
+        <div className="character-points-bank" aria-label={`Свободных очков: ${availablePoints}`}>
+          <span>Свободные очки</span>
+          <strong>{availablePoints}</strong>
+        </div>
+      </div>
 
       <div className="character-stats-list" role="list">
         {STAT_ROWS.map((stat) => {
@@ -48,11 +57,17 @@ export default function CharacterStatsView({ character, onStatChange }) {
                   type="button"
                   className="character-stat-button character-stat-button--plus"
                   onClick={() => onStatChange(stat.key, 1)}
+                  disabled={availablePoints <= 0}
                   aria-label={`Увеличить ${stat.label.toLowerCase()}`}
                 >
                   +
                 </button>
               </div>
+              {stat.key === "endurance" ? (
+                <span className="character-stat-row__effect">
+                  1 очко = +1 выносливости. Сейчас: {maxStamina} максимум (база {BASE_STAMINA}).
+                </span>
+              ) : null}
               {stat.key === "will" ? (
                 <span className="character-stat-row__effect">
                   1 очко = +100 HP и +10 HP раз в 10 сек.
