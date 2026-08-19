@@ -8,6 +8,7 @@ import {
   maleSpearman,
   maleSwordsman,
 } from "./assets.js";
+import { createEmptyCharacteristics } from "./characteristics.js";
 import { createEmptyEquipment } from "./equipment.js";
 
 const classDefinitions = {
@@ -18,12 +19,7 @@ const classDefinitions = {
       health: 120,
       attack: 14,
       defense: 12,
-      strength: 14,
-      agility: 8,
-      stealth: 4,
-      scouting: 5,
-      lockpicking: 3,
-      endurance: 12,
+      ...createEmptyCharacteristics(),
     },
   },
   spearman: {
@@ -33,12 +29,7 @@ const classDefinitions = {
       health: 110,
       attack: 13,
       defense: 10,
-      strength: 13,
-      agility: 10,
-      stealth: 4,
-      scouting: 6,
-      lockpicking: 3,
-      endurance: 11,
+      ...createEmptyCharacteristics(),
     },
   },
   assassin: {
@@ -48,12 +39,7 @@ const classDefinitions = {
       health: 90,
       attack: 16,
       defense: 7,
-      strength: 16,
-      agility: 15,
-      stealth: 15,
-      scouting: 10,
-      lockpicking: 14,
-      endurance: 8,
+      ...createEmptyCharacteristics(),
     },
   },
   archer: {
@@ -63,12 +49,7 @@ const classDefinitions = {
       health: 95,
       attack: 14,
       defense: 8,
-      strength: 14,
-      agility: 13,
-      stealth: 10,
-      scouting: 14,
-      lockpicking: 7,
-      endurance: 9,
+      ...createEmptyCharacteristics(),
     },
   },
 };
@@ -112,7 +93,7 @@ export function getDefaultStatsForClass(classId) {
 
 export function createCharacter(nickname, skin) {
   return {
-    version: 4,
+    version: 5,
     nickname,
     gender: skin.gender,
     classId: skin.classId,
