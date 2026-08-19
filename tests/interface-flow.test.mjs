@@ -14,6 +14,7 @@ const skinCardSource = await read("../src/components/SkinCard.jsx");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
 const statsSource = await read("../src/components/CharacterStatsView.jsx");
+const playerHudSource = await read("../src/components/PlayerHud.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 
@@ -82,6 +83,16 @@ test("characteristic rows have plus and minus controls that persist changes", ()
   assert.match(characterScreenSource, /function handleStatChange\(key, delta\)/);
   assert.match(characterScreenSource, /stats: nextStats/);
   assert.match(characterScreenSource, /saveCharacter\(/);
+});
+
+test("character HUD includes the 10-point stamina scale", () => {
+  assert.match(playerHudSource, /hud-resource--stamina/);
+  assert.match(playerHudSource, /ВЫНОСЛИВОСТЬ/);
+  assert.match(playerHudSource, /currentStamina/);
+  assert.match(playerHudSource, /maxStamina/);
+  assert.match(playerHudSource, /characterMode \? \(/);
+  assert.match(characterScreenSource, /currentStamina=\{currentStamina\}/);
+  assert.match(characterScreenSource, /maxStamina=\{maxStamina\}/);
 });
 
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {
