@@ -42,10 +42,7 @@ test("only active tab receives the same gold highlight and diamonds", () => {
 test("character bottom navigation switches approved artwork with four real hit targets", () => {
   assert.match(characterNavCss, /\.bottom-nav--character\s*\{/);
   assert.match(characterNavCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
-  assert.match(
-    characterNavCss,
-    /background-image:\s*var\(--character-nav-sprite\) !important/,
-  );
+  assert.match(characterNavCss, /background-image:\s*var\(--character-nav-sprite\) !important/);
   assert.match(characterNavCss, /background-size:\s*100% 400% !important/);
 
   for (const state of ["skills", "inventory", "stats", "character"]) {
