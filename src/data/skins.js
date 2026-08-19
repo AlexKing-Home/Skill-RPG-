@@ -8,7 +8,10 @@ import {
   maleSpearman,
   maleSwordsman,
 } from "./assets.js";
-import { createEmptyCharacteristics } from "./characteristics.js";
+import {
+  createEmptyCharacteristics,
+  STARTING_CHARACTERISTIC_POINTS,
+} from "./characteristics.js";
 import { createEmptyEquipment } from "./equipment.js";
 import { BASE_STAMINA } from "./stamina.js";
 
@@ -94,7 +97,7 @@ export function getDefaultStatsForClass(classId) {
 
 export function createCharacter(nickname, skin) {
   return {
-    version: 6,
+    version: 7,
     nickname,
     gender: skin.gender,
     classId: skin.classId,
@@ -102,6 +105,7 @@ export function createCharacter(nickname, skin) {
     skinName: skin.name,
     skinImage: skin.image,
     experience: 0,
+    characteristicPoints: STARTING_CHARACTERISTIC_POINTS,
     currentHealth: skin.stats.health,
     maxStamina: BASE_STAMINA,
     currentStamina: BASE_STAMINA,
