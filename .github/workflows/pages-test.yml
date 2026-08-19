@@ -3,7 +3,7 @@ name: Publish static test build
 on:
   push:
     branches:
-      - rebuild/character-entry-clean
+      - main
   workflow_dispatch:
 
 permissions:
