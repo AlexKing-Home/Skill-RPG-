@@ -32,6 +32,7 @@ function LocationFallback() {
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
+  const [characterSection, setCharacterSection] = useState("character");
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
     if (!usesCurrentMap) return defaultLocation;
@@ -54,6 +55,11 @@ export default function CharacterScreen({ character, onBack }) {
       location: nextLocation,
       worldState: nextWorldState,
     });
+  }
+
+  function handleTabChange(nextTab) {
+    setActiveTab(nextTab);
+    if (nextTab === "character") setCharacterSection("character");
   }
 
   function handleTravel(nodeId) {
@@ -82,14 +88,17 @@ export default function CharacterScreen({ character, onBack }) {
 
   let content;
   if (activeTab === "character") {
-    content = (
-      <CharacterDetailsView
-        character={character}
-        currentHealth={currentHealth}
-        level={level}
-        experience={experience}
-      />
-    );
+    content =
+      characterSection === "character" ? (
+        <CharacterDetailsView
+          character={character}
+          currentHealth={currentHealth}
+          level={level}
+          experience={experience}
+        />
+      ) : (
+        <PlaceholderView type={characterSection} />
+      );
   } else if (activeTab === "location") {
     const isStartCity = location.nodeId === "start-city";
     const isMeadows = ["field", "meadows"].includes(location.nodeId);
@@ -148,7 +157,7 @@ export default function CharacterScreen({ character, onBack }) {
           mode={profileMode ? "character" : "default"}
         />
 
-        <GameTabs activeTab={topTab} onChange={setActiveTab} />
+        <GameTabs activeTab={topTab} onChange={handleTabChange} />
 
         <div
           className={`game-content fantasy-panel ${
@@ -159,8 +168,8 @@ export default function CharacterScreen({ character, onBack }) {
         </div>
 
         <BottomNav
-          active={activeTab}
-          onChange={setActiveTab}
+          active={profileMode ? characterSection : activeTab}
+          onChange={profileMode ? setCharacterSection : handleTabChange}
           onHome={onBack}
           variant={profileMode ? "character" : "main"}
         />
