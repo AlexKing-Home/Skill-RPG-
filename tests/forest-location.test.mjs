@@ -11,6 +11,25 @@ const view = await read("../src/components/ForestLocationView.jsx");
 const styles = await read("../src/forest-location.css");
 const forestArtModule = await read("../src/data/forestLocationArt.js");
 
+const forestChunkPaths = [
+  "../src/data/forestLocationChunks/forest-01.js",
+  "../src/data/forestLocationChunks/forest-02.js",
+  "../src/data/forestLocationChunks/forest-03.js",
+  "../src/data/forestLocationChunks/forest-04.js",
+  "../src/data/forestLocationChunks/forest-05.js",
+  "../src/data/forestLocationChunks/forest-06a.js",
+  "../src/data/forestLocationChunks/forest-06b.js",
+  "../src/data/forestLocationChunks/forest-07.js",
+  "../src/data/forestLocationChunks/forest-08.js",
+];
+
+async function readForestChunk(path) {
+  const source = await read(path);
+  const match = source.match(/^export default "([A-Za-z0-9+/=]+)";\s*$/);
+  assert.ok(match, `${path} must contain only one valid base64 chunk`);
+  return match[1];
+}
+
 test("forest node opens its dedicated artwork view", () => {
   assert.match(screen, /ForestLocationView/);
   assert.match(screen, /location\.nodeId === "forest"/);
@@ -21,12 +40,26 @@ test("forest node opens its dedicated artwork view", () => {
   assert.match(view, /<h1 id="forest-location-title">Лес<\/h1>/);
 });
 
-test("forest artwork uses the same committed chunk data URL pattern as other locations", () => {
-  for (let index = 1; index <= 8; index += 1) {
-    assert.match(forestArtModule, new RegExp(`forestLocationChunks/forest-0${index}\\.js`));
+test("forest artwork uses the same committed data URL pattern as other locations", () => {
+  for (const path of forestChunkPaths) {
+    const fileName = path.split("/").at(-1);
+    assert.match(forestArtModule, new RegExp(`forestLocationChunks/${fileName.replace(".", "\\.")}`));
   }
 
   assert.match(forestArtModule, /data:image\/webp;base64/);
+});
+
+test("forest chunks reconstruct one complete WebP image", async () => {
+  const chunks = await Promise.all(forestChunkPaths.map(readForestChunk));
+  const encoded = chunks.join("");
+
+  assert.equal(encoded.length % 4, 0);
+
+  const artwork = Buffer.from(encoded, "base64");
+  assert.equal(artwork.length, 95_760);
+  assert.equal(artwork.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.equal(artwork.subarray(8, 12).toString("ascii"), "WEBP");
+  assert.equal(artwork.readUInt32LE(4) + 8, artwork.length);
 });
 
 test("forest art stays visible and is not covered by generic map layers", () => {
