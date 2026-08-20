@@ -104,10 +104,7 @@ export default function WorldMapView({ location, onTravel, onEncounter }) {
     const encounter = rollTravelEncounter();
 
     if (encounter) {
-      const encounterDelay = Math.max(
-        TRAVEL_STEP_MS / 2,
-        (steps.length * TRAVEL_STEP_MS) / 2,
-      );
+      const encounterDelay = Math.max(TRAVEL_STEP_MS / 2, (steps.length * TRAVEL_STEP_MS) / 2);
 
       scheduleTravelStep(() => {
         clearTravelTimers();
