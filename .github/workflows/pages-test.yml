@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - rebuild/character-entry-clean
   workflow_dispatch:
 
 permissions:
