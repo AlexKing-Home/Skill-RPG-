@@ -27,7 +27,7 @@ test("skill mastery runs from zero to one thousand", () => {
   assert.deepEqual(getMasteryProgress(500), { current: 500, max: 1000, percent: 50 });
 });
 
-test("four requested weapon classes have independent mastery values", () => {
+test("weapon classes have independent mastery values", () => {
   assert.deepEqual(
     WEAPON_MASTERY_TYPES.map(({ key, label }) => ({ key, label })),
     [
@@ -35,6 +35,7 @@ test("four requested weapon classes have independent mastery values", () => {
       { key: "twoHanded", label: "Двуручный меч" },
       { key: "rapier", label: "Рапира" },
       { key: "katana", label: "Катана" },
+      { key: "dualWield", label: "Два меча" },
     ],
   );
 
@@ -43,6 +44,7 @@ test("four requested weapon classes have independent mastery values", () => {
     twoHanded: 0,
     rapier: 0,
     katana: 0,
+    dualWield: 0,
   });
 
   assert.deepEqual(normalizeSkillMastery({ oneHanded: 500, rapier: 1200 }), {
@@ -50,23 +52,24 @@ test("four requested weapon classes have independent mastery values", () => {
     twoHanded: 0,
     rapier: 1000,
     katana: 0,
+    dualWield: 0,
   });
 });
 
-test("two-handed mastery stays hidden until one-handed mastery is complete", () => {
+test("dual swords stay hidden until one-handed mastery is complete", () => {
   assert.deepEqual(
     getVisibleWeaponMasteryTypes({ oneHanded: 999 }).map(({ key }) => key),
-    ["oneHanded", "rapier", "katana"],
+    ["oneHanded", "twoHanded", "rapier", "katana"],
   );
 
   assert.deepEqual(
     getVisibleWeaponMasteryTypes({ oneHanded: 1000 }).map(({ key }) => key),
-    ["oneHanded", "twoHanded", "rapier", "katana"],
+    ["oneHanded", "twoHanded", "rapier", "katana", "dualWield"],
   );
 });
 
 test("skills subsection renders mastery bars only for visible weapon classes", () => {
-  assert.equal(WEAPON_MASTERY_TYPES.length, 4);
+  assert.equal(WEAPON_MASTERY_TYPES.length, 5);
   assert.match(skillsViewSource, /getVisibleWeaponMasteryTypes/);
   assert.match(skillsViewSource, /visibleWeapons\.map/);
   assert.match(skillsViewSource, /weapon\.label/);
