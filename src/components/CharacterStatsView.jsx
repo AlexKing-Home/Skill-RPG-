@@ -4,6 +4,7 @@ import { BASE_STAMINA, getMaxStamina } from "../data/stamina.js";
 const STAT_ROWS = [
   { key: "strength", label: "Сила", icon: "⚔" },
   { key: "agility", label: "Ловкость", icon: "✦" },
+  { key: "accuracy", label: "Точность", icon: "◎" },
   { key: "stealth", label: "Скрытность", icon: "◈" },
   { key: "scouting", label: "Разведка", icon: "⌖" },
   { key: "lockpicking", label: "Взлом", icon: "◇" },
