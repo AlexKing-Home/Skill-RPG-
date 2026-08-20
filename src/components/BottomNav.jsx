@@ -13,8 +13,6 @@ const mainItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
-const battleItem = { id: "battle", label: "Бой", icon: "⚔" };
-
 // Character mode has its own four-section navigation.
 const characterItems = [
   { id: "skills", label: "Навыки", icon: "✦" },
@@ -23,17 +21,8 @@ const characterItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
-export default function BottomNav({
-  active,
-  onChange,
-  onHome,
-  variant = "main",
-  encounterActive = false,
-}) {
-  const encounterItems = encounterActive
-    ? mainItems.map((item) => (item.id === "tasks" ? battleItem : item))
-    : mainItems;
-  const items = variant === "character" ? characterItems : encounterItems;
+export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
+  const items = variant === "character" ? characterItems : mainItems;
   const style =
     variant === "character"
       ? { "--character-nav-sprite": `url("${characterNavSprite}")` }
