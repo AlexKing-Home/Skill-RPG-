@@ -1,11 +1,12 @@
 import {
   getMasteryProgress,
+  getVisibleWeaponMasteryTypes,
   normalizeSkillMastery,
-  WEAPON_MASTERY_TYPES,
 } from "../data/skills.js";
 
 export default function CharacterSkillsView({ character }) {
   const skillMastery = normalizeSkillMastery(character.skillMastery);
+  const visibleWeapons = getVisibleWeaponMasteryTypes(skillMastery);
 
   return (
     <section className="game-view character-skills-view">
@@ -13,7 +14,7 @@ export default function CharacterSkillsView({ character }) {
       <h1>Навыки</h1>
 
       <div className="mastery-list">
-        {WEAPON_MASTERY_TYPES.map((weapon) => {
+        {visibleWeapons.map((weapon) => {
           const mastery = getMasteryProgress(skillMastery[weapon.key]);
 
           return (
