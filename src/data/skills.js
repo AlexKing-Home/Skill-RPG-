@@ -2,13 +2,14 @@ export const MASTERY_MAX = 1000;
 
 export const WEAPON_MASTERY_TYPES = [
   { key: "oneHanded", label: "Одноручный меч" },
-  {
-    key: "twoHanded",
-    label: "Двуручный меч",
-    unlock: { key: "oneHanded", mastery: MASTERY_MAX },
-  },
+  { key: "twoHanded", label: "Двуручный меч" },
   { key: "rapier", label: "Рапира" },
   { key: "katana", label: "Катана" },
+  {
+    key: "dualWield",
+    label: "Два меча",
+    unlock: { key: "oneHanded", mastery: MASTERY_MAX },
+  },
 ];
 
 export function normalizeMastery(value) {
