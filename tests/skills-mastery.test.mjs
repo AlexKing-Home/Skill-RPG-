@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import {
   createEmptySkillMastery,
   getMasteryProgress,
+  getVisibleWeaponMasteryTypes,
   MASTERY_MAX,
   normalizeMastery,
   normalizeSkillMastery,
@@ -52,9 +53,22 @@ test("four requested weapon classes have independent mastery values", () => {
   });
 });
 
-test("skills subsection renders a mastery bar for every weapon class", () => {
+test("two-handed mastery stays hidden until one-handed mastery is complete", () => {
+  assert.deepEqual(
+    getVisibleWeaponMasteryTypes({ oneHanded: 999 }).map(({ key }) => key),
+    ["oneHanded", "rapier", "katana"],
+  );
+
+  assert.deepEqual(
+    getVisibleWeaponMasteryTypes({ oneHanded: 1000 }).map(({ key }) => key),
+    ["oneHanded", "twoHanded", "rapier", "katana"],
+  );
+});
+
+test("skills subsection renders mastery bars only for visible weapon classes", () => {
   assert.equal(WEAPON_MASTERY_TYPES.length, 4);
-  assert.match(skillsViewSource, /WEAPON_MASTERY_TYPES\.map/);
+  assert.match(skillsViewSource, /getVisibleWeaponMasteryTypes/);
+  assert.match(skillsViewSource, /visibleWeapons\.map/);
   assert.match(skillsViewSource, /weapon\.label/);
   assert.match(skillsViewSource, /role="progressbar"/);
   assert.match(skillsViewSource, /mastery\.current/);
