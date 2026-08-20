@@ -6,6 +6,11 @@
   margin-bottom: 22px;
 }
 
+.mastery-list {
+  display: grid;
+  gap: 12px;
+}
+
 .mastery-card {
   padding: 18px;
   border: 1px solid rgba(151, 113, 67, 0.68);
@@ -71,8 +76,16 @@
 }
 
 @media (max-width: 600px) {
+  .mastery-list {
+    gap: 9px;
+  }
+
   .mastery-card {
     padding: 14px;
+  }
+
+  .mastery-card__header {
+    gap: 10px;
   }
 
   .mastery-card__header strong {
