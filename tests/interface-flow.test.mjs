@@ -74,7 +74,8 @@ test("character subsections stay inside the character tab", () => {
   assert.match(placeholderSource, /title: "Характеристики"/);
 });
 
-test("characteristic rows have plus and minus controls that persist changes", () => {
+test("characteristic rows include accuracy and plus-minus controls", () => {
+  assert.match(statsSource, /key: "accuracy", label: "Точность"/);
   assert.match(statsSource, /character-stat-button--minus/);
   assert.match(statsSource, /character-stat-button--plus/);
   assert.match(statsSource, /onStatChange\(stat\.key, -1\)/);
