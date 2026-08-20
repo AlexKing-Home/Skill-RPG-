@@ -105,6 +105,7 @@ export function createCharacter(nickname, skin) {
     skinName: skin.name,
     skinImage: skin.image,
     experience: 0,
+    skillMastery: 0,
     characteristicPoints: STARTING_CHARACTERISTIC_POINTS,
     currentHealth: skin.stats.health,
     maxStamina: BASE_STAMINA,
