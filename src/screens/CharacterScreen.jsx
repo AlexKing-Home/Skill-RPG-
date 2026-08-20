@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
+import CharacterSkillsView from "../components/CharacterSkillsView.jsx";
 import CharacterStatsView from "../components/CharacterStatsView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
@@ -200,6 +201,8 @@ export default function CharacterScreen({ character, onBack }) {
           experience={experience}
         />
       );
+    } else if (characterSection === "skills") {
+      content = <CharacterSkillsView character={activeCharacter} />;
     } else if (characterSection === "stats") {
       content = <CharacterStatsView character={activeCharacter} onStatChange={handleStatChange} />;
     } else {
