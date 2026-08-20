@@ -2,6 +2,7 @@ export const CHARACTERISTIC_KEYS = [
   "strength",
   "agility",
   "accuracy",
+  "mobility",
   "stealth",
   "scouting",
   "lockpicking",
