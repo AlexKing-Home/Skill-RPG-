@@ -53,10 +53,9 @@ test("four requested weapon classes have independent mastery values", () => {
 });
 
 test("skills subsection renders a mastery bar for every weapon class", () => {
-  for (const label of ["Одноручный меч", "Двуручный меч", "Рапира", "Катана"]) {
-    assert.match(skillsViewSource, new RegExp(label));
-  }
+  assert.equal(WEAPON_MASTERY_TYPES.length, 4);
   assert.match(skillsViewSource, /WEAPON_MASTERY_TYPES\.map/);
+  assert.match(skillsViewSource, /weapon\.label/);
   assert.match(skillsViewSource, /role="progressbar"/);
   assert.match(skillsViewSource, /mastery\.current/);
   assert.match(skillsViewSource, /mastery\.max/);
