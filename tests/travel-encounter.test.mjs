@@ -38,6 +38,9 @@ test("wild boar attack automatically opens the battle tab", () => {
   assert.match(characterScreen, /function handleEncounter\(encounter\)/);
   assert.match(characterScreen, /setActiveEncounter\(encounter\)/);
   assert.match(characterScreen, /setActiveTab\("battle"\)/);
-  assert.match(characterScreen, /<BattleView encounter={activeEncounter} \/>/);
-  assert.match(characterScreen, /onEncounter={handleEncounter}/);
+  assert.match(characterScreen, /<BattleView[\s\S]*encounter=\{activeEncounter\}/);
+  assert.match(characterScreen, /currentStamina=\{currentStamina\}/);
+  assert.match(characterScreen, /maxStamina=\{maxStamina\}/);
+  assert.match(characterScreen, /onSkillActivate=\{handleSkillActivate\}/);
+  assert.match(characterScreen, /onEncounter=\{handleEncounter\}/);
 });
