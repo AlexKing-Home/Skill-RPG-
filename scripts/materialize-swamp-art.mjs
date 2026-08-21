@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const outputDir = `${root}public/ui`;
+const floorMapOutputFile = `${outputDir}/floor-one-map.webp`;
 const swampOutputFile = `${outputDir}/swamp-location.webp`;
 const ruinsOutputFile = `${outputDir}/ruins-location.webp`;
 
@@ -32,11 +33,14 @@ function decodeWebp(chunks, label) {
   return image;
 }
 
+const floorMapImage = decodeWebp(await loadChunks("mapChunks", "floor1", 8), "Floor map");
 const swampImage = decodeWebp(await loadChunks("swampLocationChunks", "swamp", 6), "Swamp");
 const ruinsImage = decodeWebp(await loadChunks("ruinsLocationChunks", "ruins", 8), "Ruins");
 
 await mkdir(outputDir, { recursive: true });
+await writeFile(floorMapOutputFile, floorMapImage);
 await writeFile(swampOutputFile, swampImage);
 await writeFile(ruinsOutputFile, ruinsImage);
+console.log(`Prepared floor map artwork: ${floorMapImage.length} bytes`);
 console.log(`Prepared swamp artwork: ${swampImage.length} bytes`);
 console.log(`Prepared ruins artwork: ${ruinsImage.length} bytes`);
