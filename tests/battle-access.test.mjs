@@ -9,6 +9,7 @@ const characterScreenSource = await readFile(
 
 test("battle tab always renders battle controls while encounters only add flee behavior", () => {
   assert.match(characterScreenSource, /else if \(activeTab === "battle"\) \{[\s\S]*?<BattleView/);
+  assert.doesNotMatch(characterScreenSource, /<PlaceholderView type="battle"/);
   assert.doesNotMatch(
     characterScreenSource,
     /activeEncounter \? \([\s\S]*?<BattleView[\s\S]*?: \([\s\S]*?<PlaceholderView type="battle"/,
