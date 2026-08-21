@@ -22,7 +22,7 @@ const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /setScreen\("character"\)/);
   assert.match(appSource, /<CharacterScreen character=\{character\}/);
-  assert.match(appSource, /exact-reference\.css/);
+  assert.match(appSource, /styles\/app-theme\.css/);
 });
 
 test("game screen contains HUD maps tabs and integrated character profile", () => {
