@@ -15,7 +15,7 @@ const rootsChunk1 = await read("../src/data/swampSubLocationChunks/roots-01.js")
 const rootsChunk2 = await read("../src/data/swampSubLocationChunks/roots-02.js");
 const firstChunkSource = await read("../src/data/swampLocationChunks/swamp-01.js");
 const lastChunkSource = await read("../src/data/swampLocationChunks/swamp-06.js");
-const cssSource = await read("../src/swamp-location.css");
+const cssSource = await read("../src/styles/world.css");
 const mainSource = await read("../src/main.jsx");
 
 const pointIds = [

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { forestLocationArt } from "../data/forestLocationArt.js";
-import "../forest-location.css";
+import "../styles/location-scenes.css";
 
 const forestPoints = [
   {

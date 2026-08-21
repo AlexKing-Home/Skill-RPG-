@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ruinsLocationArt } from "../data/ruinsLocationArt.js";
-import "../ruins-location.css";
+import "../styles/location-scenes.css";
 
 const ruinsPoints = [
   {

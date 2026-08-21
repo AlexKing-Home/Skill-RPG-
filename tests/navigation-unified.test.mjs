@@ -7,23 +7,18 @@ async function read(relativePath) {
 }
 
 const mainSource = await read("../src/main.jsx");
-const navCss = await read("../src/navigation-unified.css");
-const characterNavCss = await read("../src/character-navigation-art.css");
+const navCss = await read("../src/styles/navigation.css");
+const characterNavCss = await read("../src/styles/character.css");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 
-test("unified tab skin loads after state-specific navigation artwork", () => {
-  const stateSpecific = mainSource.indexOf('import "./navigation-reference-v9.css"');
-  const unified = mainSource.indexOf('import "./navigation-unified.css"');
-  assert.ok(stateSpecific >= 0);
-  assert.ok(unified > stateSpecific);
-});
-
-test("character artwork override loads after unified navigation", () => {
-  const unified = mainSource.indexOf('import "./navigation-unified.css"');
-  const characterArtwork = mainSource.indexOf('import "./character-navigation-art.css"');
-  assert.ok(unified >= 0);
-  assert.ok(characterArtwork > unified);
+test("navigation and character layers keep their cascade order", () => {
+  const navigation = mainSource.indexOf('import "./styles/navigation.css"');
+  const world = mainSource.indexOf('import "./styles/world.css"');
+  const character = mainSource.indexOf('import "./styles/character.css"');
+  assert.ok(navigation >= 0);
+  assert.ok(world > navigation);
+  assert.ok(character > world);
 });
 
 test("map location battle and character share one four-column top navigation geometry", () => {

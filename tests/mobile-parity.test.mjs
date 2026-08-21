@@ -10,10 +10,10 @@ const mainSource = await read("../src/main.jsx");
 const assetsSource = await read("../src/data/assets.js");
 const worldSource = await read("../src/components/WorldMapView.jsx");
 const locationSource = await read("../src/components/LocationMapView.jsx");
-const parityCss = await read("../src/parity-fixes.css");
-const deviceCss = await read("../src/device-regression-fixes.css");
-const finalCss = await read("../src/reference-parity-final.css");
-const mobilePolishCss = await read("../src/mobile-polish.css");
+const parityCss = await read("../src/styles/compatibility.css");
+const deviceCss = await read("../src/styles/compatibility.css");
+const finalCss = await read("../src/styles/compatibility.css");
+const mobilePolishCss = await read("../src/styles/compatibility.css");
 
 test("mobile polish loads after all parity layers", () => {
   assert.match(mainSource, /import "\.\/parity-fixes\.css"/);

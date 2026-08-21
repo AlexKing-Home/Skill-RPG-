@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { meadowLocationArt } from "../data/meadowLocationArt.js";
-import "../meadow-location.css";
+import "../styles/location-scenes.css";
 
 const meadowObjects = [
   {

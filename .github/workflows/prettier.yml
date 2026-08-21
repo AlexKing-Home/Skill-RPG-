@@ -32,23 +32,45 @@ jobs:
       - name: Install repository dependencies
         run: npm install
 
-      - name: Run one-time CSS consolidation
+      - name: Format files changed by this push
         shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          node scripts/consolidate-css-once.mjs
-          npx --no-install prettier --write --ignore-unknown src tests README.md docs package.json
-          printf '%s\n' \
-            node_modules \
-            dist \
-            coverage \
-            'src/data/**/*Chunks*/**' > .prettierignore
-          rm -f scripts/consolidate-css-once.mjs
-          rm -f .github/workflows/css-consolidation.yml
-          git checkout origin/main -- .github/workflows/prettier.yml
+
+          zero="0000000000000000000000000000000000000000"
+          if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" == "$zero" ]]; then
+            if git rev-parse "${CURRENT_SHA}^" >/dev/null 2>&1; then
+              base="${CURRENT_SHA}^"
+            else
+              base="$CURRENT_SHA"
+            fi
+          else
+            base="$BEFORE_SHA"
+          fi
+
+          mapfile -d '' files < <(
+            git diff --name-only --diff-filter=ACMR -z "$base" "$CURRENT_SHA" -- \
+              '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.css' '*.scss' \
+              '*.json' '*.md' '*.yml' '*.yaml' '*.html'
+          )
+
+          if ((${#files[@]} == 0)); then
+            echo "No Prettier-supported files changed in this push."
+            exit 0
+          fi
+
+          npx --no-install prettier --write --ignore-unknown "${files[@]}"
+
+          if git diff --quiet -- "${files[@]}"; then
+            echo "Formatting is already correct."
+            exit 0
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "refactor: consolidate CSS architecture"
+          git add -- "${files[@]}"
+          git commit -m "style: auto-format with Prettier"
           git push origin "HEAD:${GITHUB_REF_NAME}"

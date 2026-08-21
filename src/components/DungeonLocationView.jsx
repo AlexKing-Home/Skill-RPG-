@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dungeonLocationArt } from "../data/dungeonLocationArt.js";
-import "../dungeon-location.css";
+import "../styles/location-scenes.css";
 
 const dungeonPoints = [
   {

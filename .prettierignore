@@ -2,9 +2,3 @@ node_modules
 dist
 coverage
 src/data/**/*Chunks*/**
-src/navigation-reference-v2.css
-src/parity-fixes.css
-src/reference-ui-v8.css
-src/welcome-background.css
-scripts/consolidate-css-once.mjs
-.github/workflows/css-consolidation.yml
