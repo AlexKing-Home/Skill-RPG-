@@ -30,6 +30,7 @@ export default function BattleView({
   currentStamina = 0,
   maxStamina = 0,
   onSkillActivate,
+  onFlee,
   findSkill = null,
   weaponLabel = "Оружие",
 }) {
@@ -176,6 +177,12 @@ export default function BattleView({
             </button>
           ))}
         </div>
+
+        {onFlee ? (
+          <button type="button" className="battle-flee" onClick={onFlee}>
+            Бегство
+          </button>
+        ) : null}
       </div>
     </section>
   );
