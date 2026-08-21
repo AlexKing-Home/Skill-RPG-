@@ -2,10 +2,7 @@ import {
   createEmptyCharacteristics,
   STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
-import {
-  getAvailableCharacteristicPoints,
-  getLevelFromSkillMastery,
-} from "../data/progression.js";
+import { getAvailableCharacteristicPoints, getLevelFromSkillMastery } from "../data/progression.js";
 import { normalizeSkillMastery } from "../data/skills.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
