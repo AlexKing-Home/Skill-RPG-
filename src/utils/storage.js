@@ -1,5 +1,6 @@
 import {
   createEmptyCharacteristics,
+  normalizeCharacteristicPoints,
   STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
 import { getAvailableCharacteristicPoints, getLevelFromSkillMastery } from "../data/progression.js";
@@ -25,12 +26,7 @@ export function normalizeCharacter(character) {
   const existingStats = rest.stats ?? {};
   const usesPointPool = sourceVersion >= CHARACTERISTICS_POINT_POOL_VERSION;
   const characteristics = usesPointPool
-    ? Object.fromEntries(
-        Object.entries(createEmptyCharacteristics()).map(([key]) => {
-          const raw = Number(existingStats[key]);
-          return [key, Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0];
-        }),
-      )
+    ? normalizeCharacteristicPoints(existingStats)
     : createEmptyCharacteristics();
   const stats = {
     ...defaults,
