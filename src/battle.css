@@ -281,6 +281,33 @@
   grid-row: 3;
 }
 
+.battle-flee {
+  justify-self: center;
+  min-width: 160px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid rgba(174, 116, 73, 0.76);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(62, 36, 25, 0.94), rgba(25, 15, 11, 0.98));
+  color: #e5c39b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 222, 175, 0.04),
+    0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
+.battle-flee:active {
+  transform: translateY(1px);
+}
+
+.battle-flee:focus-visible {
+  outline: 2px solid rgba(104, 200, 255, 0.88);
+  outline-offset: 2px;
+}
+
 @media (max-width: 620px) {
   .battle-view {
     padding: 18px 14px 24px;
