@@ -1,0 +1,53 @@
+name: One-time CSS consolidation
+
+on:
+  push:
+    branches:
+      - chore/review-cleanup
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v7
+        with:
+          ref: chore/review-cleanup
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Consolidate CSS sources
+        run: node scripts/consolidate-css-once.mjs
+
+      - name: Format migrated sources
+        run: npx --no-install prettier --write src tests docs README.md package.json
+
+      - name: Run full verification
+        run: npm run check
+
+      - name: Remove one-time migration files
+        run: |
+          rm scripts/consolidate-css-once.mjs
+          rm .github/workflows/css-consolidation.yml
+
+      - name: Commit consolidated CSS
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "refactor: consolidate CSS architecture"
+          git push origin HEAD:chore/review-cleanup
