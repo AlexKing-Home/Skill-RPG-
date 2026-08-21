@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  test-and-build:
+  quality-test-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -20,6 +20,12 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run static checks
+        run: npm run lint
 
       - name: Run regression tests
         run: npm test
