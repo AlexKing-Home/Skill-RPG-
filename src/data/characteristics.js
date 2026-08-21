@@ -30,9 +30,7 @@ export function normalizeCharacteristicPoints(stats = {}) {
 
 export function normalizeAvailableCharacteristicPoints(value) {
   const raw = Number(value);
-  return Number.isFinite(raw)
-    ? Math.max(0, Math.floor(raw))
-    : STARTING_CHARACTERISTIC_POINTS;
+  return Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : STARTING_CHARACTERISTIC_POINTS;
 }
 
 export function getSpentCharacteristicPoints(stats = {}) {
