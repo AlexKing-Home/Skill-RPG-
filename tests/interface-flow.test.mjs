@@ -15,6 +15,7 @@ const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
 const statsSource = await read("../src/components/CharacterStatsView.jsx");
 const playerHudSource = await read("../src/components/PlayerHud.jsx");
+const battleViewSource = await read("../src/components/BattleView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 
@@ -95,6 +96,56 @@ test("character HUD includes the 10-point stamina scale", () => {
   assert.match(playerHudSource, /characterMode \? \(/);
   assert.match(characterScreenSource, /currentStamina=\{currentStamina\}/);
   assert.match(characterScreenSource, /maxStamina=\{maxStamina\}/);
+});
+
+test("battle direction buttons define their basic combat actions", () => {
+  assert.match(battleViewSource, /left: "УДАР СЛЕВА!"/);
+  assert.match(battleViewSource, /right: "УДАР СПРАВА!"/);
+  assert.match(battleViewSource, /up: "БЛОК!"/);
+  assert.match(battleViewSource, /down: "ПАРИРОВАНИЕ!"/);
+  assert.match(battleViewSource, /function handleDirection\(directionId\)/);
+  assert.match(battleViewSource, /onClick=\{\(\) => handleDirection\(direction\.id\)\}/);
+});
+
+test("battle action notification appears only after the shared 1.5 second combo window", () => {
+  assert.match(battleViewSource, /COMBO_INPUT_TIMEOUT_MS = 1500/);
+  assert.match(battleViewSource, /function resolveCombo\(sequence\)/);
+  assert.match(battleViewSource, /sequence\.length === 1/);
+  assert.match(battleViewSource, /showAction\(BASIC_ACTIONS\[sequence\[0\]\]\)/);
+  assert.match(battleViewSource, /resolveCombo\(comboSequenceRef\.current\)/);
+  assert.match(battleViewSource, /"Ввод комбинации…"/);
+});
+
+test("recognized sword skill spends stamina and shows its activation cost", () => {
+  assert.match(battleViewSource, /findOneHandedSwordSkill\(sequence\)/);
+  assert.match(battleViewSource, /onSkillActivate \? onSkillActivate\(skill\) : true/);
+  assert.match(
+    battleViewSource,
+    /showAction\(`НАВЫК: \$\{skill\.name\}! −\$\{skill\.staminaCost\} ВЫН\.`\)/,
+  );
+  assert.match(battleViewSource, /НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!/);
+});
+
+test("character combat state deducts and persists skill stamina", () => {
+  assert.match(characterScreenSource, /\[currentStamina, setCurrentStamina\]/);
+  assert.match(characterScreenSource, /function handleSkillActivate\(skill\)/);
+  assert.match(characterScreenSource, /currentStamina < staminaCost/);
+  assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
+  assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
+  assert.match(characterScreenSource, /currentStamina: nextStamina/);
+  assert.match(characterScreenSource, /onSkillActivate=\{handleSkillActivate\}/);
+});
+
+test("battle combo timer starts once on the first input and does not restart", () => {
+  assert.match(battleViewSource, /function startComboTimer\(\)/);
+  assert.match(battleViewSource, /if \(comboTimerRef\.current !== null\) return/);
+  assert.match(battleViewSource, /startComboTimer\(\)/);
+  assert.doesNotMatch(battleViewSource, /restartComboTimer/);
+  assert.match(battleViewSource, /comboTimerRef\.current = null/);
+  assert.match(battleViewSource, /comboSequenceRef\.current = \[\]/);
+  assert.match(battleViewSource, /setComboSequence\(\[\]\)/);
+  assert.match(battleViewSource, /battle-combo__timer-fill/);
+  assert.match(battleViewSource, /animationDuration: `\$\{COMBO_INPUT_TIMEOUT_MS\}ms`/);
 });
 
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {
