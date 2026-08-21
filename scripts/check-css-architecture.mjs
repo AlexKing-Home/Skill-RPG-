@@ -16,9 +16,7 @@ const legacyOverrideFiles = new Set([
 ]);
 
 const legacyNamePattern = /(?:fixes|final|-v\d+)\.css$/;
-const cssFiles = (await readdir(sourceDirectory))
-  .filter((file) => file.endsWith(".css"))
-  .sort();
+const cssFiles = (await readdir(sourceDirectory)).filter((file) => file.endsWith(".css")).sort();
 
 const unexpectedLegacyFiles = cssFiles.filter(
   (file) => legacyNamePattern.test(file) && !legacyOverrideFiles.has(file),
