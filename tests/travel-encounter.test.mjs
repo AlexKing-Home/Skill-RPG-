@@ -55,5 +55,5 @@ test("active battle prevents travel until the explicit flee action clears the en
   assert.match(characterScreen, /function handleFleeBattle\(\)/);
   assert.match(characterScreen, /setActiveEncounter\(null\)/);
   assert.match(characterScreen, /setActiveTab\("map"\)/);
-  assert.match(characterScreen, /onFlee=\{handleFleeBattle\}/);
+  assert.match(characterScreen, /onFlee=\{activeEncounter \? handleFleeBattle : undefined\}/);
 });

@@ -152,7 +152,7 @@ test("active encounters lock navigation and expose an explicit flee action", () 
   assert.match(characterScreenSource, /const battleLocked = Boolean\(activeEncounter\)/);
   assert.match(characterScreenSource, /locked=\{battleLocked\}/);
   assert.match(characterScreenSource, /function handleFleeBattle\(\)/);
-  assert.match(characterScreenSource, /onFlee=\{handleFleeBattle\}/);
+  assert.match(characterScreenSource, /onFlee=\{activeEncounter \? handleFleeBattle : undefined\}/);
   assert.match(battleViewSource, /className="battle-flee"/);
   assert.match(battleViewSource, />\s*Бегство\s*</);
 });
