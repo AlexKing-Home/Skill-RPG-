@@ -1,7 +1,8 @@
-/* Unified top navigation. All three states use the same geometry and only the active column changes. */
+/* Unified top navigation. All four states use the same geometry and only the active column changes. */
 .game-tabs,
 .game-tabs--map,
 .game-tabs--location,
+.game-tabs--battle,
 .game-tabs--character {
   position: relative !important;
   box-sizing: border-box !important;
@@ -9,7 +10,7 @@
   min-width: 0 !important;
   aspect-ratio: 921 / 105 !important;
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   gap: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -52,10 +53,10 @@
   color: #c9b89a !important;
   box-shadow: none !important;
   font-family: Georgia, "Times New Roman", serif !important;
-  font-size: clamp(15px, 3.45vw, 22px) !important;
+  font-size: clamp(12px, 2.8vw, 19px) !important;
   font-weight: 400 !important;
   line-height: 1 !important;
-  letter-spacing: 0.045em !important;
+  letter-spacing: 0.035em !important;
   text-transform: uppercase !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.72) !important;
 }
@@ -130,6 +131,17 @@
 .game-tab:focus-visible {
   outline: 2px solid rgba(104, 200, 255, 0.88) !important;
   outline-offset: -4px !important;
+}
+
+.game-tab:disabled,
+.bottom-nav__item:disabled {
+  cursor: not-allowed !important;
+  filter: saturate(0.45) brightness(0.72) !important;
+}
+
+.game-tab:disabled:not(.is-active),
+.bottom-nav__item:disabled:not(.is-active) {
+  opacity: 0.55 !important;
 }
 
 /* Character mode uses real React labels instead of the old reference crop. */
@@ -241,14 +253,15 @@
   .game-tabs,
   .game-tabs--map,
   .game-tabs--location,
+  .game-tabs--battle,
   .game-tabs--character {
     aspect-ratio: 921 / 105 !important;
   }
 
   .game-tab,
   .game-tab.is-active {
-    padding-inline: 4px !important;
-    font-size: clamp(14px, 3.7vw, 20px) !important;
+    padding-inline: 3px !important;
+    font-size: clamp(11px, 2.75vw, 17px) !important;
   }
 
   .bottom-nav--character {

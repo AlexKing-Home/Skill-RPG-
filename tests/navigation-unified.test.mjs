@@ -9,6 +9,7 @@ async function read(relativePath) {
 const mainSource = await read("../src/main.jsx");
 const navCss = await read("../src/navigation-unified.css");
 const characterNavCss = await read("../src/character-navigation-art.css");
+const tabsSource = await read("../src/components/GameTabs.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 
 test("unified tab skin loads after state-specific navigation artwork", () => {
@@ -25,13 +26,25 @@ test("character artwork override loads after unified navigation", () => {
   assert.ok(characterArtwork > unified);
 });
 
-test("map location and character share one top navigation geometry", () => {
+test("map location battle and character share one four-column top navigation geometry", () => {
   assert.match(
     navCss,
-    /\.game-tabs--map,[\s\S]*\.game-tabs--location,[\s\S]*\.game-tabs--character/,
+    /\.game-tabs--map,[\s\S]*\.game-tabs--location,[\s\S]*\.game-tabs--battle,[\s\S]*\.game-tabs--character/,
   );
-  assert.match(navCss, /grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(navCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(navCss, /background-image:\s*none !important/);
+  for (const label of ["Карта", "Локация", "Бой", "Персонаж"]) {
+    assert.match(tabsSource, new RegExp(label));
+  }
+});
+
+test("active battle can lock navigation without removing the battle tab", () => {
+  assert.match(tabsSource, /locked = false/);
+  assert.match(tabsSource, /locked && tab\.id !== activeTab/);
+  assert.match(tabsSource, /disabled=\{disabled\}/);
+  assert.match(bottomNavSource, /locked = false/);
+  assert.match(bottomNavSource, /if \(locked\) return/);
+  assert.match(bottomNavSource, /disabled=\{locked\}/);
 });
 
 test("only active tab receives the same gold highlight and diamonds", () => {

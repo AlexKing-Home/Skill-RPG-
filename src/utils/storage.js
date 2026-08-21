@@ -1,9 +1,9 @@
 import {
   createEmptyCharacteristics,
-  normalizeAvailableCharacteristicPoints,
   normalizeCharacteristicPoints,
   STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
+import { getAvailableCharacteristicPoints, getLevelFromSkillMastery } from "../data/progression.js";
 import { normalizeSkillMastery } from "../data/skills.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
@@ -28,14 +28,15 @@ export function normalizeCharacter(character) {
   const characteristics = usesPointPool
     ? normalizeCharacteristicPoints(existingStats)
     : createEmptyCharacteristics();
-  const characteristicPoints = usesPointPool
-    ? normalizeAvailableCharacteristicPoints(rest.characteristicPoints)
-    : STARTING_CHARACTERISTIC_POINTS;
   const stats = {
     ...defaults,
     ...existingStats,
     ...characteristics,
   };
+  const level = getLevelFromSkillMastery(skillMastery);
+  const characteristicPoints = usesPointPool
+    ? getAvailableCharacteristicPoints(level, stats)
+    : STARTING_CHARACTERISTIC_POINTS;
   const maxStamina = getMaxStamina(stats);
   const currentStamina = normalizeCurrentStamina(rest.currentStamina, maxStamina);
 

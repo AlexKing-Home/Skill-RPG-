@@ -12,12 +12,13 @@ const mapArtSource = await read("../src/data/floorOneMapArt.js");
 const navigationSource = await read("../src/data/worldNavigation.js");
 const cssSource = await read("../src/floor-map.css");
 
-test("approved floor map art is used by the world map", () => {
+test("approved floor map art is materialized outside the client JavaScript bundle", async () => {
   assert.match(mapSource, /floorOneMapArt/);
-  assert.match(mapArtSource, /data:image\/webp;base64/);
+  assert.match(floorOneMapArt, /\/ui\/floor-one-map\.webp/);
+  assert.doesNotMatch(mapArtSource, /data:image\/webp;base64/);
+  assert.doesNotMatch(mapArtSource, /mapChunks/);
 
-  const encoded = floorOneMapArt.replace("data:image/webp;base64,", "");
-  const image = Buffer.from(encoded, "base64");
+  const image = await readFile(new URL("../public/ui/floor-one-map.webp", import.meta.url));
   assert.equal(image.subarray(0, 4).toString("ascii"), "RIFF");
   assert.equal(image.subarray(8, 12).toString("ascii"), "WEBP");
   assert.ok(image.length > 80000);

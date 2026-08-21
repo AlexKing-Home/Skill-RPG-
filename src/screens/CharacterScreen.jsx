@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import BattleView from "../components/BattleView.jsx";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
@@ -9,8 +9,10 @@ import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
 import WorldMapView from "../components/WorldMapView.jsx";
 import { getMaxHealth, getWillBonuses } from "../data/characteristics.js";
+import { getCombatProfile } from "../data/combatProfiles.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
-import { getExperienceProgress } from "../data/progression.js";
+import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
+import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
@@ -40,8 +42,8 @@ export default function CharacterScreen({ character, onBack }) {
   const [activeEncounter, setActiveEncounter] = useState(null);
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
-  const [characteristicPoints, setCharacteristicPoints] = useState(() =>
-    Math.max(0, Math.floor(Number(character.characteristicPoints) || 0)),
+  const [skillMastery, setSkillMastery] = useState(() =>
+    normalizeSkillMastery(character.skillMastery),
   );
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
@@ -54,11 +56,14 @@ export default function CharacterScreen({ character, onBack }) {
     ...(character.worldState ?? {}),
     floorMapVersion: FLOOR_MAP_VERSION,
   }));
-  const experience = getExperienceProgress(character.experience ?? 0);
-  const level = experience.level;
+
+  const progression = getSkillProgression(skillMastery);
+  const level = progression.level;
+  const characteristicPoints = getAvailableCharacteristicPoints(level, stats);
   const maxHealth = getMaxHealth(stats);
   const willBonuses = getWillBonuses(stats);
   const maxStamina = getMaxStamina(stats);
+  const combatProfile = getCombatProfile(character.classId);
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
@@ -67,10 +72,18 @@ export default function CharacterScreen({ character, onBack }) {
   );
   const activeCharacter = {
     ...character,
+    skillMastery,
     characteristicPoints,
     maxStamina,
     currentStamina,
     stats,
+  };
+  const snapshotRef = useRef(null);
+  snapshotRef.current = {
+    ...activeCharacter,
+    currentHealth,
+    location,
+    worldState,
   };
 
   useEffect(() => {
@@ -88,46 +101,27 @@ export default function CharacterScreen({ character, onBack }) {
       setCurrentHealth((health) => {
         const nextHealth = Math.min(maxHealth, health + willBonuses.regenerationPerTick);
         if (nextHealth !== health) {
-          saveCharacter({
-            ...character,
-            characteristicPoints,
-            stats,
-            maxStamina,
-            currentStamina,
+          const nextSnapshot = {
+            ...snapshotRef.current,
             currentHealth: nextHealth,
-            location,
-            worldState,
-          });
+          };
+          snapshotRef.current = nextSnapshot;
+          saveCharacter(nextSnapshot);
         }
         return nextHealth;
       });
     }, willBonuses.regenerationIntervalMs);
 
     return () => window.clearInterval(intervalId);
-  }, [
-    character,
-    characteristicPoints,
-    currentStamina,
-    location,
-    maxHealth,
-    maxStamina,
-    stats,
-    willBonuses.regenerationIntervalMs,
-    willBonuses.regenerationPerTick,
-    worldState,
-  ]);
+  }, [maxHealth, willBonuses.regenerationIntervalMs, willBonuses.regenerationPerTick]);
 
-  function persist(nextLocation = location, nextWorldState = worldState) {
-    saveCharacter({
-      ...character,
-      characteristicPoints,
-      stats,
-      maxStamina,
-      currentStamina,
-      currentHealth,
-      location: nextLocation,
-      worldState: nextWorldState,
-    });
+  function persist(overrides = {}) {
+    const nextSnapshot = {
+      ...snapshotRef.current,
+      ...overrides,
+    };
+    snapshotRef.current = nextSnapshot;
+    saveCharacter(nextSnapshot);
   }
 
   function handleStatChange(key, delta) {
@@ -139,26 +133,22 @@ export default function CharacterScreen({ character, onBack }) {
     if (nextValue === currentValue) return;
 
     const nextStats = { ...stats, [key]: nextValue };
-    const nextCharacteristicPoints = Math.max(0, characteristicPoints - delta);
+    const nextCharacteristicPoints = getAvailableCharacteristicPoints(level, nextStats);
     const nextMaxHealth = getMaxHealth(nextStats);
     const nextCurrentHealth = Math.min(nextMaxHealth, currentHealth);
     const nextMaxStamina = getMaxStamina(nextStats);
     const nextCurrentStamina = normalizeCurrentStamina(currentStamina, nextMaxStamina);
 
     setStats(nextStats);
-    setCharacteristicPoints(nextCharacteristicPoints);
     if (nextCurrentHealth !== currentHealth) setCurrentHealth(nextCurrentHealth);
     if (nextCurrentStamina !== currentStamina) setCurrentStamina(nextCurrentStamina);
 
-    saveCharacter({
-      ...character,
+    persist({
       characteristicPoints: nextCharacteristicPoints,
       stats: nextStats,
       maxStamina: nextMaxStamina,
       currentStamina: nextCurrentStamina,
       currentHealth: nextCurrentHealth,
-      location,
-      worldState,
     });
   }
 
@@ -167,40 +157,55 @@ export default function CharacterScreen({ character, onBack }) {
     if (currentStamina < staminaCost) return false;
 
     const nextStamina = currentStamina - staminaCost;
+    const nextSkillMastery = combatProfile.masteryKey
+      ? increaseWeaponMastery(skillMastery, combatProfile.masteryKey)
+      : skillMastery;
+    const nextProgression = getSkillProgression(nextSkillMastery);
+    const nextCharacteristicPoints = getAvailableCharacteristicPoints(nextProgression.level, stats);
+
     setCurrentStamina(nextStamina);
-    saveCharacter({
-      ...character,
-      characteristicPoints,
-      stats,
-      maxStamina,
+    if (nextSkillMastery !== skillMastery) setSkillMastery(nextSkillMastery);
+    persist({
+      skillMastery: nextSkillMastery,
+      characteristicPoints: nextCharacteristicPoints,
       currentStamina: nextStamina,
-      currentHealth,
-      location,
-      worldState,
     });
     return true;
   }
 
   function handleTabChange(nextTab) {
+    if (activeEncounter && nextTab !== "battle") return;
     setActiveTab(nextTab);
     if (nextTab === "character") setCharacterSection("character");
   }
 
   function handleTravel(nodeId) {
+    if (activeEncounter) return;
+
     const nextLocation = locationFromNode(nodeId);
     const nextWorldState = {
       ...worldState,
       floorMapVersion: FLOOR_MAP_VERSION,
     };
-    setActiveEncounter(null);
     setLocation(nextLocation);
     setWorldState(nextWorldState);
-    persist(nextLocation, nextWorldState);
+    persist({ location: nextLocation, worldState: nextWorldState });
   }
 
   function handleEncounter(encounter) {
+    if (activeEncounter) return;
     setActiveEncounter(encounter);
     setActiveTab("battle");
+  }
+
+  function handleFleeBattle() {
+    setActiveEncounter(null);
+    setActiveTab("map");
+  }
+
+  function handleHome() {
+    if (activeEncounter) return;
+    onBack();
   }
 
   function handleOpenChest(chestId) {
@@ -213,7 +218,7 @@ export default function CharacterScreen({ character, onBack }) {
       openedChests: [...openedChests, chestId],
     };
     setWorldState(nextWorldState);
-    persist(location, nextWorldState);
+    persist({ worldState: nextWorldState });
   }
 
   let content;
@@ -225,7 +230,6 @@ export default function CharacterScreen({ character, onBack }) {
           currentHealth={currentHealth}
           maxHealth={maxHealth}
           level={level}
-          experience={experience}
         />
       );
     } else if (characterSection === "skills") {
@@ -279,6 +283,9 @@ export default function CharacterScreen({ character, onBack }) {
         currentStamina={currentStamina}
         maxStamina={maxStamina}
         onSkillActivate={handleSkillActivate}
+        onFlee={handleFleeBattle}
+        findSkill={combatProfile.findSkill}
+        weaponLabel={combatProfile.label}
       />
     ) : (
       <PlaceholderView type="battle" />
@@ -293,6 +300,7 @@ export default function CharacterScreen({ character, onBack }) {
 
   const topTab = ["map", "location", "battle", "character"].includes(activeTab) ? activeTab : "map";
   const profileMode = activeTab === "character";
+  const battleLocked = Boolean(activeEncounter);
 
   return (
     <main className="screen screen--game">
@@ -304,11 +312,11 @@ export default function CharacterScreen({ character, onBack }) {
           maxHealth={maxHealth}
           currentStamina={currentStamina}
           maxStamina={maxStamina}
-          experience={experience}
+          progression={progression}
           mode={profileMode ? "character" : "default"}
         />
 
-        <GameTabs activeTab={topTab} onChange={handleTabChange} />
+        <GameTabs activeTab={topTab} onChange={handleTabChange} locked={battleLocked} />
 
         <div
           className={`game-content fantasy-panel ${
@@ -321,8 +329,9 @@ export default function CharacterScreen({ character, onBack }) {
         <BottomNav
           active={profileMode ? characterSection : activeTab}
           onChange={profileMode ? setCharacterSection : handleTabChange}
-          onHome={onBack}
+          onHome={handleHome}
           variant={profileMode ? "character" : "main"}
+          locked={battleLocked}
         />
       </section>
     </main>

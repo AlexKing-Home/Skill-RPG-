@@ -34,7 +34,7 @@ test("world travel is twice as slow and encounter interrupts the route", () => {
   assert.match(worldMapView, /clearTravelTimers\(\);\s*setIsTraveling\(false\)/);
 });
 
-test("wild boar attack automatically opens the battle tab", () => {
+test("wild boar attack automatically opens and locks the battle tab", () => {
   assert.match(characterScreen, /function handleEncounter\(encounter\)/);
   assert.match(characterScreen, /setActiveEncounter\(encounter\)/);
   assert.match(characterScreen, /setActiveTab\("battle"\)/);
@@ -43,4 +43,14 @@ test("wild boar attack automatically opens the battle tab", () => {
   assert.match(characterScreen, /maxStamina=\{maxStamina\}/);
   assert.match(characterScreen, /onSkillActivate=\{handleSkillActivate\}/);
   assert.match(characterScreen, /onEncounter=\{handleEncounter\}/);
+  assert.match(characterScreen, /const battleLocked = Boolean\(activeEncounter\)/);
+  assert.match(characterScreen, /locked=\{battleLocked\}/);
+});
+
+test("active battle prevents travel until the explicit flee action clears the encounter", () => {
+  assert.match(characterScreen, /function handleTravel\(nodeId\) \{\s*if \(activeEncounter\) return;/);
+  assert.match(characterScreen, /function handleFleeBattle\(\)/);
+  assert.match(characterScreen, /setActiveEncounter\(null\)/);
+  assert.match(characterScreen, /setActiveTab\("map"\)/);
+  assert.match(characterScreen, /onFlee=\{handleFleeBattle\}/);
 });

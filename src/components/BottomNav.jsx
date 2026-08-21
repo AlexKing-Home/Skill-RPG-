@@ -21,12 +21,18 @@ const characterItems = [
   { id: "character", label: "Персонаж", icon: "♚" },
 ];
 
-export default function BottomNav({ active, onChange, onHome, variant = "main" }) {
+export default function BottomNav({ active, onChange, onHome, variant = "main", locked = false }) {
   const items = variant === "character" ? characterItems : mainItems;
   const style =
     variant === "character"
       ? { "--character-nav-sprite": `url("${characterNavSprite}")` }
       : undefined;
+
+  function handleItemClick(item) {
+    if (locked) return;
+    if (item.id === "home") onHome();
+    else onChange(item.id);
+  }
 
   return (
     <nav
@@ -39,8 +45,10 @@ export default function BottomNav({ active, onChange, onHome, variant = "main" }
           key={item.id}
           type="button"
           className={`bottom-nav__item ${active === item.id ? "is-active" : ""}`}
-          onClick={() => (item.id === "home" ? onHome() : onChange(item.id))}
+          onClick={() => handleItemClick(item)}
           aria-pressed={active === item.id}
+          aria-disabled={locked}
+          disabled={locked}
         >
           <span className="bottom-nav__icon" aria-hidden="true">
             {item.icon}

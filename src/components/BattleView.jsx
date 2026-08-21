@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { findOneHandedSwordSkill } from "../data/oneHandedSwordSkills.js";
 import "../battle.css";
 
 const directions = [
@@ -31,6 +30,9 @@ export default function BattleView({
   currentStamina = 0,
   maxStamina = 0,
   onSkillActivate,
+  onFlee,
+  findSkill = null,
+  weaponLabel = "Оружие",
 }) {
   const [activeAction, setActiveAction] = useState("");
   const [comboSequence, setComboSequence] = useState([]);
@@ -62,7 +64,7 @@ export default function BattleView({
     if (sequence.length === 1) {
       showAction(BASIC_ACTIONS[sequence[0]]);
     } else {
-      const skill = findOneHandedSwordSkill(sequence);
+      const skill = typeof findSkill === "function" ? findSkill(sequence) : null;
       if (skill) {
         const activated = onSkillActivate ? onSkillActivate(skill) : true;
         if (activated) {
@@ -70,6 +72,8 @@ export default function BattleView({
         } else {
           showAction("НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!");
         }
+      } else if (sequence.length > 1) {
+        showAction(`КОМБИНАЦИЯ «${weaponLabel}» НЕ РАСПОЗНАНА`);
       }
     }
 
@@ -146,7 +150,7 @@ export default function BattleView({
 
         <div className={`battle-combo ${comboSequence.length ? "is-active" : ""}`}>
           <div className="battle-combo__label">
-            <span>КОМБИНАЦИЯ</span>
+            <span>КОМБИНАЦИЯ · {weaponLabel}</span>
             <strong>{comboLabel || "—"}</strong>
           </div>
           <div className="battle-combo__timer" aria-label="Общее время на ввод комбинации">
@@ -173,6 +177,12 @@ export default function BattleView({
             </button>
           ))}
         </div>
+
+        {onFlee ? (
+          <button type="button" className="battle-flee" onClick={onFlee}>
+            Бегство
+          </button>
+        ) : null}
       </div>
     </section>
   );

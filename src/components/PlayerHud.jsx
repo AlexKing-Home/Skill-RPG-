@@ -7,15 +7,14 @@ export default function PlayerHud({
   maxHealth,
   currentStamina,
   maxStamina,
-  experience,
+  progression,
   mode = "default",
 }) {
   const hpPercent =
     maxHealth > 0 ? Math.min(100, Math.max(0, (currentHealth / maxHealth) * 100)) : 0;
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
-  const expLabel =
-    experience.end === null ? `${experience.total}` : `${experience.total} / ${experience.end}`;
+  const masteryLabel = `${progression.total} / ${progression.end}`;
   const characterMode = mode === "character";
 
   return (
@@ -56,14 +55,14 @@ export default function PlayerHud({
         <div className="hud-resource hud-resource--exp">
           <div className="hud-resource__label">
             <span>
-              <b aria-hidden="true">XP</b> {characterMode ? "ОПЫТ" : "EXP"}
+              <b aria-hidden="true">✦</b> {characterMode ? "МАСТЕРСТВО" : "SKILL"}
             </span>
-            <strong>{expLabel}</strong>
+            <strong>{masteryLabel}</strong>
           </div>
-          <div className="hud-resource__track" aria-label={`Опыт ${expLabel}`}>
+          <div className="hud-resource__track" aria-label={`Мастерство ${masteryLabel}`}>
             <span
               className="hud-resource__fill hud-resource__fill--exp"
-              style={{ width: `${experience.percent}%` }}
+              style={{ width: `${progression.percent}%` }}
             />
           </div>
         </div>
