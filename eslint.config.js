@@ -31,15 +31,15 @@ export default [
     rules: {
       "no-undef": "error",
       "no-unreachable": "error",
-      "no-constant-condition": ["error", { "checkLoops": false }],
+      "no-constant-condition": ["error", { checkLoops: false }],
       "no-unused-vars": [
         "warn",
         {
-          "argsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }
-      ]
-    }
-  }
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
 ];
