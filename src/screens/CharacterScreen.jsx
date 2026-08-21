@@ -277,18 +277,16 @@ export default function CharacterScreen({ character, onBack }) {
 
     content = <Suspense fallback={<LocationFallback />}>{locationContent}</Suspense>;
   } else if (activeTab === "battle") {
-    content = activeEncounter ? (
+    content = (
       <BattleView
         encounter={activeEncounter}
         currentStamina={currentStamina}
         maxStamina={maxStamina}
         onSkillActivate={handleSkillActivate}
-        onFlee={handleFleeBattle}
+        onFlee={activeEncounter ? handleFleeBattle : undefined}
         findSkill={combatProfile.findSkill}
         weaponLabel={combatProfile.label}
       />
-    ) : (
-      <PlaceholderView type="battle" />
     );
   } else if (["tasks", "inventory"].includes(activeTab)) {
     content = <PlaceholderView type={activeTab} />;
