@@ -162,6 +162,25 @@ export default function CharacterScreen({ character, onBack }) {
     });
   }
 
+  function handleSkillActivate(skill) {
+    const staminaCost = Math.max(0, Math.floor(Number(skill?.staminaCost) || 0));
+    if (currentStamina < staminaCost) return false;
+
+    const nextStamina = currentStamina - staminaCost;
+    setCurrentStamina(nextStamina);
+    saveCharacter({
+      ...character,
+      characteristicPoints,
+      stats,
+      maxStamina,
+      currentStamina: nextStamina,
+      currentHealth,
+      location,
+      worldState,
+    });
+    return true;
+  }
+
   function handleTabChange(nextTab) {
     setActiveTab(nextTab);
     if (nextTab === "character") setCharacterSection("character");
@@ -255,7 +274,12 @@ export default function CharacterScreen({ character, onBack }) {
     content = <Suspense fallback={<LocationFallback />}>{locationContent}</Suspense>;
   } else if (activeTab === "battle") {
     content = activeEncounter ? (
-      <BattleView encounter={activeEncounter} />
+      <BattleView
+        encounter={activeEncounter}
+        currentStamina={currentStamina}
+        maxStamina={maxStamina}
+        onSkillActivate={handleSkillActivate}
+      />
     ) : (
       <PlaceholderView type="battle" />
     );
