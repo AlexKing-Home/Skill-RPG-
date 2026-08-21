@@ -1,4 +1,5 @@
 export const MASTERY_MAX = 1000;
+export const MASTERY_GAIN_PER_ACTIVATION = 1;
 
 export const WEAPON_MASTERY_TYPES = [
   { key: "oneHanded", label: "Одноручный меч" },
@@ -27,6 +28,21 @@ export function normalizeSkillMastery(value = {}) {
   return Object.fromEntries(
     WEAPON_MASTERY_TYPES.map(({ key }) => [key, normalizeMastery(source[key])]),
   );
+}
+
+export function increaseWeaponMastery(
+  skillMastery,
+  weaponKey,
+  amount = MASTERY_GAIN_PER_ACTIVATION,
+) {
+  const normalized = normalizeSkillMastery(skillMastery);
+  if (!Object.hasOwn(normalized, weaponKey)) return normalized;
+
+  const gain = Math.max(0, Math.floor(Number(amount) || 0));
+  return {
+    ...normalized,
+    [weaponKey]: normalizeMastery(normalized[weaponKey] + gain),
+  };
 }
 
 export function isWeaponMasteryUnlocked(weapon, skillMastery = {}) {
