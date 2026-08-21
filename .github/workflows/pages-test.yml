@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - main
-      - rebuild/character-entry-clean
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: static-preview-${{ github.ref_name }}
+  group: static-preview-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,6 +40,7 @@ jobs:
         run: npm run build
 
       - name: Publish preview-build branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
