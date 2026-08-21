@@ -135,7 +135,10 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /function handleSkillActivate\(skill\)/);
   assert.match(characterScreenSource, /currentStamina < staminaCost/);
   assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
-  assert.match(characterScreenSource, /increaseWeaponMastery\(skillMastery, combatProfile\.masteryKey\)/);
+  assert.match(
+    characterScreenSource,
+    /increaseWeaponMastery\(skillMastery, combatProfile\.masteryKey\)/,
+  );
   assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
   assert.match(characterScreenSource, /currentStamina: nextStamina/);
@@ -172,10 +175,7 @@ test("regeneration timer depends on regeneration parameters rather than stamina 
     characterScreenSource,
     /\}, \[maxHealth, willBonuses\.regenerationIntervalMs, willBonuses\.regenerationPerTick\]\);/,
   );
-  assert.doesNotMatch(
-    characterScreenSource,
-    /\}, \[[^\]]*currentStamina[^\]]*\]\);/,
-  );
+  assert.doesNotMatch(characterScreenSource, /\}, \[[^\]]*currentStamina[^\]]*\]\);/);
 });
 
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {

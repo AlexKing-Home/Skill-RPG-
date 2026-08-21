@@ -48,7 +48,10 @@ test("wild boar attack automatically opens and locks the battle tab", () => {
 });
 
 test("active battle prevents travel until the explicit flee action clears the encounter", () => {
-  assert.match(characterScreen, /function handleTravel\(nodeId\) \{\s*if \(activeEncounter\) return;/);
+  assert.match(
+    characterScreen,
+    /function handleTravel\(nodeId\) \{\s*if \(activeEncounter\) return;/,
+  );
   assert.match(characterScreen, /function handleFleeBattle\(\)/);
   assert.match(characterScreen, /setActiveEncounter\(null\)/);
   assert.match(characterScreen, /setActiveTab\("map"\)/);
