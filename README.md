@@ -36,9 +36,12 @@ npm run check
 - `src/components/` — reusable game and interface views.
 - `src/data/` — game configuration, progression data, navigation data, skill data, and embedded artwork sources.
 - `src/utils/` — persistence and other shared utilities.
-- `src/*.css` — current global style layers. See `docs/css-architecture.md` before changing their order.
-- `scripts/` — repository and asset preparation utilities.
+- `src/styles/` — consolidated domain styles for theme, foundation, compatibility, navigation, world, character, and dedicated location scenes.
+- `src/game-interface.css` and `src/battle.css` — focused styles loaded with the game screen and battle view.
+- `scripts/` — repository, CSS architecture, and asset preparation utilities.
 - `tests/` — Node-based regression tests for game rules, navigation, locations, interface behavior, and progression.
+
+See `docs/css-architecture.md` before moving or adding styles.
 
 ## Artwork preparation
 
@@ -54,6 +57,6 @@ The start-city view uses `src/data/startCityApprovedWebp/` as its single active 
 
 ## Repository hygiene
 
-Tracked empty files are not allowed. `npm run lint` runs ESLint and then `scripts/check-empty-files.mjs` so accidental zero-byte files are caught in CI.
+Tracked empty files are not allowed. `npm run lint` runs ESLint and repository hygiene checks so accidental zero-byte files are caught in CI.
 
-Global CSS is intentionally not reordered as part of routine cleanup because several files are legacy parity layers and cascade order can affect the visible interface. New styling work should follow the rules in `docs/css-architecture.md` instead of adding another numbered or `*-fixes.css` layer.
+CSS is consolidated into a fixed set of domain stylesheets. `scripts/check-css-architecture.mjs` rejects new ad-hoc legacy override files, unexpected CSS files, missing required domain files, and exact duplicate stylesheets. New styling should be made in the domain that owns the affected interface rather than by adding another numbered or `*-fixes.css` layer.
