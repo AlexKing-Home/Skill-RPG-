@@ -115,7 +115,7 @@ export function getTravelRoute(fromId, toId) {
         nodeIds: current.path,
         edgeKeys: current.edges,
         distanceKm: current.distance,
-        travelMs: Math.max(750, (current.path.length - 1) * 650),
+        travelMs: Math.max(1300, (current.path.length - 1) * 1300),
       };
     }
 

@@ -4,6 +4,7 @@ import {
   normalizeCharacteristicPoints,
   STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
+import { normalizeSkillMastery } from "../data/skills.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
 
@@ -17,6 +18,7 @@ export function normalizeCharacter(character) {
   const { level: _legacyLevel, ...rest } = character;
   const rawExperience = Number(rest.experience);
   const experience = Number.isFinite(rawExperience) ? Math.max(0, Math.floor(rawExperience)) : 0;
+  const skillMastery = normalizeSkillMastery(rest.skillMastery);
   const rawVersion = Number(rest.version);
   const sourceVersion = Number.isFinite(rawVersion) ? Math.floor(rawVersion) : 1;
   const version = Math.max(CURRENT_CHARACTER_VERSION, sourceVersion);
@@ -41,6 +43,7 @@ export function normalizeCharacter(character) {
     ...rest,
     version,
     experience,
+    skillMastery,
     characteristicPoints,
     maxStamina,
     currentStamina,

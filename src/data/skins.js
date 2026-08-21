@@ -8,11 +8,9 @@ import {
   maleSpearman,
   maleSwordsman,
 } from "./assets.js";
-import {
-  createEmptyCharacteristics,
-  STARTING_CHARACTERISTIC_POINTS,
-} from "./characteristics.js";
+import { createEmptyCharacteristics, STARTING_CHARACTERISTIC_POINTS } from "./characteristics.js";
 import { createEmptyEquipment } from "./equipment.js";
+import { createEmptySkillMastery } from "./skills.js";
 import { BASE_STAMINA } from "./stamina.js";
 
 const classDefinitions = {
@@ -105,6 +103,7 @@ export function createCharacter(nickname, skin) {
     skinName: skin.name,
     skinImage: skin.image,
     experience: 0,
+    skillMastery: createEmptySkillMastery(),
     characteristicPoints: STARTING_CHARACTERISTIC_POINTS,
     currentHealth: skin.stats.health,
     maxStamina: BASE_STAMINA,

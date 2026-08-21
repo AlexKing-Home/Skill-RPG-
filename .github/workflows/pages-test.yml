@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+      - rebuild/character-entry-clean
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: static-preview
+  group: static-preview-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:

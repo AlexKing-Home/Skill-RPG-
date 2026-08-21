@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { floorOneMapArt } from "../data/floorOneMapArt.js";
+import { rollTravelEncounter } from "../data/travelEncounters.js";
 import {
   START_NODE_ID,
   floorOneNavigation,
@@ -8,8 +9,9 @@ import {
 } from "../data/worldNavigation.js";
 
 const TAP_MOVE_TOLERANCE = 18;
+const TRAVEL_STEP_MS = 1300;
 
-export default function WorldMapView({ location, onTravel }) {
+export default function WorldMapView({ location, onTravel, onEncounter }) {
   const currentNode = getTravelNode(location.nodeId) ?? getTravelNode(START_NODE_ID);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [heroNodeId, setHeroNodeId] = useState(currentNode.id);
@@ -99,6 +101,21 @@ export default function WorldMapView({ location, onTravel }) {
     setIsTraveling(true);
 
     const steps = route.nodeIds.slice(1);
+    const encounter = rollTravelEncounter();
+
+    if (encounter) {
+      const encounterDelay = Math.max(TRAVEL_STEP_MS / 2, (steps.length * TRAVEL_STEP_MS) / 2);
+
+      scheduleTravelStep(() => {
+        clearTravelTimers();
+        setIsTraveling(false);
+        onEncounter?.({
+          ...encounter,
+          fromNodeId: currentNode.id,
+          destinationNodeId: destination.id,
+        });
+      }, encounterDelay);
+    }
 
     function moveStep(index) {
       if (index >= steps.length) {
@@ -107,7 +124,7 @@ export default function WorldMapView({ location, onTravel }) {
       }
 
       setHeroNodeId(steps[index]);
-      scheduleTravelStep(() => moveStep(index + 1), 650);
+      scheduleTravelStep(() => moveStep(index + 1), TRAVEL_STEP_MS);
     }
 
     moveStep(0);

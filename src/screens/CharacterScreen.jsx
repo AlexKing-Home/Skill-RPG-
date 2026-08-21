@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import BattleView from "../components/BattleView.jsx";
 import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
+import CharacterSkillsView from "../components/CharacterSkillsView.jsx";
 import CharacterStatsView from "../components/CharacterStatsView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
@@ -35,6 +37,7 @@ function LocationFallback() {
 
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
+  const [activeEncounter, setActiveEncounter] = useState(null);
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
   const [characteristicPoints, setCharacteristicPoints] = useState(() =>
@@ -170,9 +173,15 @@ export default function CharacterScreen({ character, onBack }) {
       ...worldState,
       floorMapVersion: FLOOR_MAP_VERSION,
     };
+    setActiveEncounter(null);
     setLocation(nextLocation);
     setWorldState(nextWorldState);
     persist(nextLocation, nextWorldState);
+  }
+
+  function handleEncounter(encounter) {
+    setActiveEncounter(encounter);
+    setActiveTab("battle");
   }
 
   function handleOpenChest(chestId) {
@@ -200,6 +209,8 @@ export default function CharacterScreen({ character, onBack }) {
           experience={experience}
         />
       );
+    } else if (characterSection === "skills") {
+      content = <CharacterSkillsView character={activeCharacter} />;
     } else if (characterSection === "stats") {
       content = <CharacterStatsView character={activeCharacter} onStatChange={handleStatChange} />;
     } else {
@@ -242,10 +253,18 @@ export default function CharacterScreen({ character, onBack }) {
     }
 
     content = <Suspense fallback={<LocationFallback />}>{locationContent}</Suspense>;
-  } else if (["tasks", "inventory", "battle"].includes(activeTab)) {
+  } else if (activeTab === "battle") {
+    content = activeEncounter ? (
+      <BattleView encounter={activeEncounter} />
+    ) : (
+      <PlaceholderView type="battle" />
+    );
+  } else if (["tasks", "inventory"].includes(activeTab)) {
     content = <PlaceholderView type={activeTab} />;
   } else {
-    content = <WorldMapView location={location} onTravel={handleTravel} />;
+    content = (
+      <WorldMapView location={location} onTravel={handleTravel} onEncounter={handleEncounter} />
+    );
   }
 
   const topTab = ["map", "location", "battle", "character"].includes(activeTab) ? activeTab : "map";
