@@ -1,0 +1,51 @@
+name: Publish battle preview
+
+on:
+  push:
+    branches:
+      - agent/battle-system
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: battle-static-preview
+  cancel-in-progress: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Build React app
+        env:
+          STATIC_PREVIEW: "true"
+        run: npm run build
+
+      - name: Publish battle preview branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd dist
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Battle preview ${GITHUB_SHA}"
+          git branch -M battle-preview-build
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin battle-preview-build
