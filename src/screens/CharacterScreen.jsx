@@ -11,10 +11,7 @@ import WorldMapView from "../components/WorldMapView.jsx";
 import { getMaxHealth, getWillBonuses } from "../data/characteristics.js";
 import { getCombatProfile } from "../data/combatProfiles.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
-import {
-  getAvailableCharacteristicPoints,
-  getSkillProgression,
-} from "../data/progression.js";
+import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
@@ -45,7 +42,9 @@ export default function CharacterScreen({ character, onBack }) {
   const [activeEncounter, setActiveEncounter] = useState(null);
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
-  const [skillMastery, setSkillMastery] = useState(() => normalizeSkillMastery(character.skillMastery));
+  const [skillMastery, setSkillMastery] = useState(() =>
+    normalizeSkillMastery(character.skillMastery),
+  );
   const [location, setLocation] = useState(() => {
     const usesCurrentMap = character.worldState?.floorMapVersion === FLOOR_MAP_VERSION;
     if (!usesCurrentMap) return defaultLocation;
