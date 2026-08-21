@@ -8,6 +8,7 @@ export default [
       "public/**",
       "src/assets/**",
       "src/data/**/*Chunks*/**",
+      "src/data/startCityApprovedWebp/**",
     ],
   },
   {
