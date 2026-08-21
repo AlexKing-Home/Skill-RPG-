@@ -50,6 +50,8 @@ npm run assets:prepare
 
 The preparation step is implemented by `scripts/materialize-art.mjs` and currently generates the first-floor map, swamp artwork, and ruins artwork.
 
+The start-city view uses `src/data/startCityApprovedWebp/` as its single active embedded artwork source. Obsolete duplicate start-city chunk sets are not kept in the repository.
+
 ## Repository hygiene
 
 Tracked empty files are not allowed. `npm run lint` runs ESLint and then `scripts/check-empty-files.mjs` so accidental zero-byte files are caught in CI.
