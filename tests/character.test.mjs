@@ -197,7 +197,7 @@ test("experience bar uses progress inside the active level range", () => {
 });
 
 test("navigation remains driven by the approved reference crops", () => {
-  const css = readFileSync(new URL("../src/navigation-reference-v9.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/styles/navigation.css", import.meta.url), "utf8");
   const navigationAssets = [
     "tabs-map.webp",
     "tabs-location.webp",

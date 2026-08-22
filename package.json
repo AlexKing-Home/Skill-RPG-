@@ -7,10 +7,12 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "assets:prepare": "node scripts/materialize-swamp-art.mjs",
+    "assets:prepare": "node scripts/materialize-art.mjs",
     "dev": "npm run assets:prepare && vite",
     "build": "npm run assets:prepare && vite build",
     "preview": "vite preview --host 0.0.0.0",
+    "lint": "eslint . && node scripts/check-empty-files.mjs && node scripts/check-css-architecture.mjs",
+    "check": "npm run format:check && npm run lint && npm test && npm run build",
     "test": "npm run assets:prepare && node --test tests/*.test.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
@@ -21,6 +23,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "5.1.1",
+    "eslint": "10.8.1",
+    "globals": "^16.0.0",
     "prettier": "3.6.2",
     "vite": "7.2.2"
   }

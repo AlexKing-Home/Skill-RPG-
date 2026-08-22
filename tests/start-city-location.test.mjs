@@ -9,7 +9,7 @@ async function read(path) {
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/StartCityLocationView.jsx");
 const art = await read("../src/data/startCityLocationArt.js");
-const styles = await read("../src/start-city-location.css");
+const styles = await read("../src/styles/location-scenes.css");
 
 test("start city uses the approved generated city scene", () => {
   assert.match(screen, /StartCityLocationView/);

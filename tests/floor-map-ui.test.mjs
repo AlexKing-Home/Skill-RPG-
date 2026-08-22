@@ -10,7 +10,7 @@ async function read(path) {
 const mapSource = await read("../src/components/WorldMapView.jsx");
 const mapArtSource = await read("../src/data/floorOneMapArt.js");
 const navigationSource = await read("../src/data/worldNavigation.js");
-const cssSource = await read("../src/floor-map.css");
+const cssSource = await read("../src/styles/world.css");
 
 test("approved floor map art is materialized outside the client JavaScript bundle", async () => {
   assert.match(mapSource, /floorOneMapArt/);

@@ -9,7 +9,7 @@ async function read(path) {
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/MeadowLocationView.jsx");
 const art = await read("../src/data/meadowLocationArt.js");
-const styles = await read("../src/meadow-location.css");
+const styles = await read("../src/styles/location-scenes.css");
 
 test("meadows use the approved meadow scene instead of the generic location map", () => {
   assert.match(screen, /MeadowLocationView/);

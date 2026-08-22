@@ -34,7 +34,10 @@ export function normalizeAvailableCharacteristicPoints(value) {
 }
 
 export function getSpentCharacteristicPoints(stats = {}) {
-  return Object.values(normalizeCharacteristicPoints(stats)).reduce((total, value) => total + value, 0);
+  return Object.values(normalizeCharacteristicPoints(stats)).reduce(
+    (total, value) => total + value,
+    0,
+  );
 }
 
 export function getWillBonuses(stats = {}) {

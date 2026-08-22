@@ -8,7 +8,7 @@ async function read(path) {
 
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/DungeonLocationView.jsx");
-const styles = await read("../src/dungeon-location.css");
+const styles = await read("../src/styles/location-scenes.css");
 const art = await read("../src/data/dungeonLocationArt.js");
 
 const chunkPaths = Array.from(

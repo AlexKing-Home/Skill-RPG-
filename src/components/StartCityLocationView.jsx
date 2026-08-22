@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { startCityLocationArt } from "../data/startCityLocationArt.js";
-import "../start-city-location.css";
+import "../styles/location-scenes.css";
 
 const cityObjects = [
   {

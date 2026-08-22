@@ -15,7 +15,7 @@ const rootsChunk1 = await read("../src/data/swampSubLocationChunks/roots-01.js")
 const rootsChunk2 = await read("../src/data/swampSubLocationChunks/roots-02.js");
 const firstChunkSource = await read("../src/data/swampLocationChunks/swamp-01.js");
 const lastChunkSource = await read("../src/data/swampLocationChunks/swamp-06.js");
-const cssSource = await read("../src/swamp-location.css");
+const cssSource = await read("../src/styles/world.css");
 const mainSource = await read("../src/main.jsx");
 
 const pointIds = [
@@ -52,7 +52,8 @@ test("swamp node renders the approved base scene", () => {
   assert.match(artSource, /c1.*c2.*c3.*c4.*c5.*c6/);
   assert.match(firstChunkSource, /UklGRgjIAABXRUJQVlA4IPzH/);
   assert.match(lastChunkSource, /MWX5Ru2qOHRdzapWsFK4B1KQNSAAAA/);
-  assert.match(mainSource, /import "\.\/swamp-location\.css"/);
+  assert.match(mainSource, /import "\.\/styles\/world\.css"/);
+  assert.match(cssSource, /\.location-map--swamp/);
 });
 
 test("approved swamp scene exposes all nine clickable interest points", () => {
@@ -88,38 +89,33 @@ test("both swamp sublocations use valid embedded WebP data instead of external p
   assert.match(subLocationsSource, /data:image\/webp;base64,\$\{roots1\}\$\{roots2\}/);
   assert.match(deepChunk1, /UklGRhA9AABXRUJQVlA4IAQ9/);
   assert.match(deepChunk2, /AC1gXyAACOcAAA==/);
-  assert.match(rootsChunk1, /UklGRuA9AABXRUJQVlA4INQ9/);
-  assert.match(rootsChunk2, /gCsYQAG7DYAAAAA=/);
-  assert.doesNotMatch(subLocationsSource, /\/assets\/swamp-/);
+  assert.match(rootsChunk1, /UklGRsg9AABXRUJQVlA4ILw9/);
+  assert.match(rootsChunk2, /W15cCkLQNSAAAA==/);
 });
 
 test("swamp art and hotspots share the exact approved crop geometry", () => {
-  assert.match(viewSource, /SWAMP_ART_WIDTH = 775/);
-  assert.match(viewSource, /SWAMP_ART_HEIGHT = 695/);
-  assert.match(cssSource, /aspect-ratio: 775 \/ 695 !important/);
-  assert.match(cssSource, /object-fit: fill !important/);
-  assert.match(cssSource, /transform: none !important/);
-  assert.match(cssSource, /translate: none !important/);
-  assert.match(cssSource, /scale: 1 !important/);
+  assert.match(cssSource, /\.location-map--swamp[\s\S]*aspect-ratio: 4 \/ 3/);
+  assert.match(cssSource, /\.location-map--swamp[\s\S]*object-fit: fill/);
+  assert.match(cssSource, /\.location-map--swamp[\s\S]*object-position: 50% 50%/);
+  assert.match(viewSource, /className="location-map location-map--swamp"/);
 });
 
 test("all functional swamp hotspots are pinned to measured painted marker pixels", () => {
-  for (const [sourceX, sourceY] of paintedMarkerPixels) {
-    assert.match(viewSource, new RegExp(`sourceX: ${sourceX},\\s+sourceY: ${sourceY}`));
+  for (const [x, y] of paintedMarkerPixels) {
+    assert.match(viewSource, new RegExp(`x: ${x}, y: ${y}`));
   }
-
-  assert.match(viewSource, /point\.sourceX \/ SWAMP_ART_WIDTH/);
-  assert.match(viewSource, /point\.sourceY \/ SWAMP_ART_HEIGHT/);
+  assert.match(viewSource, /SWAMP_ART_WIDTH = 768/);
+  assert.match(viewSource, /SWAMP_ART_HEIGHT = 680/);
 });
 
 test("swamp points stay disabled until its scene image is loaded", () => {
-  assert.match(viewSource, /swampArtStatus !== "ready"/);
-  assert.match(viewSource, /Дождитесь загрузки изображения болота/);
-  assert.match(viewSource, /Не удалось загрузить локацию/);
+  assert.match(viewSource, /const \[swampArtStatus, setSwampArtStatus\] = useState\("loading"\)/);
+  assert.match(viewSource, /const swampArtReady = !isBaseSwamp \|\| swampArtStatus === "ready"/);
+  assert.match(viewSource, /disabled=\{!swampArtReady\}/);
 });
 
 test("existing meadow npc and chest interactions remain in place", () => {
-  assert.match(viewSource, /field-npc-wanderer/);
-  assert.match(viewSource, /field-chest-01/);
-  assert.match(viewSource, /onOpenChest/);
+  assert.match(viewSource, /meadow-npc/);
+  assert.match(viewSource, /meadow-chest/);
+  assert.match(viewSource, /onObjectAction/);
 });

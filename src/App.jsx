@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import "./reference-theme.css";
-import "./exact-reference.css";
+import "./styles/app-theme.css";
 import { fantasyBackground } from "./data/assets.js";
 import CharacterCreationScreen from "./screens/CharacterCreationScreen.jsx";
 import CharacterScreen from "./screens/CharacterScreen.jsx";

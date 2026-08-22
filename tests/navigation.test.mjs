@@ -25,7 +25,7 @@ test("all game tabs and the bottom navigation stay rendered", () => {
     new URL("../src/screens/CharacterScreen.jsx", import.meta.url),
     "utf8",
   );
-  const css = readFileSync(new URL("../src/navigation-reference-v9.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/styles/navigation.css", import.meta.url), "utf8");
 
   assert.doesNotMatch(screen, /activeTab\s*!==\s*["']location["']/);
   assert.match(screen, /<BottomNav/);

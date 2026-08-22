@@ -1,0 +1,456 @@
+/* Source section: src/start-city-location.css */
+.location-map--start-city {
+  position: relative;
+  aspect-ratio: 561 / 701 !important;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #02080d;
+}
+
+.location-map--start-city .start-city-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.city-hotspot {
+  position: absolute;
+  z-index: 7;
+  width: clamp(58px, 11%, 92px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.city-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 16%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.city-hotspot:hover::after,
+.city-hotspot:focus-visible::after,
+.city-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.city-hotspot:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 520px) {
+  .city-hotspot {
+    width: clamp(60px, 15%, 82px);
+  }
+}
+
+/* Source section: src/meadow-location.css */
+.location-map--meadow {
+  position: relative;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--meadow .meadow-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.location-map--meadow .field-object {
+  z-index: 7;
+}
+
+.meadow-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.meadow-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.meadow-hotspot:hover::after,
+.meadow-hotspot:focus-visible::after,
+.meadow-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.meadow-hotspot:focus-visible {
+  outline: none;
+}
+
+/* Source section: src/forest-location.css */
+.location-map--forest {
+  position: relative;
+  aspect-ratio: 3 / 4 !important;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--forest::before,
+.location-map--forest::after {
+  content: none !important;
+  display: none !important;
+}
+
+.location-map--forest .forest-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.forest-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.forest-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.forest-hotspot:hover::after,
+.forest-hotspot:focus-visible::after,
+.forest-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.forest-hotspot:focus-visible {
+  outline: none;
+}
+
+/* Source section: src/dungeon-location.css */
+.location-map--dungeon {
+  position: relative;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--dungeon::before,
+.location-map--dungeon::after {
+  content: none !important;
+  display: none !important;
+}
+
+.location-map--dungeon .dungeon-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.dungeon-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dungeon-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.dungeon-hotspot:hover::after,
+.dungeon-hotspot:focus-visible::after,
+.dungeon-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.dungeon-hotspot:focus-visible {
+  outline: none;
+}
+
+/* Source section: src/ruins-location.css */
+.location-map--ruins {
+  position: relative;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--ruins::before,
+.location-map--ruins::after {
+  content: none !important;
+  display: none !important;
+}
+
+.location-map--ruins .ruins-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.ruins-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ruins-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.ruins-hotspot:hover::after,
+.ruins-hotspot:focus-visible::after,
+.ruins-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.ruins-hotspot:focus-visible {
+  outline: none;
+}
+
+/* Source section: src/settlement-location.css */
+.location-map--settlement-art {
+  position: relative;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 15px;
+  background: #02080d;
+  touch-action: manipulation;
+}
+
+.location-map--settlement-art::before,
+.location-map--settlement-art::after {
+  content: none !important;
+  display: none !important;
+}
+
+.location-map--settlement-art .settlement-location__image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  scale: 1 !important;
+  translate: none !important;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.settlement-hotspot {
+  position: absolute;
+  z-index: 8;
+  width: clamp(64px, 15%, 104px);
+  aspect-ratio: 1;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.settlement-hotspot::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.settlement-hotspot:hover::after,
+.settlement-hotspot:focus-visible::after,
+.settlement-hotspot.is-selected::after {
+  border-color: rgba(242, 198, 111, 0.95);
+  background: rgba(6, 19, 29, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(36, 157, 224, 0.22),
+    0 0 18px rgba(62, 185, 244, 0.52);
+}
+
+.settlement-hotspot:focus-visible {
+  outline: none;
+}

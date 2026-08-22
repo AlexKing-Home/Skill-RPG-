@@ -8,9 +8,9 @@ async function read(path) {
 
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/RuinsLocationView.jsx");
-const styles = await read("../src/ruins-location.css");
+const styles = await read("../src/styles/location-scenes.css");
 const ruinsArtModule = await read("../src/data/ruinsLocationArt.js");
-const materializer = await read("../scripts/materialize-swamp-art.mjs");
+const materializer = await read("../scripts/materialize-art.mjs");
 
 test("ruins node opens the dedicated approved location art", () => {
   assert.match(screen, /RuinsLocationView/);

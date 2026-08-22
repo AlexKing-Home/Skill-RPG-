@@ -8,7 +8,7 @@ async function read(path) {
 
 const screen = await read("../src/screens/CharacterScreen.jsx");
 const view = await read("../src/components/ForestLocationView.jsx");
-const styles = await read("../src/forest-location.css");
+const styles = await read("../src/styles/location-scenes.css");
 const forestArtModule = await read("../src/data/forestLocationArt.js");
 
 const forestChunkPaths = [

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { settlementLocationArt } from "../data/settlementLocationArt.js";
-import "../settlement-location.css";
+import "../styles/location-scenes.css";
 
 const settlementPoints = [
   {
