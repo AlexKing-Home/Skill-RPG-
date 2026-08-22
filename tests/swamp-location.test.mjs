@@ -119,10 +119,7 @@ test("all functional swamp hotspots are pinned to measured painted marker pixels
 test("swamp points stay disabled until its scene image is loaded", () => {
   assert.match(viewSource, /const \[swampArtStatus, setSwampArtStatus\] = useState\("loading"\)/);
   assert.match(viewSource, /if \(!isBaseSwamp \|\| swampArtStatus !== "ready"\) return/);
-  assert.match(
-    viewSource,
-    /isBaseSwamp &&\s+swampArtStatus === "ready" &&\s+swampPoints\.map/,
-  );
+  assert.match(viewSource, /isBaseSwamp &&\s+swampArtStatus === "ready" &&\s+swampPoints\.map/);
   assert.match(viewSource, /Дождитесь загрузки изображения болота/);
 });
 
