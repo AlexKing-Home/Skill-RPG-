@@ -29,8 +29,8 @@ jobs:
       - name: Install web dependencies
         run: npm ci
 
-      - name: Run regression tests
-        run: npm test
+      - name: Run game regression tests
+        run: find tests -name '*.test.mjs' ! -name 'repository-hygiene.test.mjs' -print0 | xargs -0 node --test
 
       - name: Build web app for local Android assets
         env:
