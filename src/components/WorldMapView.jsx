@@ -11,7 +11,7 @@ import {
 const TAP_MOVE_TOLERANCE = 18;
 const TRAVEL_STEP_MS = 1300;
 
-export default function WorldMapView({ location, onTravel, onEncounter }) {
+export default function WorldMapView({ location, onTravel, onEncounter, onRest }) {
   const currentNode = getTravelNode(location.nodeId) ?? getTravelNode(START_NODE_ID);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [heroNodeId, setHeroNodeId] = useState(currentNode.id);
@@ -310,6 +310,15 @@ export default function WorldMapView({ location, onTravel, onEncounter }) {
             кликабельна.
           </p>
         )}
+
+        <button
+          type="button"
+          className="travel-panel__button"
+          onClick={onRest}
+          disabled={isTraveling}
+        >
+          Отдохнуть
+        </button>
       </div>
     </section>
   );
