@@ -106,6 +106,7 @@ test("wild boar encounter provides and displays enemy artwork in battle", () => 
   assert.match(battleViewSource, /className="battle-card__enemy-art"/);
   assert.match(battleViewSource, /src=\{enemyImage\}/);
   assert.match(battleViewSource, /alt=\{enemyName\}/);
+  assert.doesNotMatch(battleViewSource, /Неизвестный противник/);
 });
 
 test("battle direction buttons define their basic combat actions", () => {
