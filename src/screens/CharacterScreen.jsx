@@ -14,6 +14,7 @@ import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
+import { resolveTravelEncounter } from "../data/travelEncounters.js";
 import { FLOOR_MAP_VERSION, START_NODE_ID, locationFromNode } from "../data/worldNavigation.js";
 import { saveCharacter } from "../utils/storage.js";
 import "../game-interface.css";
@@ -201,7 +202,9 @@ export default function CharacterScreen({ character, onBack }) {
 
   function handleEncounter(encounter) {
     if (activeEncounter) return;
-    setActiveEncounter(encounter);
+
+    const nextEncounter = resolveTravelEncounter(encounter);
+    setActiveEncounter(nextEncounter);
     setActiveTab("battle");
   }
 
