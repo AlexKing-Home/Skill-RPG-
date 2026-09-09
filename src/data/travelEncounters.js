@@ -9,6 +9,14 @@ export const wildBoarEncounter = {
   image: wildBoarArt,
 };
 
+export function resolveTravelEncounter(encounter) {
+  if (!encounter || encounter.id === wildBoarEncounter.id) {
+    return { ...wildBoarEncounter, ...(encounter ?? {}) };
+  }
+
+  return encounter;
+}
+
 export function shouldTriggerWildBoarEncounter(randomValue = Math.random()) {
   return randomValue < WILD_BOAR_ENCOUNTER_CHANCE;
 }
