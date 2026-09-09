@@ -41,6 +41,7 @@ export default function BattleView({
   const comboTimerRef = useRef(null);
   const comboSequenceRef = useRef([]);
   const enemyName = encounter?.name ?? "Неизвестный противник";
+  const enemyImage = encounter?.image ?? null;
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -121,6 +122,9 @@ export default function BattleView({
       </div>
 
       <div className="battle-card battle-card--compact" role="status" aria-live="assertive">
+        {enemyImage ? (
+          <img className="battle-card__enemy-art" src={enemyImage} alt={enemyName} />
+        ) : null}
         <span className="battle-card__eyebrow">Противник</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
         <div className="battle-card__divider" aria-hidden="true" />
