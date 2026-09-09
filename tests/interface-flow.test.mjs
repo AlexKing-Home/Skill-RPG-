@@ -19,6 +19,7 @@ const battleViewSource = await read("../src/components/BattleView.jsx");
 const worldMapSource = await read("../src/components/WorldMapView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
+const encounterSource = await read("../src/data/travelEncounters.js");
 
 test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /setScreen\("character"\)/);
@@ -97,6 +98,14 @@ test("character HUD includes stamina and skill mastery progression", () => {
   assert.match(playerHudSource, /МАСТЕРСТВО/);
   assert.match(playerHudSource, /progression\.percent/);
   assert.match(characterScreenSource, /progression=\{progression\}/);
+});
+
+test("wild boar encounter provides and displays enemy artwork in battle", () => {
+  assert.match(encounterSource, /image: wildBoarArt/);
+  assert.match(battleViewSource, /const enemyImage = encounter\?\.image \?\? null/);
+  assert.match(battleViewSource, /className="battle-card__enemy-art"/);
+  assert.match(battleViewSource, /src=\{enemyImage\}/);
+  assert.match(battleViewSource, /alt=\{enemyName\}/);
 });
 
 test("battle direction buttons define their basic combat actions", () => {
