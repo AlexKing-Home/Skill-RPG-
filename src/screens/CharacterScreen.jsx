@@ -173,6 +173,13 @@ export default function CharacterScreen({ character, onBack }) {
     return true;
   }
 
+  function handleRest() {
+    if (activeEncounter || currentStamina >= maxStamina) return;
+
+    setCurrentStamina(maxStamina);
+    persist({ currentStamina: maxStamina });
+  }
+
   function handleTabChange(nextTab) {
     if (activeEncounter && nextTab !== "battle") return;
     setActiveTab(nextTab);
@@ -292,7 +299,12 @@ export default function CharacterScreen({ character, onBack }) {
     content = <PlaceholderView type={activeTab} />;
   } else {
     content = (
-      <WorldMapView location={location} onTravel={handleTravel} onEncounter={handleEncounter} />
+      <WorldMapView
+        location={location}
+        onTravel={handleTravel}
+        onEncounter={handleEncounter}
+        onRest={handleRest}
+      />
     );
   }
 
