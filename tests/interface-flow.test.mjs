@@ -16,6 +16,7 @@ const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
 const statsSource = await read("../src/components/CharacterStatsView.jsx");
 const playerHudSource = await read("../src/components/PlayerHud.jsx");
 const battleViewSource = await read("../src/components/BattleView.jsx");
+const worldMapSource = await read("../src/components/WorldMapView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
 
@@ -144,6 +145,15 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /currentStamina: nextStamina/);
   assert.match(characterScreenSource, /skillMastery: nextSkillMastery/);
   assert.match(characterScreenSource, /onSkillActivate=\{handleSkillActivate\}/);
+});
+
+test("world map rest button restores stamina to the current maximum and persists it", () => {
+  assert.match(worldMapSource, />\s*Отдохнуть\s*</);
+  assert.match(worldMapSource, /onClick=\{onRest\}/);
+  assert.match(characterScreenSource, /function handleRest\(\)/);
+  assert.match(characterScreenSource, /setCurrentStamina\(maxStamina\)/);
+  assert.match(characterScreenSource, /persist\(\{ currentStamina: maxStamina \}\)/);
+  assert.match(characterScreenSource, /onRest=\{handleRest\}/);
 });
 
 test("active encounters lock navigation and expose an explicit flee action", () => {
