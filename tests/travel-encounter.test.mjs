@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import {
   WILD_BOAR_ENCOUNTER_CHANCE,
   rollTravelEncounter,
+  resolveTravelEncounter,
   shouldTriggerWildBoarEncounter,
 } from "../src/data/travelEncounters.js";
 import { getTravelRoute } from "../src/data/worldNavigation.js";
@@ -23,6 +24,9 @@ test("wild boar encounter chance is exactly 50 percent", () => {
   assert.equal(shouldTriggerWildBoarEncounter(0.99), false);
   assert.equal(rollTravelEncounter(0.25)?.name, "Дикий кабан");
   assert.equal(rollTravelEncounter(0.75), null);
+  assert.equal(resolveTravelEncounter(null).name, "Дикий кабан");
+  assert.equal(resolveTravelEncounter({ id: "wild-boar" }).name, "Дикий кабан");
+  assert.ok(resolveTravelEncounter({ id: "wild-boar" }).image);
 });
 
 test("world travel is twice as slow and encounter interrupts the route", () => {
@@ -36,7 +40,8 @@ test("world travel is twice as slow and encounter interrupts the route", () => {
 
 test("wild boar attack automatically opens and locks the battle tab", () => {
   assert.match(characterScreen, /function handleEncounter\(encounter\)/);
-  assert.match(characterScreen, /setActiveEncounter\(encounter\)/);
+  assert.match(characterScreen, /const nextEncounter = resolveTravelEncounter\(encounter\)/);
+  assert.match(characterScreen, /setActiveEncounter\(nextEncounter\)/);
   assert.match(characterScreen, /setActiveTab\("battle"\)/);
   assert.match(characterScreen, /<BattleView[\s\S]*encounter=\{activeEncounter\}/);
   assert.match(characterScreen, /currentStamina=\{currentStamina\}/);
