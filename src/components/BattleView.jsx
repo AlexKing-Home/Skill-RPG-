@@ -40,7 +40,14 @@ export default function BattleView({
   const actionTimerRef = useRef(null);
   const comboTimerRef = useRef(null);
   const comboSequenceRef = useRef([]);
-  const enemyName = encounter?.name ?? "Неизвестный противник";
+  const enemyName = encounter?.name ?? "Нет активного противника";
+  const enemyImage = encounter?.image ?? null;
+  const enemyMaxHealth = Math.max(0, Math.floor(Number(encounter?.maxHealth) || 0));
+  const rawEnemyCurrentHealth = encounter?.currentHealth ?? enemyMaxHealth;
+  const enemyCurrentHealth = Math.min(
+    enemyMaxHealth,
+    Math.max(0, Math.floor(Number(rawEnemyCurrentHealth) || 0)),
+  );
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -121,10 +128,22 @@ export default function BattleView({
       </div>
 
       <div className="battle-card battle-card--compact" role="status" aria-live="assertive">
+        {enemyImage ? (
+          <img className="battle-card__enemy-art" src={enemyImage} alt={enemyName} />
+        ) : null}
         <span className="battle-card__eyebrow">Противник</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
+        {enemyMaxHealth > 0 ? (
+          <span className="battle-card__status">
+            HP {enemyCurrentHealth} / {enemyMaxHealth}
+          </span>
+        ) : null}
         <div className="battle-card__divider" aria-hidden="true" />
-        <p>{enemyName} преградил путь и напал на героя.</p>
+        <p>
+          {encounter
+            ? `${enemyName} преградил путь и напал на героя.`
+            : "Ожидание случайной встречи."}
+        </p>
       </div>
 
       <div className="battle-controls" aria-label="Боевые элементы управления">

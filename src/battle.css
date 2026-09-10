@@ -61,6 +61,21 @@
   font-size: 1.5rem;
 }
 
+.battle-card__enemy-art {
+  width: min(100%, 320px);
+  max-height: 320px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(177, 132, 69, 0.72);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.36);
+}
+
+.battle-card:has(.battle-card__enemy-art)::before {
+  display: none;
+}
+
 .battle-card__eyebrow {
   color: #71c9f4;
   font-size: 0.72rem;
