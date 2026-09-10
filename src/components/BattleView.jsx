@@ -42,6 +42,12 @@ export default function BattleView({
   const comboSequenceRef = useRef([]);
   const enemyName = encounter?.name ?? "Нет активного противника";
   const enemyImage = encounter?.image ?? null;
+  const enemyMaxHealth = Math.max(0, Math.floor(Number(encounter?.maxHealth) || 0));
+  const rawEnemyCurrentHealth = encounter?.currentHealth ?? enemyMaxHealth;
+  const enemyCurrentHealth = Math.min(
+    enemyMaxHealth,
+    Math.max(0, Math.floor(Number(rawEnemyCurrentHealth) || 0)),
+  );
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -127,6 +133,11 @@ export default function BattleView({
         ) : null}
         <span className="battle-card__eyebrow">Противник</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
+        {enemyMaxHealth > 0 ? (
+          <span className="battle-card__status">
+            HP {enemyCurrentHealth} / {enemyMaxHealth}
+          </span>
+        ) : null}
         <div className="battle-card__divider" aria-hidden="true" />
         <p>
           {encounter
