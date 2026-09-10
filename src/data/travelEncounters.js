@@ -7,6 +7,8 @@ export const wildBoarEncounter = {
   name: "Дикий кабан",
   kind: "mob",
   image: wildBoarArt,
+  maxHealth: 25,
+  currentHealth: 25,
 };
 
 export function resolveTravelEncounter(encounter) {
