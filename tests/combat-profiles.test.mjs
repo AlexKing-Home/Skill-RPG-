@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {
-  getCombatProfile,
-  getCombatProfileForWeapon,
-} from "../src/data/combatProfiles.js";
+import { getCombatProfile, getCombatProfileForWeapon } from "../src/data/combatProfiles.js";
 import { findOneHandedSwordSkill } from "../src/data/oneHandedSwordSkills.js";
 
 test("swordsman uses one-handed sword combo resolver and mastery", () => {
