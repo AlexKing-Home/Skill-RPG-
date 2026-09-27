@@ -6,6 +6,9 @@ export const WEAPON_MASTERY_TYPES = [
   { key: "twoHanded", label: "Двуручный меч" },
   { key: "rapier", label: "Рапира" },
   { key: "katana", label: "Катана" },
+  { key: "spear", label: "Копьё" },
+  { key: "dagger", label: "Кинжал" },
+  { key: "bow", label: "Лук" },
   {
     key: "dualWield",
     label: "Два меча",
