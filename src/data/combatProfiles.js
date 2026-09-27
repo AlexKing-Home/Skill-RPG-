@@ -1,7 +1,4 @@
-import {
-  findOneHandedSwordSkill,
-  ONE_HANDED_SWORD_SKILLS,
-} from "./oneHandedSwordSkills.js";
+import { findOneHandedSwordSkill, ONE_HANDED_SWORD_SKILLS } from "./oneHandedSwordSkills.js";
 
 const genericProfile = {
   weaponType: "unarmed",

@@ -146,15 +146,11 @@ export function isOneHandedSwordSkillUnlocked(skill, mastery = 0) {
 }
 
 export function getUnlockedOneHandedSwordSkills(mastery = 0) {
-  return ONE_HANDED_SWORD_SKILLS.filter((skill) =>
-    isOneHandedSwordSkillUnlocked(skill, mastery),
-  );
+  return ONE_HANDED_SWORD_SKILLS.filter((skill) => isOneHandedSwordSkillUnlocked(skill, mastery));
 }
 
 export function getNextOneHandedSwordSkillUnlock(mastery = 0) {
-  return ONE_HANDED_SWORD_SKILLS.find(
-    (skill) => !isOneHandedSwordSkillUnlocked(skill, mastery),
-  );
+  return ONE_HANDED_SWORD_SKILLS.find((skill) => !isOneHandedSwordSkillUnlocked(skill, mastery));
 }
 
 export function findOneHandedSwordSkill(sequence) {

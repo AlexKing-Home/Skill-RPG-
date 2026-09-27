@@ -198,7 +198,6 @@ test("reference character view keeps portrait stats and equipment in one integra
   assert.match(detailsSource, /Сила атаки/);
 });
 
-
 test("mastery unlock progression is visible and enforced in combat", () => {
   assert.match(skillsSource, /Открыто приёмов:/);
   assert.match(skillsSource, /Следующий:/);

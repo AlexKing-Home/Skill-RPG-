@@ -300,7 +300,9 @@ export default function CharacterScreen({ character, onBack }) {
         onSkillActivate={handleSkillActivate}
         onFlee={activeEncounter ? handleFleeBattle : undefined}
         findSkill={combatProfile.findSkill}
-        currentMastery={combatProfile.masteryKey ? (skillMastery[combatProfile.masteryKey] ?? 0) : 0}
+        currentMastery={
+          combatProfile.masteryKey ? (skillMastery[combatProfile.masteryKey] ?? 0) : 0
+        }
         weaponLabel={combatProfile.label}
       />
     );

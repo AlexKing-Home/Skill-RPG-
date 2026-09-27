@@ -114,7 +114,6 @@ test("one-handed sword resolver returns the matching skill only for a complete c
   assert.equal(findOneHandedSwordSkill(["left", "left"]), undefined);
 });
 
-
 test("one-handed sword techniques unlock gradually with mastery", () => {
   assert.deepEqual(
     ONE_HANDED_SWORD_SKILLS.map(({ id, masteryRequired }) => [id, masteryRequired]),
