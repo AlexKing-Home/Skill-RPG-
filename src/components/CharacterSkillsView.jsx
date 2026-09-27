@@ -1,4 +1,6 @@
-import { getCombatProfile } from "../data/combatProfiles.js";
+import {
+  getCombatProfileForWeapon,
+} from "../data/combatProfiles.js";
 import {
   getMasteryProgress,
   getVisibleWeaponMasteryTypes,
@@ -15,7 +17,6 @@ const directionSymbols = {
 export default function CharacterSkillsView({ character }) {
   const skillMastery = normalizeSkillMastery(character.skillMastery);
   const visibleWeapons = getVisibleWeaponMasteryTypes(skillMastery);
-  const combatProfile = getCombatProfile(character.classId);
 
   return (
     <section className="game-view character-skills-view">
@@ -25,8 +26,7 @@ export default function CharacterSkillsView({ character }) {
       <div className="mastery-list">
         {visibleWeapons.map((weapon) => {
           const mastery = getMasteryProgress(skillMastery[weapon.key]);
-          const techniques =
-            combatProfile.masteryKey === weapon.key ? (combatProfile.skills ?? []) : [];
+          const techniques = getCombatProfileForWeapon(weapon.key).skills ?? [];
           const unlockedTechniques = techniques.filter(
             (skill) => mastery.current >= (skill.masteryRequired ?? 0),
           );
