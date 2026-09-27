@@ -1,7 +1,4 @@
-import {
-  findOneHandedSwordSkill,
-  ONE_HANDED_SWORD_SKILLS,
-} from "./oneHandedSwordSkills.js";
+import { findOneHandedSwordSkill, ONE_HANDED_SWORD_SKILLS } from "./oneHandedSwordSkills.js";
 import {
   BOW_SKILLS,
   DAGGER_SKILLS,
@@ -68,4 +65,3 @@ export function getCombatProfile(classId, equipment = {}) {
   const weaponType = getEquippedWeaponType(equipment) ?? classWeaponTypes[classId];
   return getCombatProfileForWeapon(weaponType);
 }
-

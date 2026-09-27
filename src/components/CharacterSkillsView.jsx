@@ -1,6 +1,4 @@
-import {
-  getCombatProfileForWeapon,
-} from "../data/combatProfiles.js";
+import { getCombatProfileForWeapon } from "../data/combatProfiles.js";
 import {
   getMasteryProgress,
   getVisibleWeaponMasteryTypes,
@@ -102,4 +100,3 @@ export default function CharacterSkillsView({ character }) {
     </section>
   );
 }
-

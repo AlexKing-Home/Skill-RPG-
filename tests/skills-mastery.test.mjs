@@ -69,16 +69,7 @@ test("dual swords stay hidden until one-handed mastery is complete", () => {
 
   assert.deepEqual(
     getVisibleWeaponMasteryTypes({ oneHanded: 1000 }).map(({ key }) => key),
-    [
-      "oneHanded",
-      "twoHanded",
-      "rapier",
-      "katana",
-      "spear",
-      "dagger",
-      "bow",
-      "dualWield",
-    ],
+    ["oneHanded", "twoHanded", "rapier", "katana", "spear", "dagger", "bow", "dualWield"],
   );
 });
 
@@ -95,4 +86,3 @@ test("skills subsection renders mastery and technique unlock progress", () => {
   assert.match(characterScreenSource, /characterSection === "skills"/);
   assert.match(characterScreenSource, /<CharacterSkillsView character=\{activeCharacter\}/);
 });
-
