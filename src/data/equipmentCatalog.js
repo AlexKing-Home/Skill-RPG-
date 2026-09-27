@@ -8,13 +8,15 @@ export const EQUIPMENT_RARITIES = [
 ];
 
 const COMMON_EFFECTS = [
-  (tier) => `Атакующие приёмы расходуют на ${Math.max(1, Math.floor(tier / 4))} ед. выносливости меньше (не ниже 1).`,
+  (tier) =>
+    `Атакующие приёмы расходуют на ${Math.max(1, Math.floor(tier / 4))} ед. выносливости меньше (не ниже 1).`,
   (tier) => `После успешного приёма точность следующей атаки +${2 + tier}%.`,
   (tier) => `Критический урон повышен на ${5 + tier * 2}%.`,
   (tier) => `Первый удар в бою наносит +${4 + tier * 3}% урона.`,
   (tier) => `После идеального блока или парирования атака +${3 + tier * 2}% на 2 сек.`,
   (tier) => `При выносливости ниже 30% урон приёмов +${5 + tier * 2}%.`,
-  (tier) => `Каждый 4-й успешный приём восстанавливает ${1 + Math.min(3, Math.floor(tier / 2))} выносливости.`,
+  (tier) =>
+    `Каждый 4-й успешный приём восстанавливает ${1 + Math.min(3, Math.floor(tier / 2))} выносливости.`,
   (tier) => `Шанс ${3 + tier}% не потратить выносливость при использовании приёма.`,
   (tier) => `Урон по противнику с полным HP +${5 + tier * 2}%.`,
   (tier) => `После победы над врагом восстанавливается ${2 + tier} выносливости.`,
@@ -147,7 +149,12 @@ const WEAPON_CATALOG_CONFIG = {
       "Буревестника",
       "Небесного Копейщика",
     ],
-    uniqueNames: ["Гунгнир Рассвета", "Пика Последнего Рубежа", "Небесный Пронзатель", "Копьё Тысячи Бурь"],
+    uniqueNames: [
+      "Гунгнир Рассвета",
+      "Пика Последнего Рубежа",
+      "Небесный Пронзатель",
+      "Копьё Тысячи Бурь",
+    ],
     uniqueEffects: [
       "Первый удар по новой цели наносит +25% урона.",
       "Удары после блока игнорируют 15% защиты цели.",
@@ -239,7 +246,9 @@ const WEAPON_CATALOG_CONFIG = {
 };
 
 function getRarity(level) {
-  return EQUIPMENT_RARITIES.find(({ fromLevel, toLevel }) => level >= fromLevel && level <= toLevel);
+  return EQUIPMENT_RARITIES.find(
+    ({ fromLevel, toLevel }) => level >= fromLevel && level <= toLevel,
+  );
 }
 
 function getMasteryRequirement(index) {
@@ -301,9 +310,7 @@ function createWeaponItem(masteryKey, config, name, index) {
 
 export const EQUIPMENT_CATALOG = Object.entries(WEAPON_CATALOG_CONFIG).flatMap(
   ([masteryKey, config]) =>
-    createNames(config).map((name, index) =>
-      createWeaponItem(masteryKey, config, name, index),
-    ),
+    createNames(config).map((name, index) => createWeaponItem(masteryKey, config, name, index)),
 );
 
 export const EQUIPMENT_BY_ID = new Map(EQUIPMENT_CATALOG.map((item) => [item.id, item]));
