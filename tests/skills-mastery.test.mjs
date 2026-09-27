@@ -95,3 +95,4 @@ test("skills subsection renders mastery and technique unlock progress", () => {
   assert.match(characterScreenSource, /characterSection === "skills"/);
   assert.match(characterScreenSource, /<CharacterSkillsView character=\{activeCharacter\}/);
 });
+

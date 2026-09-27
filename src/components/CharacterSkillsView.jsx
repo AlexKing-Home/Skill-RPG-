@@ -102,3 +102,4 @@ export default function CharacterSkillsView({ character }) {
     </section>
   );
 }
+

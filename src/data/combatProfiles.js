@@ -68,3 +68,4 @@ export function getCombatProfile(classId, equipment = {}) {
   const weaponType = getEquippedWeaponType(equipment) ?? classWeaponTypes[classId];
   return getCombatProfileForWeapon(weaponType);
 }
+
