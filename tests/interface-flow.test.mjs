@@ -127,7 +127,7 @@ test("battle resolves skills through the active weapon profile instead of hardco
     /showAction\(`НАВЫК: \$\{skill\.name\}! −\$\{skill\.staminaCost\} ВЫН\.`\)/,
   );
   assert.match(battleViewSource, /НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!/);
-  assert.match(characterScreenSource, /getCombatProfile\(character\.classId\)/);
+  assert.match(characterScreenSource, /getCombatProfile\(character\.classId, character\.equipment\)/);
   assert.match(characterScreenSource, /findSkill=\{combatProfile\.findSkill\}/);
 });
 
@@ -139,7 +139,7 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
   assert.match(
     characterScreenSource,
-    /increaseWeaponMastery\(skillMastery, combatProfile\.masteryKey\)/,
+    /increaseWeaponMastery\(skillMastery, masteryKey\)/,
   );
   assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
