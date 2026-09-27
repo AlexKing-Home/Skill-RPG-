@@ -63,7 +63,7 @@ export default function CharacterScreen({ character, onBack }) {
   const maxHealth = getMaxHealth(stats);
   const willBonuses = getWillBonuses(stats);
   const maxStamina = getMaxStamina(stats);
-  const combatProfile = getCombatProfile(character.classId);
+  const combatProfile = getCombatProfile(character.classId, character.equipment);
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
