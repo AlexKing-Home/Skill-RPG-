@@ -1,10 +1,14 @@
-import { findOneHandedSwordSkill } from "./oneHandedSwordSkills.js";
+import {
+  findOneHandedSwordSkill,
+  ONE_HANDED_SWORD_SKILLS,
+} from "./oneHandedSwordSkills.js";
 
 const genericProfile = {
   weaponType: "unarmed",
   label: "Без оружия",
   masteryKey: null,
   findSkill: null,
+  skills: [],
 };
 
 const combatProfiles = {
@@ -13,6 +17,7 @@ const combatProfiles = {
     label: "Одноручный меч",
     masteryKey: "oneHanded",
     findSkill: findOneHandedSwordSkill,
+    skills: ONE_HANDED_SWORD_SKILLS,
   },
   spearman: {
     weaponType: "spear",

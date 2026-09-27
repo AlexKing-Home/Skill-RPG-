@@ -157,9 +157,17 @@ export default function CharacterScreen({ character, onBack }) {
     if (currentStamina < staminaCost) return false;
 
     const nextStamina = currentStamina - staminaCost;
-    const nextSkillMastery = combatProfile.masteryKey
-      ? increaseWeaponMastery(skillMastery, combatProfile.masteryKey)
+    const masteryKey = combatProfile.masteryKey;
+    const previousMastery = masteryKey ? (skillMastery[masteryKey] ?? 0) : 0;
+    const nextSkillMastery = masteryKey
+      ? increaseWeaponMastery(skillMastery, masteryKey)
       : skillMastery;
+    const nextMastery = masteryKey ? (nextSkillMastery[masteryKey] ?? previousMastery) : 0;
+    const unlockedSkill = (combatProfile.skills ?? []).find(
+      (candidate) =>
+        (candidate.masteryRequired ?? 0) > previousMastery &&
+        (candidate.masteryRequired ?? 0) <= nextMastery,
+    );
     const nextProgression = getSkillProgression(nextSkillMastery);
     const nextCharacteristicPoints = getAvailableCharacteristicPoints(nextProgression.level, stats);
 
@@ -170,7 +178,7 @@ export default function CharacterScreen({ character, onBack }) {
       characteristicPoints: nextCharacteristicPoints,
       currentStamina: nextStamina,
     });
-    return true;
+    return { activated: true, unlockedSkill: unlockedSkill ?? null };
   }
 
   function handleRest() {
@@ -292,6 +300,7 @@ export default function CharacterScreen({ character, onBack }) {
         onSkillActivate={handleSkillActivate}
         onFlee={activeEncounter ? handleFleeBattle : undefined}
         findSkill={combatProfile.findSkill}
+        currentMastery={combatProfile.masteryKey ? (skillMastery[combatProfile.masteryKey] ?? 0) : 0}
         weaponLabel={combatProfile.label}
       />
     );

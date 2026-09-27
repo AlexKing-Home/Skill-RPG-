@@ -1,6 +1,7 @@
 export const ONE_HANDED_SWORD_SKILLS = [
   {
     id: "slant",
+    masteryRequired: 0,
     name: "Косой удар",
     originalName: "Slant",
     description: "Одиночный диагональный удар.",
@@ -9,6 +10,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "vertical",
+    masteryRequired: 0,
     name: "Вертикальный удар",
     originalName: "Vertical",
     description: "Вертикальный удар.",
@@ -17,6 +19,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "horizontal",
+    masteryRequired: 50,
     name: "Горизонтальный удар",
     originalName: "Horizontal",
     description: "Горизонтальный удар.",
@@ -25,6 +28,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "uppercut",
+    masteryRequired: 100,
     name: "Восходящий удар",
     originalName: "Uppercut",
     description: "Восходящий удар.",
@@ -33,6 +37,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "rage-spike",
+    masteryRequired: 175,
     name: "Яростный выпад",
     originalName: "Rage Spike",
     description: "Рывок к противнику с атакой.",
@@ -41,6 +46,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "sonic-leap",
+    masteryRequired: 250,
     name: "Звуковой прыжок",
     originalName: "Sonic Leap",
     description: "Быстрый прыжок или рывок с ударом сверху.",
@@ -49,6 +55,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "vertical-arc",
+    masteryRequired: 325,
     name: "Вертикальная дуга",
     originalName: "Vertical Arc",
     description: "Два удара по V-траектории.",
@@ -57,6 +64,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "sharp-nail",
+    masteryRequired: 400,
     name: "Острый гвоздь",
     originalName: "Sharp Nail",
     description: "Трёхударная комбинация.",
@@ -65,6 +73,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "savage-fulcrum",
+    masteryRequired: 475,
     name: "Свирепый рычаг",
     originalName: "Savage Fulcrum",
     description: "Комбинация из трёх ударов.",
@@ -73,6 +82,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "horizontal-square",
+    masteryRequired: 550,
     name: "Горизонтальный квадрат",
     originalName: "Horizontal Square",
     description: "Четыре горизонтальных удара.",
@@ -81,6 +91,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "vertical-square",
+    masteryRequired: 625,
     name: "Вертикальный квадрат",
     originalName: "Vertical Square",
     description: "Комбинация из четырёх вертикальных ударов.",
@@ -89,6 +100,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "vorpal-strike",
+    masteryRequired: 700,
     name: "Смертельный удар",
     originalName: "Vorpal Strike",
     description: "Мощный дальний выпад.",
@@ -97,6 +109,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "deadly-sins",
+    masteryRequired: 800,
     name: "Смертные грехи",
     originalName: "Deadly Sins",
     description: "Семь последовательных ударов.",
@@ -105,6 +118,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "howling-octave",
+    masteryRequired: 900,
     name: "Воющая октава",
     originalName: "Howling Octave",
     description: "Восьмиударная комбинация.",
@@ -113,6 +127,7 @@ export const ONE_HANDED_SWORD_SKILLS = [
   },
   {
     id: "nova-ascension",
+    masteryRequired: 1000,
     name: "Восхождение Новы",
     originalName: "Nova Ascension",
     description: "Десятиударная высшая техника одноручного меча.",
@@ -120,6 +135,27 @@ export const ONE_HANDED_SWORD_SKILLS = [
     staminaCost: 6,
   },
 ];
+
+function normalizeMasteryValue(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? Math.max(0, Math.floor(numeric)) : 0;
+}
+
+export function isOneHandedSwordSkillUnlocked(skill, mastery = 0) {
+  return normalizeMasteryValue(mastery) >= normalizeMasteryValue(skill?.masteryRequired);
+}
+
+export function getUnlockedOneHandedSwordSkills(mastery = 0) {
+  return ONE_HANDED_SWORD_SKILLS.filter((skill) =>
+    isOneHandedSwordSkillUnlocked(skill, mastery),
+  );
+}
+
+export function getNextOneHandedSwordSkillUnlock(mastery = 0) {
+  return ONE_HANDED_SWORD_SKILLS.find(
+    (skill) => !isOneHandedSwordSkillUnlocked(skill, mastery),
+  );
+}
 
 export function findOneHandedSwordSkill(sequence) {
   return ONE_HANDED_SWORD_SKILLS.find(

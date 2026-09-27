@@ -32,6 +32,7 @@ export default function BattleView({
   onSkillActivate,
   onFlee,
   findSkill = null,
+  currentMastery = 0,
   weaponLabel = "Оружие",
 }) {
   const [activeAction, setActiveAction] = useState("");
@@ -66,11 +67,25 @@ export default function BattleView({
     } else {
       const skill = typeof findSkill === "function" ? findSkill(sequence) : null;
       if (skill) {
-        const activated = onSkillActivate ? onSkillActivate(skill) : true;
-        if (activated) {
-          showAction(`НАВЫК: ${skill.name}! −${skill.staminaCost} ВЫН.`);
+        const masteryRequired = Math.max(0, Math.floor(Number(skill.masteryRequired) || 0));
+        if (currentMastery < masteryRequired) {
+          showAction(`ПРИЁМ ЗАКРЫТ: ${skill.name} · НУЖНО ${masteryRequired} МАСТ.`);
         } else {
-          showAction("НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!");
+          const activationResult = onSkillActivate ? onSkillActivate(skill) : true;
+          const activated =
+            typeof activationResult === "object"
+              ? activationResult?.activated !== false
+              : Boolean(activationResult);
+
+          if (activated) {
+            if (activationResult?.unlockedSkill) {
+              showAction(`НОВЫЙ ПРИЁМ: ${activationResult.unlockedSkill.name} ОТКРЫТ!`);
+            } else {
+              showAction(`НАВЫК: ${skill.name}! −${skill.staminaCost} ВЫН.`);
+            }
+          } else {
+            showAction("НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!");
+          }
         }
       } else if (sequence.length > 1) {
         showAction(`КОМБИНАЦИЯ «${weaponLabel}» НЕ РАСПОЗНАНА`);

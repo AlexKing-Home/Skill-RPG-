@@ -14,6 +14,7 @@ const skinCardSource = await read("../src/components/SkinCard.jsx");
 const tabsSource = await read("../src/components/GameTabs.jsx");
 const detailsSource = await read("../src/components/CharacterDetailsView.jsx");
 const statsSource = await read("../src/components/CharacterStatsView.jsx");
+const skillsSource = await read("../src/components/CharacterSkillsView.jsx");
 const playerHudSource = await read("../src/components/PlayerHud.jsx");
 const battleViewSource = await read("../src/components/BattleView.jsx");
 const worldMapSource = await read("../src/components/WorldMapView.jsx");
@@ -195,4 +196,15 @@ test("reference character view keeps portrait stats and equipment in one integra
   assert.match(detailsSource, /equipment-grid/);
   assert.match(detailsSource, /Уровень героя/);
   assert.match(detailsSource, /Сила атаки/);
+});
+
+
+test("mastery unlock progression is visible and enforced in combat", () => {
+  assert.match(skillsSource, /Открыто приёмов:/);
+  assert.match(skillsSource, /Следующий:/);
+  assert.match(skillsSource, /masteryRequired/);
+  assert.match(battleViewSource, /ПРИЁМ ЗАКРЫТ:/);
+  assert.match(battleViewSource, /НОВЫЙ ПРИЁМ:/);
+  assert.match(characterScreenSource, /currentMastery=/);
+  assert.match(characterScreenSource, /unlockedSkill/);
 });

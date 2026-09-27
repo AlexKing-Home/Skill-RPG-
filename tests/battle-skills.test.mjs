@@ -3,6 +3,9 @@ import test from "node:test";
 import {
   ONE_HANDED_SWORD_SKILLS,
   findOneHandedSwordSkill,
+  getNextOneHandedSwordSkillUnlock,
+  getUnlockedOneHandedSwordSkills,
+  isOneHandedSwordSkillUnlocked,
 } from "../src/data/oneHandedSwordSkills.js";
 
 const expectedSkills = [
@@ -109,4 +112,41 @@ test("one-handed sword resolver returns the matching skill only for a complete c
 
   assert.equal(findOneHandedSwordSkill(["left"]), undefined);
   assert.equal(findOneHandedSwordSkill(["left", "left"]), undefined);
+});
+
+
+test("one-handed sword techniques unlock gradually with mastery", () => {
+  assert.deepEqual(
+    ONE_HANDED_SWORD_SKILLS.map(({ id, masteryRequired }) => [id, masteryRequired]),
+    [
+      ["slant", 0],
+      ["vertical", 0],
+      ["horizontal", 50],
+      ["uppercut", 100],
+      ["rage-spike", 175],
+      ["sonic-leap", 250],
+      ["vertical-arc", 325],
+      ["sharp-nail", 400],
+      ["savage-fulcrum", 475],
+      ["horizontal-square", 550],
+      ["vertical-square", 625],
+      ["vorpal-strike", 700],
+      ["deadly-sins", 800],
+      ["howling-octave", 900],
+      ["nova-ascension", 1000],
+    ],
+  );
+
+  assert.deepEqual(
+    getUnlockedOneHandedSwordSkills(0).map(({ id }) => id),
+    ["slant", "vertical"],
+  );
+  assert.equal(getUnlockedOneHandedSwordSkills(49).length, 2);
+  assert.equal(getUnlockedOneHandedSwordSkills(50).at(-1)?.id, "horizontal");
+  assert.equal(getUnlockedOneHandedSwordSkills(999).length, 14);
+  assert.equal(getUnlockedOneHandedSwordSkills(1000).length, 15);
+  assert.equal(getNextOneHandedSwordSkillUnlock(49)?.id, "horizontal");
+  assert.equal(getNextOneHandedSwordSkillUnlock(1000), undefined);
+  assert.equal(isOneHandedSwordSkillUnlocked(ONE_HANDED_SWORD_SKILLS[2], 49), false);
+  assert.equal(isOneHandedSwordSkillUnlocked(ONE_HANDED_SWORD_SKILLS[2], 50), true);
 });
