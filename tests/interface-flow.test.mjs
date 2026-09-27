@@ -207,3 +207,13 @@ test("mastery unlock progression is visible and enforced in combat", () => {
   assert.match(characterScreenSource, /currentMastery=/);
   assert.match(characterScreenSource, /unlockedSkill/);
 });
+
+
+test("combat profile follows the weapon currently stored in the primary equipment slot", () => {
+  assert.match(
+    characterScreenSource,
+    /getCombatProfile\(character\.classId, character\.equipment\)/,
+  );
+  assert.match(characterScreenSource, /combatProfile\.masteryKey/);
+  assert.match(characterScreenSource, /combatProfile\.skills/);
+});
