@@ -122,8 +122,8 @@ test("battle action notification appears only after the shared 1.5 second combo 
   assert.match(battleViewSource, /COMBO_INPUT_TIMEOUT_MS = 1500/);
   assert.match(battleViewSource, /function resolveCombo\(sequence\)/);
   assert.match(battleViewSource, /sequence\.length === 1/);
-  assert.match(battleViewSource, /showAction\(BASIC_ACTIONS\[sequence\[0\]\]\)/);
-  assert.match(battleViewSource, /resolveCombo\(comboSequenceRef\.current\)/);
+  assert.match(battleViewSource, /onBasicAction\?\.\(sequence\[0\]\)/);
+  assert.match(battleViewSource, /resolveComboRef\.current\(comboSequenceRef\.current\)/);
   assert.match(battleViewSource, /"Ввод комбинации…"/);
 });
 
@@ -144,15 +144,13 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /\[currentStamina, setCurrentStamina\]/);
   assert.match(characterScreenSource, /\[skillMastery, setSkillMastery\]/);
   assert.match(characterScreenSource, /function handleSkillActivate\(skill\)/);
-  assert.match(characterScreenSource, /currentStamina < staminaCost/);
-  assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
+  assert.match(characterScreenSource, /resolvePlayerAction\(current, \{ skill \}\)/);
+  assert.match(characterScreenSource, /if \(!result.accepted\) return false/);
   assert.match(
     characterScreenSource,
-    /increaseWeaponMastery\(skillMastery, combatProfile\.masteryKey\)/,
+    /increaseWeaponMastery\(current.skillMastery, combatProfile.masteryKey\)/,
   );
-  assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
-  assert.match(characterScreenSource, /currentStamina: nextStamina/);
   assert.match(characterScreenSource, /skillMastery: nextSkillMastery/);
   assert.match(characterScreenSource, /onSkillActivate=\{handleSkillActivate\}/);
 });

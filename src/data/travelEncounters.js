@@ -7,6 +7,8 @@ export const wildBoarEncounter = {
   name: "Дикий кабан",
   kind: "mob",
   image: wildBoarArt,
+  attack: 18,
+  defense: 2,
   maxHealth: 25,
   currentHealth: 25,
 };

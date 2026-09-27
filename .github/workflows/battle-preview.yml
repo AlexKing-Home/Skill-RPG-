@@ -3,14 +3,14 @@ name: Publish battle preview
 on:
   push:
     branches:
-      - agent/battle-system
+      - feature/complete-combat-20260927
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: battle-static-preview
+  group: complete-combat-static-preview
   cancel-in-progress: true
 
 jobs:
@@ -46,6 +46,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Battle preview ${GITHUB_SHA}"
-          git branch -M battle-preview-build
+          git branch -M complete-combat-preview-build
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin battle-preview-build
+          git push --force origin complete-combat-preview-build

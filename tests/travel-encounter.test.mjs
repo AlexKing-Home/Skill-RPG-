@@ -40,7 +40,10 @@ test("world travel is twice as slow and encounter interrupts the route", () => {
 
 test("wild boar attack automatically opens and locks the battle tab", () => {
   assert.match(characterScreen, /function handleEncounter\(encounter\)/);
-  assert.match(characterScreen, /const nextEncounter = resolveTravelEncounter\(encounter\)/);
+  assert.match(
+    characterScreen,
+    /const nextEncounter = createBattle\(resolveTravelEncounter\(encounter\)\)/,
+  );
   assert.match(characterScreen, /setActiveEncounter\(nextEncounter\)/);
   assert.match(characterScreen, /setActiveTab\("battle"\)/);
   assert.match(characterScreen, /<BattleView[\s\S]*encounter=\{activeEncounter\}/);
