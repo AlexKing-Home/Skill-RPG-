@@ -127,7 +127,10 @@ test("battle resolves skills through the active weapon profile instead of hardco
     /showAction\(`НАВЫК: \$\{skill\.name\}! −\$\{skill\.staminaCost\} ВЫН\.`\)/,
   );
   assert.match(battleViewSource, /НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!/);
-  assert.match(characterScreenSource, /getCombatProfile\(character\.classId, character\.equipment\)/);
+  assert.match(
+    characterScreenSource,
+    /getCombatProfile\(character\.classId, character\.equipment\)/,
+  );
   assert.match(characterScreenSource, /findSkill=\{combatProfile\.findSkill\}/);
 });
 
@@ -137,10 +140,7 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /function handleSkillActivate\(skill\)/);
   assert.match(characterScreenSource, /currentStamina < staminaCost/);
   assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
-  assert.match(
-    characterScreenSource,
-    /increaseWeaponMastery\(skillMastery, masteryKey\)/,
-  );
+  assert.match(characterScreenSource, /increaseWeaponMastery\(skillMastery, masteryKey\)/);
   assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
   assert.match(characterScreenSource, /currentStamina: nextStamina/);
@@ -207,7 +207,6 @@ test("mastery unlock progression is visible and enforced in combat", () => {
   assert.match(characterScreenSource, /currentMastery=/);
   assert.match(characterScreenSource, /unlockedSkill/);
 });
-
 
 test("combat profile follows the weapon currently stored in the primary equipment slot", () => {
   assert.match(
