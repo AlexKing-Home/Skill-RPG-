@@ -13,3 +13,12 @@ export const EQUIPMENT_SLOTS = [
 export function createEmptyEquipment() {
   return Object.fromEntries(EQUIPMENT_SLOTS.map(({ id }) => [id, null]));
 }
+
+export {
+  EQUIPMENT_BY_ID,
+  EQUIPMENT_CATALOG,
+  EQUIPMENT_RARITIES,
+  canMeetEquipmentRequirements,
+  getEquipmentById,
+  getWeaponsByMastery,
+} from "./equipmentCatalog.js";
