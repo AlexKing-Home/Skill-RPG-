@@ -334,6 +334,18 @@
   opacity: 0.52;
 }
 
+.interaction-panel__actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.interaction-panel__button.is-selected {
+  border-color: rgba(104, 197, 243, 0.92);
+  box-shadow: 0 0 0 1px rgba(104, 197, 243, 0.18);
+}
+
 .interaction-panel__hint,
 .interaction-panel__dialogue {
   margin: 0;
@@ -376,6 +388,10 @@
   .travel-panel__button,
   .interaction-panel__button {
     width: 100%;
+  }
+
+  .interaction-panel__actions {
+    grid-template-columns: 1fr;
   }
 
   .field-object {
