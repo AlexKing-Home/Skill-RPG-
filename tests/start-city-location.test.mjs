@@ -57,3 +57,14 @@ test("start-city hotspot centers are tied to the painted marker coordinates", ()
   assert.match(view, /x: 26\.43,\s*y: 74\.55/);
   assert.match(view, /x: 75\.06,\s*y: 78\.68/);
 });
+
+
+test("blacksmith interaction opens weapon upgrade and repair services", () => {
+  assert.match(view, /action: "Говорить с кузнецом"/);
+  assert.match(view, /FORGE_SERVICES/);
+  assert.match(view, /label: "Улучшение оружия"/);
+  assert.match(view, /label: "Ремонт оружия"/);
+  assert.match(view, /setForgeMenuOpen\(true\)/);
+  assert.match(view, /selectForgeService/);
+  assert.match(view, /aria-label="Услуги кузнеца"/);
+});
