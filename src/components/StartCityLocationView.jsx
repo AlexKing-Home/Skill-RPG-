@@ -16,9 +16,8 @@ const cityObjects = [
     name: "Кузница",
     x: 17.23,
     y: 22.66,
-    action: "Осмотреть",
-    description:
-      "Из кузницы доносится звон металла. Здесь позже можно будет чинить и улучшать снаряжение.",
+    action: "Говорить с кузнецом",
+    description: "Из кузницы доносится звон металла. За наковальней работает городской кузнец.",
   },
   {
     id: "city-inn",
@@ -86,17 +85,34 @@ const cityObjects = [
   },
 ];
 
+const FORGE_SERVICES = [
+  {
+    id: "upgrade",
+    label: "Улучшение оружия",
+    description: "Кузнец готов улучшить выбранное оружие, если выполнены условия улучшения.",
+  },
+  {
+    id: "repair",
+    label: "Ремонт оружия",
+    description: "Кузнец готов восстановить прочность выбранного оружия.",
+  },
+];
+
 const CITY_ASPECT_RATIO = 1402 / 1122;
 const MAP_TAP_RADIUS = 13.5;
 
 export default function StartCityLocationView() {
   const [selectedId, setSelectedId] = useState(null);
   const [message, setMessage] = useState("");
+  const [forgeMenuOpen, setForgeMenuOpen] = useState(false);
+  const [selectedForgeService, setSelectedForgeService] = useState(null);
   const selectedObject = cityObjects.find((object) => object.id === selectedId) ?? null;
 
   function selectObject(objectId) {
     setSelectedId(objectId);
     setMessage("");
+    setForgeMenuOpen(false);
+    setSelectedForgeService(null);
   }
 
   function handleMapTap(event) {
@@ -125,7 +141,20 @@ export default function StartCityLocationView() {
 
   function interact() {
     if (!selectedObject) return;
+
+    if (selectedObject.id === "city-forge") {
+      setForgeMenuOpen(true);
+      setSelectedForgeService(null);
+      setMessage("Кузнец: Нужна помощь с оружием? Могу улучшить его или привести в порядок.");
+      return;
+    }
+
     setMessage(selectedObject.description);
+  }
+
+  function selectForgeService(service) {
+    setSelectedForgeService(service.id);
+    setMessage(service.description);
   }
 
   return (
@@ -188,6 +217,24 @@ export default function StartCityLocationView() {
           <p className="interaction-panel__hint">
             Нажмите на любую синюю точку города, чтобы выбрать взаимодействие.
           </p>
+        )}
+
+        {forgeMenuOpen && selectedObject?.id === "city-forge" && (
+          <div className="interaction-panel__actions" aria-label="Услуги кузнеца">
+            {FORGE_SERVICES.map((service) => (
+              <button
+                key={service.id}
+                type="button"
+                className={`interaction-panel__button ${
+                  selectedForgeService === service.id ? "is-selected" : ""
+                }`}
+                onClick={() => selectForgeService(service)}
+                aria-pressed={selectedForgeService === service.id}
+              >
+                {service.label}
+              </button>
+            ))}
+          </div>
         )}
 
         {message && <p className="interaction-panel__dialogue">{message}</p>}
