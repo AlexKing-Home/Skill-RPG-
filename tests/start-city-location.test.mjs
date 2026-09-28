@@ -58,7 +58,6 @@ test("start-city hotspot centers are tied to the painted marker coordinates", ()
   assert.match(view, /x: 75\.06,\s*y: 78\.68/);
 });
 
-
 test("blacksmith interaction opens weapon upgrade and repair services", () => {
   assert.match(view, /action: "Говорить с кузнецом"/);
   assert.match(view, /FORGE_SERVICES/);
