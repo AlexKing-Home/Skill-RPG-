@@ -217,10 +217,13 @@ export default function BattleView({
           ))}
         </div>
 
-        <p className="battle-help">
-          Обычный удар: 0 ВЫН. · Блок: 1 · Парирование: 2. Все действия выполняются через 1,5 сек.
-          после первого нажатия. Атака снимает защитную стойку.
-        </p>
+        <details className="battle-history">
+          <summary>Правила боя</summary>
+          <p className="battle-help">
+            Обычный удар: 0 ВЫН. · Блок: 1 · Парирование: 2. Все действия выполняются через 1,5 сек.
+            после первого нажатия. Атака снимает защитную стойку.
+          </p>
+        </details>
 
         {onFlee && canAct ? (
           <button type="button" className="battle-flee" onClick={onFlee}>

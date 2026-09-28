@@ -43,11 +43,14 @@ export default function BattleStatus({ encounter, onFinish }) {
           </p>
         </>
       )}
-      <ol className="battle-log" aria-label="Журнал боя" aria-live="polite">
-        {(encounter.log ?? []).map((entry, index) => (
-          <li key={`${index}-${entry}`}>{entry}</li>
-        ))}
-      </ol>
+      <details className="battle-history">
+        <summary>Журнал боя</summary>
+        <ol className="battle-log" aria-label="Журнал боя" aria-live="polite">
+          {(encounter.log ?? []).map((entry, index) => (
+            <li key={`${index}-${entry}`}>{entry}</li>
+          ))}
+        </ol>
+      </details>
     </div>
   );
 }
