@@ -14,16 +14,51 @@ export default function BattleStatus({ encounter, onFinish }) {
   const finished = encounter.status !== "active";
   const victory = encounter.status === "victory";
   const guard = encounter.guard;
+  const reward = encounter.reward;
   return (
     <div className="battle-status">
       {finished ? (
-        <div className="battle-result" role="status">
+        <div
+          className={`battle-result battle-result--${victory ? "victory" : "defeat"}`}
+          role="alert"
+          aria-live="assertive"
+        >
+          <span className="battle-result__eyebrow">Результат боя</span>
           <strong>{victory ? "Победа!" : "Поражение"}</strong>
           <p>
             {victory
-              ? "Путь свободен. Можно продолжить путешествие."
-              : "Герой повержен. Вернитесь в стартовый город, чтобы восстановиться."}
+              ? `${encounter.name} повержен. Награда уже добавлена персонажу.`
+              : "Герой повержен. Добыча не получена."}
           </p>
+
+          {victory ? (
+            <div className="battle-result__loot">
+              <span className="battle-result__loot-title">Добыча</span>
+              {reward ? (
+                <>
+                  <div className="battle-result__loot-row">
+                    <span>Монеты</span>
+                    <strong>+{reward.coins}</strong>
+                  </div>
+                  {reward.items.length ? (
+                    <ul className="battle-result__loot-list">
+                      {reward.items.map((item, index) => (
+                        <li key={`${item.id}-${index}`}>
+                          <span>{item.name}</span>
+                          {item.stackable ? <strong>×{item.quantity ?? 1}</strong> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="battle-result__loot-empty">Предметов не выпало.</p>
+                  )}
+                </>
+              ) : (
+                <p className="battle-result__loot-empty">Подсчёт добычи…</p>
+              )}
+            </div>
+          ) : null}
+
           <button type="button" className="battle-flee" onClick={onFinish}>
             {victory ? "Продолжить путь" : "Вернуться в город"}
           </button>
