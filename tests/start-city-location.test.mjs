@@ -68,8 +68,6 @@ test("blacksmith interaction opens weapon upgrade and repair services", () => {
   assert.match(view, /aria-label="Услуги кузнеца"/);
 });
 
-
-
 test("innkeeper interaction opens sell buy and talk services", () => {
   assert.match(view, /action: "Говорить с трактирщиком"/);
   assert.match(view, /INN_SERVICES/);
