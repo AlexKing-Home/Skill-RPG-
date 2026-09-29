@@ -257,6 +257,6 @@ test("equipped starter items contribute attack and defense without mutating base
   assert.match(characterScreenSource, /snapshotRef\.current = \{[\s\S]*stats,/);
   assert.match(
     characterScreenSource,
-    /resolvePlayerAction\(\{ \.\.\.snapshotRef\.current, stats: combatStats \}, \{ direction \}\)/,
+    /resolvePlayerAction\(\s*\{ \.\.\.snapshotRef\.current, stats: combatStats \},\s*\{ direction \},?\s*\)/,
   );
 });
