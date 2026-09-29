@@ -27,10 +27,12 @@ const MAX_COMBO_LENGTH = 5;
 
 export default function BattleView({
   encounter,
+  trainingMode = false,
   currentStamina = 0,
   maxStamina = 0,
   onSkillActivate,
   onFlee,
+  onExitTraining,
   findSkill = null,
   currentMastery = 0,
   weaponLabel = "Оружие",
@@ -41,7 +43,7 @@ export default function BattleView({
   const actionTimerRef = useRef(null);
   const comboTimerRef = useRef(null);
   const comboSequenceRef = useRef([]);
-  const enemyName = encounter?.name ?? "Неизвестный противник";
+  const enemyName = trainingMode ? "Тренировочный манекен" : encounter?.name ?? "Неизвестный противник";
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -78,7 +80,9 @@ export default function BattleView({
               : Boolean(activationResult);
 
           if (activated) {
-            if (activationResult?.unlockedSkill) {
+            if (trainingMode) {
+              showAction(`ТРЕНИРОВКА: ${skill.name}!`);
+            } else if (activationResult?.unlockedSkill) {
               showAction(`НОВЫЙ ПРИЁМ: ${activationResult.unlockedSkill.name} ОТКРЫТ!`);
             } else {
               showAction(`НАВЫК: ${skill.name}! −${skill.staminaCost} ВЫН.`);
@@ -129,17 +133,25 @@ export default function BattleView({
     >
       <div className="game-view__heading">
         <div>
-          <span className="game-view__eyebrow">Случайная встреча</span>
-          <h1 id="battle-title">Бой</h1>
+          <span className="game-view__eyebrow">
+            {trainingMode ? "Тренировочный двор" : "Случайная встреча"}
+          </span>
+          <h1 id="battle-title">{trainingMode ? "Тренировка" : "Бой"}</h1>
         </div>
-        <span className="location-badge battle-view__badge">⚔ Бой</span>
+        <span className="location-badge battle-view__badge">
+          {trainingMode ? "◎ Тренировка" : "⚔ Бой"}
+        </span>
       </div>
 
       <div className="battle-card battle-card--compact" role="status" aria-live="assertive">
-        <span className="battle-card__eyebrow">Противник</span>
+        <span className="battle-card__eyebrow">{trainingMode ? "Цель" : "Противник"}</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
         <div className="battle-card__divider" aria-hidden="true" />
-        <p>{enemyName} преградил путь и напал на героя.</p>
+        <p>
+          {trainingMode
+            ? "Отрабатывайте известные комбинации без расхода выносливости и без получения мастерства."
+            : `${enemyName} преградил путь и напал на героя.`}
+        </p>
       </div>
 
       <div className="battle-controls" aria-label="Боевые элементы управления">
@@ -193,7 +205,11 @@ export default function BattleView({
           ))}
         </div>
 
-        {onFlee ? (
+        {onExitTraining ? (
+          <button type="button" className="battle-flee" onClick={onExitTraining}>
+            Завершить тренировку
+          </button>
+        ) : onFlee ? (
           <button type="button" className="battle-flee" onClick={onFlee}>
             Бегство
           </button>
