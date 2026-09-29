@@ -272,12 +272,7 @@ export default function CharacterScreen({ character, onBack }) {
       coins: nextCoins,
       lastLoot: lootRecord,
     });
-  }, [
-    activeEncounter?.id,
-    activeEncounter?.rewardGranted,
-    activeEncounter?.status,
-  ]);
-
+  }, [activeEncounter?.id, activeEncounter?.rewardGranted, activeEncounter?.status]);
 
   function handleBasicAction(direction) {
     const result = resolvePlayerAction(
@@ -541,4 +536,3 @@ export default function CharacterScreen({ character, onBack }) {
     </main>
   );
 }
-
