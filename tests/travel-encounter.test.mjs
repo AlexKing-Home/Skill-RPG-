@@ -41,7 +41,10 @@ test("wild boar attack automatically opens and locks the battle tab", () => {
   assert.match(characterScreen, /<BattleView[\s\S]*encounter=\{activeEncounter\}/);
   assert.match(characterScreen, /currentStamina=\{currentStamina\}/);
   assert.match(characterScreen, /maxStamina=\{maxStamina\}/);
-  assert.match(characterScreen, /onSkillActivate=\{handleSkillActivate\}/);
+  assert.match(
+    characterScreen,
+    /onSkillActivate=\{trainingMode \? \(\) => \(\{ activated: true \}\) : handleSkillActivate\}/,
+  );
   assert.match(characterScreen, /onEncounter=\{handleEncounter\}/);
   assert.match(characterScreen, /const battleLocked = Boolean\(activeEncounter\)/);
   assert.match(characterScreen, /locked=\{battleLocked\}/);
