@@ -580,3 +580,41 @@
     flex-direction: column;
   }
 }
+
+
+.equipment-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.equipment-action-button,
+.inventory-equip-button {
+  border: 1px solid rgba(187, 142, 67, 0.68);
+  border-radius: 9px;
+  background: rgba(42, 28, 15, 0.9);
+  color: #f0d39b;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 14px;
+}
+
+.equipment-action-button:hover,
+.inventory-equip-button:hover {
+  background: rgba(78, 50, 23, 0.94);
+}
+
+.inventory-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inventory-message {
+  margin: 14px 0 0;
+  color: #c8d3d9;
+  font-size: 0.82rem;
+  text-align: center;
+}
