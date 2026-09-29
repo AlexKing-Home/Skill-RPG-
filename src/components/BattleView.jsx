@@ -61,7 +61,9 @@ export default function BattleView({
     Math.max(0, Math.floor(Number(rawEnemyCurrentHealth) || 0)),
   );
   const enemyHealthPercent =
-    enemyMaxHealth > 0 ? Math.min(100, Math.max(0, (enemyCurrentHealth / enemyMaxHealth) * 100)) : 0;
+    enemyMaxHealth > 0
+      ? Math.min(100, Math.max(0, (enemyCurrentHealth / enemyMaxHealth) * 100))
+      : 0;
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 

@@ -72,7 +72,6 @@ test("active battle prevents travel until the explicit flee action clears the en
   assert.match(characterScreen, /onFlee=\{activeEncounter \? handleFleeBattle : undefined\}/);
 });
 
-
 test("legacy saved wild boar encounters are upgraded before battle resumes", () => {
   assert.match(
     characterScreen,
