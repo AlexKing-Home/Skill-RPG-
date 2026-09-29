@@ -18,14 +18,19 @@ test("battle tab always renders battle controls while encounters only add flee b
   assert.match(characterScreenSource, /onFlee=\{activeEncounter \? handleFleeBattle : undefined\}/);
 });
 
-
 test("training mode uses battle controls without progression rewards", () => {
-  assert.match(characterScreenSource, /const \[trainingMode, setTrainingMode\] = useState\(false\)/);
+  assert.match(
+    characterScreenSource,
+    /const \[trainingMode, setTrainingMode\] = useState\(false\)/,
+  );
   assert.match(characterScreenSource, /function handleStartTraining\(\)/);
   assert.match(characterScreenSource, /setTrainingMode\(true\)/);
   assert.match(
     characterScreenSource,
     /onSkillActivate=\{trainingMode \? \(\) => \(\{ activated: true \}\) : handleSkillActivate\}/,
   );
-  assert.match(characterScreenSource, /onExitTraining=\{trainingMode \? handleEndTraining : undefined\}/);
+  assert.match(
+    characterScreenSource,
+    /onExitTraining=\{trainingMode \? handleEndTraining : undefined\}/,
+  );
 });
