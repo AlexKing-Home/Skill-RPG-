@@ -145,7 +145,10 @@ test("character combat state deducts stamina and advances weapon mastery", () =>
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
   assert.match(characterScreenSource, /currentStamina: nextStamina/);
   assert.match(characterScreenSource, /skillMastery: nextSkillMastery/);
-  assert.match(characterScreenSource, /onSkillActivate=\{handleSkillActivate\}/);
+  assert.match(
+    characterScreenSource,
+    /onSkillActivate=\{trainingMode \? \(\) => \(\{ activated: true \}\) : handleSkillActivate\}/,
+  );
 });
 
 test("world map rest button restores stamina to the current maximum and persists it", () => {
