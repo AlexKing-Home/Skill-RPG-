@@ -18,16 +18,12 @@ const EQUIPMENT_SLOT_IDS = new Set(EQUIPMENT_SLOTS.map(({ id }) => id));
 
 export function isEquippableItem(item) {
   return Boolean(
-    item &&
-      ["weapon", "armor"].includes(item.category) &&
-      EQUIPMENT_SLOT_IDS.has(item.slot),
+    item && ["weapon", "armor"].includes(item.category) && EQUIPMENT_SLOT_IDS.has(item.slot),
   );
 }
 
 export function equipInventoryItem(equipment = {}, inventory = [], itemId) {
-  const itemIndex = inventory.findIndex(
-    (item) => item?.id === itemId && isEquippableItem(item),
-  );
+  const itemIndex = inventory.findIndex((item) => item?.id === itemId && isEquippableItem(item));
   if (itemIndex < 0) {
     return { equipment, inventory, changed: false };
   }
@@ -83,4 +79,3 @@ export {
   getEquipmentById,
   getWeaponsByMastery,
 } from "./equipmentCatalog.js";
-

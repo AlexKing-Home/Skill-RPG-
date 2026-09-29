@@ -17,11 +17,7 @@ import {
   resolveEnemyAttack,
 } from "../data/combat.js";
 import { getCombatProfile } from "../data/combatProfiles.js";
-import {
-  equipInventoryItem,
-  getEquipmentCombatBonuses,
-  unequipItem,
-} from "../data/equipment.js";
+import { equipInventoryItem, getEquipmentCombatBonuses, unequipItem } from "../data/equipment.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
@@ -495,4 +491,3 @@ export default function CharacterScreen({ character, onBack }) {
     </main>
   );
 }
-
