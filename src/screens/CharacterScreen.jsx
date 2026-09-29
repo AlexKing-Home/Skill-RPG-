@@ -40,6 +40,7 @@ function LocationFallback() {
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState("map");
   const [activeEncounter, setActiveEncounter] = useState(null);
+  const [trainingMode, setTrainingMode] = useState(false);
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
   const [skillMastery, setSkillMastery] = useState(() =>
@@ -208,9 +209,22 @@ export default function CharacterScreen({ character, onBack }) {
   }
 
   function handleEncounter(encounter) {
-    if (activeEncounter) return;
+    if (activeEncounter || trainingMode) return;
     setActiveEncounter(encounter);
+    setTrainingMode(false);
     setActiveTab("battle");
+  }
+
+  function handleStartTraining() {
+    if (activeEncounter) return;
+    setActiveEncounter(null);
+    setTrainingMode(true);
+    setActiveTab("battle");
+  }
+
+  function handleEndTraining() {
+    setTrainingMode(false);
+    setActiveTab("location");
   }
 
   function handleFleeBattle() {
@@ -265,7 +279,7 @@ export default function CharacterScreen({ character, onBack }) {
 
     let locationContent;
     if (isStartCity) {
-      locationContent = <StartCityLocationView />;
+      locationContent = <StartCityLocationView onStartTraining={handleStartTraining} />;
     } else if (isMeadows) {
       locationContent = (
         <MeadowLocationView worldState={worldState} onOpenChest={handleOpenChest} />
@@ -295,10 +309,12 @@ export default function CharacterScreen({ character, onBack }) {
     content = (
       <BattleView
         encounter={activeEncounter}
+        trainingMode={trainingMode}
         currentStamina={currentStamina}
         maxStamina={maxStamina}
-        onSkillActivate={handleSkillActivate}
+        onSkillActivate={trainingMode ? () => ({ activated: true }) : handleSkillActivate}
         onFlee={activeEncounter ? handleFleeBattle : undefined}
+        onExitTraining={trainingMode ? handleEndTraining : undefined}
         findSkill={combatProfile.findSkill}
         currentMastery={
           combatProfile.masteryKey ? (skillMastery[combatProfile.masteryKey] ?? 0) : 0
