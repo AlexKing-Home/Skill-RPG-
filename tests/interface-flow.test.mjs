@@ -140,10 +140,7 @@ test("battle resolves skills through the active weapon profile instead of hardco
     /showAction\(`НАВЫК: \$\{skill\.name\}! −\$\{skill\.staminaCost\} ВЫН\.`\)/,
   );
   assert.match(battleViewSource, /НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!/);
-  assert.match(
-    characterScreenSource,
-    /getCombatProfile\(character\.classId, equipment\)/,
-  );
+  assert.match(characterScreenSource, /getCombatProfile\(character\.classId, equipment\)/);
   assert.match(characterScreenSource, /findSkill=\{combatProfile\.findSkill\}/);
 });
 
@@ -260,7 +257,6 @@ test("equipped starter items contribute attack and defense without mutating base
     /resolvePlayerAction\(\s*\{ \.\.\.snapshotRef\.current, stats: combatStats \},\s*\{ direction \},?\s*\)/,
   );
 });
-
 
 test("equipment moves between slots and inventory through explicit controls", () => {
   assert.match(characterScreenSource, /function handleEquipItem\(itemId\)/);
