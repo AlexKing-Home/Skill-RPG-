@@ -20,6 +20,7 @@ const battleViewSource = await read("../src/components/BattleView.jsx");
 const worldMapSource = await read("../src/components/WorldMapView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
+const inventorySource = await read("../src/components/InventoryView.jsx");
 const encounterSource = await read("../src/data/travelEncounters.js");
 
 test("creating a character opens the integrated game screen", () => {
@@ -241,4 +242,22 @@ test("character creation hides the archer class", async () => {
   const skinsSource = await read("../src/data/skins.js");
   assert.match(skinsSource, /creationClassOrder = \["swordsman", "spearman", "assassin"\]/);
   assert.match(creationSource, /getSkinsByGender\(gender\)/);
+});
+
+
+test("starter inventory is rendered as a real game view", () => {
+  assert.match(characterScreenSource, /<InventoryView character=\{activeCharacter\}/);
+  assert.match(inventorySource, /Монеты:/);
+  assert.match(inventorySource, /item\.effect\?\.type === "heal"/);
+  assert.doesNotMatch(characterScreenSource, /\["tasks", "inventory"\]\.includes\(activeTab\)/);
+});
+
+test("equipped starter items contribute attack and defense without mutating base stats", () => {
+  assert.match(characterScreenSource, /getEquipmentCombatBonuses\(character\.equipment\)/);
+  assert.match(characterScreenSource, /stats: combatStats/);
+  assert.match(characterScreenSource, /snapshotRef\.current = \{[\s\S]*stats,/);
+  assert.match(
+    characterScreenSource,
+    /resolvePlayerAction\(\{ \.\.\.snapshotRef\.current, stats: combatStats \}, \{ direction \}\)/,
+  );
 });
