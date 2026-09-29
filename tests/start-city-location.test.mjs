@@ -68,7 +68,6 @@ test("blacksmith interaction opens weapon upgrade and repair services", () => {
   assert.match(view, /aria-label="Услуги кузнеца"/);
 });
 
-
 test("priest interaction opens blessing and healing potion services", () => {
   assert.match(view, /action: "Говорить со священником"/);
   assert.match(view, /SHRINE_SERVICES/);
