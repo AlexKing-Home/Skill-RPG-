@@ -52,10 +52,12 @@ function LocationFallback() {
 export default function CharacterScreen({ character, onBack }) {
   const [activeTab, setActiveTab] = useState(character.activeEncounter ? "battle" : "map");
   const [activeEncounter, setActiveEncounter] = useState(() =>
-    resumeBattle(
-      character.activeEncounter,
-      character.currentHealth ?? getMaxHealth(character.stats),
-    ),
+    character.activeEncounter
+      ? resumeBattle(
+          resolveTravelEncounter(character.activeEncounter),
+          character.currentHealth ?? getMaxHealth(character.stats),
+        )
+      : null,
   );
   const [trainingMode, setTrainingMode] = useState(false);
   const [characterSection, setCharacterSection] = useState("character");

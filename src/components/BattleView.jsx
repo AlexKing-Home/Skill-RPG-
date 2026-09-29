@@ -60,6 +60,8 @@ export default function BattleView({
     enemyMaxHealth,
     Math.max(0, Math.floor(Number(rawEnemyCurrentHealth) || 0)),
   );
+  const enemyHealthPercent =
+    enemyMaxHealth > 0 ? Math.min(100, Math.max(0, (enemyCurrentHealth / enemyMaxHealth) * 100)) : 0;
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -183,9 +185,23 @@ export default function BattleView({
         <span className="battle-card__eyebrow">{trainingMode ? "Цель" : "Противник"}</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
         {enemyMaxHealth > 0 ? (
-          <span className="battle-card__status">
-            HP {enemyCurrentHealth} / {enemyMaxHealth}
-          </span>
+          <div
+            className="battle-enemy-health"
+            aria-label={`Здоровье противника ${enemyCurrentHealth} из ${enemyMaxHealth}`}
+          >
+            <div className="battle-enemy-health__label">
+              <span>HP</span>
+              <strong>
+                {enemyCurrentHealth} / {enemyMaxHealth}
+              </strong>
+            </div>
+            <div className="battle-enemy-health__track">
+              <span
+                className="battle-enemy-health__fill"
+                style={{ width: `${enemyHealthPercent}%` }}
+              />
+            </div>
+          </div>
         ) : null}
         <div className="battle-card__divider" aria-hidden="true" />
         <p>

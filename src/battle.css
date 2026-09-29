@@ -112,6 +112,46 @@
   font-size: 0.82rem;
 }
 
+.battle-enemy-health {
+  width: min(100%, 320px);
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.battle-enemy-health__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #f0c3a0;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.battle-enemy-health__label strong {
+  color: #ffe0bb;
+  font-weight: 600;
+}
+
+.battle-enemy-health__track {
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(163, 71, 53, 0.7);
+  border-radius: 999px;
+  background: rgba(30, 8, 8, 0.92);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.78);
+}
+
+.battle-enemy-health__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8f2525, #d84b3f 68%, #ef8767);
+  box-shadow: 0 0 12px rgba(216, 75, 63, 0.34);
+  transition: width 180ms ease;
+}
+
 .battle-controls {
   width: min(100%, 560px);
   margin: 20px auto 0;

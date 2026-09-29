@@ -71,3 +71,18 @@ test("active battle prevents travel until the explicit flee action clears the en
   assert.match(characterScreen, /setActiveTab\("map"\)/);
   assert.match(characterScreen, /onFlee=\{activeEncounter \? handleFleeBattle : undefined\}/);
 });
+
+
+test("legacy saved wild boar encounters are upgraded before battle resumes", () => {
+  assert.match(
+    characterScreen,
+    /character\.activeEncounter\s*\?\s*resumeBattle\(\s*resolveTravelEncounter\(character\.activeEncounter\)/,
+  );
+});
+
+test("battle view renders a visible enemy HP bar", async () => {
+  const battleView = await read("../src/components/BattleView.jsx");
+  assert.match(battleView, /battle-enemy-health/);
+  assert.match(battleView, /enemyHealthPercent/);
+  assert.match(battleView, /Здоровье противника/);
+});
