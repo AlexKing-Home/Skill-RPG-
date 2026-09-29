@@ -64,7 +64,6 @@ test("new visible classes receive starter kit on creation", () => {
   }
 });
 
-
 test("unequipping moves the item into inventory without duplication", () => {
   const kit = createStarterKit("swordsman");
   const result = unequipItem(kit.equipment, kit.inventory, "weapon1");
@@ -100,28 +99,20 @@ test("equipping into an occupied slot swaps the old item back to inventory", () 
     name: "Проверочный меч",
     baseStats: { attack: 12 },
   };
-  const result = equipInventoryItem(
-    kit.equipment,
-    [...kit.inventory, replacement],
-    replacement.id,
-  );
+  const result = equipInventoryItem(kit.equipment, [...kit.inventory, replacement], replacement.id);
 
   assert.equal(result.changed, true);
   assert.equal(result.equipment.weapon1.id, replacement.id);
+  assert.equal(result.inventory.filter((item) => item.id === "starter-one-handed-sword").length, 1);
   assert.equal(
-    result.inventory.filter((item) => item.id === "starter-one-handed-sword").length,
-    1,
+    result.inventory.some((item) => item.id === replacement.id),
+    false,
   );
-  assert.equal(result.inventory.some((item) => item.id === replacement.id), false);
 });
 
 test("consumables cannot be equipped and remain in inventory", () => {
   const kit = createStarterKit("swordsman");
-  const result = equipInventoryItem(
-    kit.equipment,
-    kit.inventory,
-    STARTER_HEALING_POTION.id,
-  );
+  const result = equipInventoryItem(kit.equipment, kit.inventory, STARTER_HEALING_POTION.id);
 
   assert.equal(result.changed, false);
   assert.equal(result.equipment.weapon1.id, "starter-one-handed-sword");
