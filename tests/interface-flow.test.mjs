@@ -272,6 +272,7 @@ test("wild boar victory grants persistent loot", () => {
   assert.match(characterScreenSource, /rollWildBoarLoot\(\)/);
   assert.match(characterScreenSource, /mergeInventoryItems\(current\.inventory, loot\.items\)/);
   assert.match(characterScreenSource, /nextCoins/);
+  assert.match(characterScreenSource, /setCoins\(nextCoins\)/);
   assert.match(characterScreenSource, /lastLoot: lootRecord/);
   assert.match(inventorySource, /Последняя добыча:/);
 });
