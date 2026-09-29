@@ -278,7 +278,6 @@ test("wild boar victory grants persistent loot", () => {
   assert.match(inventorySource, /Последняя добыча:/);
 });
 
-
 test("battle result notification shows victory defeat and granted loot", () => {
   assert.match(characterScreenSource, /encounter\.status !== "victory"/);
   assert.match(characterScreenSource, /rewardGranted/);
