@@ -77,3 +77,12 @@ test("priest interaction opens blessing and healing potion services", () => {
   assert.match(view, /selectShrineService/);
   assert.match(view, /aria-label="Услуги священника"/);
 });
+
+
+test("training yard opens battle practice mode", () => {
+  assert.match(view, /action: "Тренировка с манекеном"/);
+  assert.match(view, /StartCityLocationView\(\{ onStartTraining \}\)/);
+  assert.match(view, /selectedObject\.id === "city-training-yard"/);
+  assert.match(view, /onStartTraining\?\.\(\)/);
+  assert.match(screen, /onStartTraining=\{handleStartTraining\}/);
+});
