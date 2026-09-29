@@ -65,7 +65,8 @@ const cityObjects = [
     x: 84.09,
     y: 57.37,
     action: "Говорить со священником",
-    description: "Небольшое городское святилище освещено свечами и фонарями. Здесь служит городской священник.",
+    description:
+      "Небольшое городское святилище освещено свечами и фонарями. Здесь служит городской священник.",
   },
   {
     id: "city-caravan",
@@ -169,7 +170,9 @@ export default function StartCityLocationView() {
     if (selectedObject.id === "city-shrine") {
       setShrineMenuOpen(true);
       setSelectedShrineService(null);
-      setMessage("Священник: Добро пожаловать. Я могу благословить твоё оружие или предложить лечебное зелье.");
+      setMessage(
+        "Священник: Добро пожаловать. Я могу благословить твоё оружие или предложить лечебное зелье.",
+      );
       return;
     }
 
