@@ -3,6 +3,7 @@ import {
   normalizeCharacteristicPoints,
   STARTING_CHARACTERISTIC_POINTS,
 } from "../data/characteristics.js";
+import { createEmptyEquipment } from "../data/equipment.js";
 import { getAvailableCharacteristicPoints, getLevelFromSkillMastery } from "../data/progression.js";
 import { normalizeSkillMastery } from "../data/skills.js";
 import { getDefaultStatsForClass } from "../data/skins.js";
@@ -39,6 +40,10 @@ export function normalizeCharacter(character) {
     : STARTING_CHARACTERISTIC_POINTS;
   const maxStamina = getMaxStamina(stats);
   const currentStamina = normalizeCurrentStamina(rest.currentStamina, maxStamina);
+  const equipment = { ...createEmptyEquipment(), ...(rest.equipment ?? {}) };
+  const inventory = Array.isArray(rest.inventory) ? rest.inventory : [];
+  const rawCoins = Number(rest.coins);
+  const coins = Number.isFinite(rawCoins) ? Math.max(0, Math.floor(rawCoins)) : 0;
 
   return {
     ...rest,
@@ -48,6 +53,9 @@ export function normalizeCharacter(character) {
     characteristicPoints,
     maxStamina,
     currentStamina,
+    equipment,
+    inventory,
+    coins,
     stats,
   };
 }
