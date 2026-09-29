@@ -64,8 +64,8 @@ const cityObjects = [
     name: "Святилище",
     x: 84.09,
     y: 57.37,
-    action: "Осмотреть",
-    description: "Небольшое городское святилище освещено свечами и фонарями.",
+    action: "Говорить со священником",
+    description: "Небольшое городское святилище освещено свечами и фонарями. Здесь служит городской священник.",
   },
   {
     id: "city-caravan",
@@ -98,6 +98,19 @@ const FORGE_SERVICES = [
   },
 ];
 
+const SHRINE_SERVICES = [
+  {
+    id: "bless-weapon",
+    label: "Благословить оружие",
+    description: "Священник готов благословить выбранное оружие.",
+  },
+  {
+    id: "buy-healing-potion",
+    label: "Купить лечебное зелье",
+    description: "Священник предлагает приобрести лечебное зелье.",
+  },
+];
+
 const CITY_ASPECT_RATIO = 1402 / 1122;
 const MAP_TAP_RADIUS = 13.5;
 
@@ -106,6 +119,8 @@ export default function StartCityLocationView() {
   const [message, setMessage] = useState("");
   const [forgeMenuOpen, setForgeMenuOpen] = useState(false);
   const [selectedForgeService, setSelectedForgeService] = useState(null);
+  const [shrineMenuOpen, setShrineMenuOpen] = useState(false);
+  const [selectedShrineService, setSelectedShrineService] = useState(null);
   const selectedObject = cityObjects.find((object) => object.id === selectedId) ?? null;
 
   function selectObject(objectId) {
@@ -113,6 +128,8 @@ export default function StartCityLocationView() {
     setMessage("");
     setForgeMenuOpen(false);
     setSelectedForgeService(null);
+    setShrineMenuOpen(false);
+    setSelectedShrineService(null);
   }
 
   function handleMapTap(event) {
@@ -149,11 +166,23 @@ export default function StartCityLocationView() {
       return;
     }
 
+    if (selectedObject.id === "city-shrine") {
+      setShrineMenuOpen(true);
+      setSelectedShrineService(null);
+      setMessage("Священник: Добро пожаловать. Я могу благословить твоё оружие или предложить лечебное зелье.");
+      return;
+    }
+
     setMessage(selectedObject.description);
   }
 
   function selectForgeService(service) {
     setSelectedForgeService(service.id);
+    setMessage(service.description);
+  }
+
+  function selectShrineService(service) {
+    setSelectedShrineService(service.id);
     setMessage(service.description);
   }
 
@@ -230,6 +259,24 @@ export default function StartCityLocationView() {
                 }`}
                 onClick={() => selectForgeService(service)}
                 aria-pressed={selectedForgeService === service.id}
+              >
+                {service.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {shrineMenuOpen && selectedObject?.id === "city-shrine" && (
+          <div className="interaction-panel__actions" aria-label="Услуги священника">
+            {SHRINE_SERVICES.map((service) => (
+              <button
+                key={service.id}
+                type="button"
+                className={`interaction-panel__button ${
+                  selectedShrineService === service.id ? "is-selected" : ""
+                }`}
+                onClick={() => selectShrineService(service)}
+                aria-pressed={selectedShrineService === service.id}
               >
                 {service.label}
               </button>
