@@ -19,6 +19,7 @@ import {
 import { getCombatProfile } from "../data/combatProfiles.js";
 import { equipInventoryItem, getEquipmentCombatBonuses, unequipItem } from "../data/equipment.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
+import { mergeInventoryItems, rollWildBoarLoot } from "../data/loot.js";
 import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
 import { getMaxStamina, normalizeCurrentStamina } from "../data/stamina.js";
@@ -68,6 +69,7 @@ export default function CharacterScreen({ character, onBack }) {
   const [inventory, setInventory] = useState(() =>
     Array.isArray(character.inventory) ? [...character.inventory] : [],
   );
+  const [lastLoot, setLastLoot] = useState(character.lastLoot ?? null);
   const [skillMastery, setSkillMastery] = useState(() =>
     normalizeSkillMastery(character.skillMastery),
   );
@@ -112,6 +114,7 @@ export default function CharacterScreen({ character, onBack }) {
     currentStamina,
     equipment,
     inventory,
+    lastLoot,
     stats: combatStats,
   };
   const snapshotRef = useRef(null);
@@ -275,13 +278,37 @@ export default function CharacterScreen({ character, onBack }) {
     const current = snapshotRef.current;
     if (!current.activeEncounter || current.activeEncounter.status === "active") return;
     const defeated = current.activeEncounter.status === "defeat";
+    const victory = current.activeEncounter.status === "victory";
     const nextLocation = defeated
       ? locationFromNode(CITY_NODE_ID)
       : locationFromNode(current.activeEncounter.destinationNodeId ?? current.location.nodeId);
+
+    let rewardChanges = {};
+    if (victory && current.activeEncounter.id === "wild-boar") {
+      const loot = rollWildBoarLoot();
+      const nextInventory = mergeInventoryItems(current.inventory, loot.items);
+      const nextCoins = Math.max(0, Math.floor(Number(current.coins) || 0)) + loot.coins;
+      const lootRecord = {
+        enemyId: current.activeEncounter.id,
+        enemyName: current.activeEncounter.name,
+        coins: loot.coins,
+        items: loot.items,
+      };
+
+      setInventory(nextInventory);
+      setLastLoot(lootRecord);
+      rewardChanges = {
+        inventory: nextInventory,
+        coins: nextCoins,
+        lastLoot: lootRecord,
+      };
+    }
+
     setLocation(nextLocation);
     applyCombatChanges({
       activeEncounter: null,
       location: nextLocation,
+      ...rewardChanges,
       ...(defeated ? { currentHealth: maxHealth, currentStamina: maxStamina } : {}),
     });
     setActiveTab("map");

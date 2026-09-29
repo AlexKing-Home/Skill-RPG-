@@ -21,6 +21,24 @@ export default function InventoryView({ character, onEquip }) {
         <strong className="inventory-view__coins">Монеты: {coins}</strong>
       </div>
 
+      {character.lastLoot ? (
+        <div className="inventory-loot-note" role="status">
+          <strong>Последняя добыча: {character.lastLoot.enemyName}</strong>
+          <span>Монеты: +{character.lastLoot.coins}</span>
+          {character.lastLoot.items.length ? (
+            <span>
+              {character.lastLoot.items
+                .map((item) =>
+                  item.stackable ? `${item.name} ×${item.quantity ?? 1}` : item.name,
+                )
+                .join(", ")}
+            </span>
+          ) : (
+            <span>Предметов не выпало.</span>
+          )}
+        </div>
+      ) : null}
+
       <div className="inventory-list">
         {inventory.length ? (
           inventory.map((item, index) => (
