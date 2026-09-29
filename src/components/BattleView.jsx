@@ -43,7 +43,9 @@ export default function BattleView({
   const actionTimerRef = useRef(null);
   const comboTimerRef = useRef(null);
   const comboSequenceRef = useRef([]);
-  const enemyName = trainingMode ? "Тренировочный манекен" : encounter?.name ?? "Неизвестный противник";
+  const enemyName = trainingMode
+    ? "Тренировочный манекен"
+    : (encounter?.name ?? "Неизвестный противник");
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
