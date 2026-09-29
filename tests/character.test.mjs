@@ -34,15 +34,20 @@ test("there are exactly eight unique skins", () => {
   assert.equal(new Set(skins.map((skin) => skin.id)).size, 8);
 });
 
-test("male and female each have four classes", () => {
+test("character creation offers three classes and hides archer", () => {
   assert.deepEqual(
     getSkinsByGender("male").map((skin) => skin.classId),
-    ["swordsman", "spearman", "assassin", "archer"],
+    ["swordsman", "spearman", "assassin"],
   );
   assert.deepEqual(
     getSkinsByGender("female").map((skin) => skin.classId),
-    ["swordsman", "spearman", "assassin", "archer"],
+    ["swordsman", "spearman", "assassin"],
   );
+});
+
+test("archer skins remain available for legacy saves", () => {
+  assert.ok(skins.some((skin) => skin.id === "male-archer"));
+  assert.ok(skins.some((skin) => skin.id === "female-archer"));
 });
 
 test("all game art uses local Vite assets", () => {

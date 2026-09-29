@@ -192,6 +192,13 @@ test("regeneration timer depends on regeneration parameters rather than stamina 
   assert.doesNotMatch(characterScreenSource, /\}, \[[^\]]*currentStamina[^\]]*\]\);/);
 });
 
+test("character summary stats use vector icons instead of text glyphs", () => {
+  assert.match(detailsSource, /function CharacterStatIcon/);
+  assert.match(detailsSource, /<CharacterStatIcon type=\{stat\.id\}/);
+  assert.doesNotMatch(detailsSource, /icon: "♛"/);
+  assert.doesNotMatch(detailsSource, /icon: "⬡"/);
+});
+
 test("reference character view keeps portrait stats and equipment in one integrated page", () => {
   assert.match(detailsSource, /character-profile--reference/);
   assert.match(detailsSource, /character-summary__portrait/);
@@ -218,4 +225,11 @@ test("combat profile follows the weapon currently stored in the primary equipmen
   );
   assert.match(characterScreenSource, /combatProfile\.masteryKey/);
   assert.match(characterScreenSource, /combatProfile\.skills/);
+});
+
+
+test("character creation hides the archer class", async () => {
+  const skinsSource = await read("../src/data/skins.js");
+  assert.match(skinsSource, /creationClassOrder = \["swordsman", "spearman", "assassin"\]/);
+  assert.match(creationSource, /getSkinsByGender\(gender\)/);
 });

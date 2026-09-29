@@ -68,6 +68,7 @@ const images = {
 };
 
 const classOrder = ["swordsman", "spearman", "assassin", "archer"];
+const creationClassOrder = ["swordsman", "spearman", "assassin"];
 
 export const skins = ["male", "female"].flatMap((gender) =>
   classOrder.map((classId) => {
@@ -85,7 +86,9 @@ export const skins = ["male", "female"].flatMap((gender) =>
 );
 
 export function getSkinsByGender(gender) {
-  return skins.filter((skin) => skin.gender === gender);
+  return creationClassOrder
+    .map((classId) => skins.find((skin) => skin.gender === gender && skin.classId === classId))
+    .filter(Boolean);
 }
 
 export function getDefaultStatsForClass(classId) {

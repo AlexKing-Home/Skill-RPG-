@@ -15,11 +15,60 @@ const slotIcons = {
 };
 
 const stats = [
-  { id: "level", label: "Уровень героя", icon: "♛" },
-  { id: "health", label: "Жизни", icon: "♥" },
-  { id: "defense", label: "Защита", icon: "⬡" },
-  { id: "attack", label: "Сила атаки", icon: "⚔" },
+  { id: "level", label: "Уровень героя" },
+  { id: "health", label: "Жизни" },
+  { id: "defense", label: "Защита" },
+  { id: "attack", label: "Сила атаки" },
 ];
+
+function CharacterStatIcon({ type }) {
+  const commonProps = {
+    viewBox: "0 0 24 24",
+    width: 20,
+    height: 20,
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": true,
+  };
+
+  if (type === "level") {
+    return (
+      <svg {...commonProps}>
+        <path d="M12 18V4" />
+        <path d="m7 9 5-5 5 5" />
+        <path d="M5 20h14" />
+      </svg>
+    );
+  }
+
+  if (type === "health") {
+    return (
+      <svg {...commonProps}>
+        <path d="M20.8 5.8a5.3 5.3 0 0 0-7.5 0L12 7.1l-1.3-1.3a5.3 5.3 0 0 0-7.5 7.5L12 22l8.8-8.7a5.3 5.3 0 0 0 0-7.5Z" />
+      </svg>
+    );
+  }
+
+  if (type === "defense") {
+    return (
+      <svg {...commonProps}>
+        <path d="M12 3 19 6v5c0 4.6-2.7 8.2-7 10-4.3-1.8-7-5.4-7-10V6l7-3Z" />
+        <path d="M9 12.2 11.2 14 15.5 9.5" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...commonProps}>
+      <path d="m14.5 4.5 5-1-1 5-9 9-3 1 1-3 9-9Z" />
+      <path d="m6.5 17.5-2 2" />
+      <path d="m13 7 4 4" />
+    </svg>
+  );
+}
 
 export default function CharacterDetailsView({ character, currentHealth, maxHealth, level }) {
   const [slotMessage, setSlotMessage] = useState("");
@@ -70,7 +119,7 @@ export default function CharacterDetailsView({ character, currentHealth, maxHeal
             {stats.map((stat) => (
               <div key={stat.id} className={`character-stat character-stat--${stat.id}`}>
                 <span className="character-stat__icon" aria-hidden="true">
-                  {stat.icon}
+                  <CharacterStatIcon type={stat.id} />
                 </span>
                 <span>{stat.label}</span>
                 <strong>{statValue(stat.id)}</strong>
