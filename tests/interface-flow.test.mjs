@@ -124,7 +124,7 @@ test("battle action notification appears only after the shared 1.5 second combo 
   assert.match(battleViewSource, /function resolveCombo\(sequence\)/);
   assert.match(battleViewSource, /sequence\.length === 1/);
   assert.match(battleViewSource, /showAction\(BASIC_ACTIONS\[sequence\[0\]\]\)/);
-  assert.match(battleViewSource, /resolveCombo\(comboSequenceRef\.current\)/);
+  assert.match(battleViewSource, /resolveComboRef\.current\(comboSequenceRef\.current\)/);
   assert.match(battleViewSource, /"Ввод комбинации…"/);
 });
 
