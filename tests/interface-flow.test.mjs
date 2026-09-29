@@ -107,7 +107,9 @@ test("wild boar encounter provides and displays enemy artwork in battle", () => 
   assert.match(encounterSource, /defense: 2/);
   assert.match(encounterSource, /maxHealth: 25/);
   assert.match(battleViewSource, /className="battle-card__enemy-art"/);
-  assert.match(battleViewSource, /HP \{enemyCurrentHealth\} \/ \{enemyMaxHealth\}/);
+  assert.match(battleViewSource, /className="battle-enemy-health"/);
+  assert.match(battleViewSource, /enemyHealthPercent/);
+  assert.match(battleViewSource, /\{enemyCurrentHealth\} \/ \{enemyMaxHealth\}/);
 });
 
 test("battle direction buttons define their basic combat actions", () => {
