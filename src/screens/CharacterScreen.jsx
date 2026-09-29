@@ -236,6 +236,49 @@ export default function CharacterScreen({ character, onBack }) {
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const current = snapshotRef.current;
+    const encounter = current.activeEncounter;
+    if (
+      encounter?.status !== "victory" ||
+      encounter.rewardGranted ||
+      encounter.id !== "wild-boar"
+    ) {
+      return;
+    }
+
+    const loot = rollWildBoarLoot();
+    const nextInventory = mergeInventoryItems(current.inventory, loot.items);
+    const nextCoins = Math.max(0, Math.floor(Number(current.coins) || 0)) + loot.coins;
+    const lootRecord = {
+      enemyId: encounter.id,
+      enemyName: encounter.name,
+      coins: loot.coins,
+      items: loot.items,
+    };
+    const nextEncounter = {
+      ...encounter,
+      rewardGranted: true,
+      reward: lootRecord,
+    };
+
+    setInventory(nextInventory);
+    setCoins(nextCoins);
+    setLastLoot(lootRecord);
+    setActiveEncounter(nextEncounter);
+    persist({
+      activeEncounter: nextEncounter,
+      inventory: nextInventory,
+      coins: nextCoins,
+      lastLoot: lootRecord,
+    });
+  }, [
+    activeEncounter?.id,
+    activeEncounter?.rewardGranted,
+    activeEncounter?.status,
+  ]);
+
+
   function handleBasicAction(direction) {
     const result = resolvePlayerAction(
       { ...snapshotRef.current, stats: combatStats },
@@ -279,39 +322,16 @@ export default function CharacterScreen({ character, onBack }) {
   function handleFinishBattle() {
     const current = snapshotRef.current;
     if (!current.activeEncounter || current.activeEncounter.status === "active") return;
+
     const defeated = current.activeEncounter.status === "defeat";
-    const victory = current.activeEncounter.status === "victory";
     const nextLocation = defeated
       ? locationFromNode(CITY_NODE_ID)
       : locationFromNode(current.activeEncounter.destinationNodeId ?? current.location.nodeId);
-
-    let rewardChanges = {};
-    if (victory && current.activeEncounter.id === "wild-boar") {
-      const loot = rollWildBoarLoot();
-      const nextInventory = mergeInventoryItems(current.inventory, loot.items);
-      const nextCoins = Math.max(0, Math.floor(Number(current.coins) || 0)) + loot.coins;
-      const lootRecord = {
-        enemyId: current.activeEncounter.id,
-        enemyName: current.activeEncounter.name,
-        coins: loot.coins,
-        items: loot.items,
-      };
-
-      setInventory(nextInventory);
-      setCoins(nextCoins);
-      setLastLoot(lootRecord);
-      rewardChanges = {
-        inventory: nextInventory,
-        coins: nextCoins,
-        lastLoot: lootRecord,
-      };
-    }
 
     setLocation(nextLocation);
     applyCombatChanges({
       activeEncounter: null,
       location: nextLocation,
-      ...rewardChanges,
       ...(defeated ? { currentHealth: maxHealth, currentStamina: maxStamina } : {}),
     });
     setActiveTab("map");
