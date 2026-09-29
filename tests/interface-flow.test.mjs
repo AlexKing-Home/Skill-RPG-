@@ -244,7 +244,6 @@ test("character creation hides the archer class", async () => {
   assert.match(creationSource, /getSkinsByGender\(gender\)/);
 });
 
-
 test("starter inventory is rendered as a real game view", () => {
   assert.match(characterScreenSource, /<InventoryView character=\{activeCharacter\}/);
   assert.match(inventorySource, /Монеты:/);
@@ -261,4 +260,3 @@ test("equipped starter items contribute attack and defense without mutating base
     /resolvePlayerAction\(\{ \.\.\.snapshotRef\.current, stats: combatStats \}, \{ direction \}\)/,
   );
 });
-
