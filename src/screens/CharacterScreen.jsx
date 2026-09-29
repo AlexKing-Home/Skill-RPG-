@@ -17,7 +17,11 @@ import {
   resolveEnemyAttack,
 } from "../data/combat.js";
 import { getCombatProfile } from "../data/combatProfiles.js";
-import { getEquipmentCombatBonuses } from "../data/equipment.js";
+import {
+  equipInventoryItem,
+  getEquipmentCombatBonuses,
+  unequipItem,
+} from "../data/equipment.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
@@ -64,6 +68,10 @@ export default function CharacterScreen({ character, onBack }) {
   const [trainingMode, setTrainingMode] = useState(false);
   const [characterSection, setCharacterSection] = useState("character");
   const [stats, setStats] = useState(() => ({ ...character.stats }));
+  const [equipment, setEquipment] = useState(() => ({ ...character.equipment }));
+  const [inventory, setInventory] = useState(() =>
+    Array.isArray(character.inventory) ? [...character.inventory] : [],
+  );
   const [skillMastery, setSkillMastery] = useState(() =>
     normalizeSkillMastery(character.skillMastery),
   );
@@ -85,8 +93,8 @@ export default function CharacterScreen({ character, onBack }) {
   const maxHealth = getMaxHealth(stats);
   const willBonuses = getWillBonuses(stats);
   const maxStamina = getMaxStamina(stats);
-  const combatProfile = getCombatProfile(character.classId, character.equipment);
-  const equipmentBonuses = getEquipmentCombatBonuses(character.equipment);
+  const combatProfile = getCombatProfile(character.classId, equipment);
+  const equipmentBonuses = getEquipmentCombatBonuses(equipment);
   const combatStats = {
     ...stats,
     attack: Math.max(0, Number(stats.attack) || 0) + equipmentBonuses.attack,
@@ -106,6 +114,8 @@ export default function CharacterScreen({ character, onBack }) {
     characteristicPoints,
     maxStamina,
     currentStamina,
+    equipment,
+    inventory,
     stats: combatStats,
   };
   const snapshotRef = useRef(null);
@@ -152,6 +162,32 @@ export default function CharacterScreen({ character, onBack }) {
     };
     snapshotRef.current = nextSnapshot;
     saveCharacter(nextSnapshot);
+  }
+
+  function handleEquipItem(itemId) {
+    const result = equipInventoryItem(equipment, inventory, itemId);
+    if (!result.changed) return false;
+
+    setEquipment(result.equipment);
+    setInventory(result.inventory);
+    persist({
+      equipment: result.equipment,
+      inventory: result.inventory,
+    });
+    return true;
+  }
+
+  function handleUnequipItem(slotId) {
+    const result = unequipItem(equipment, inventory, slotId);
+    if (!result.changed) return false;
+
+    setEquipment(result.equipment);
+    setInventory(result.inventory);
+    persist({
+      equipment: result.equipment,
+      inventory: result.inventory,
+    });
+    return true;
   }
 
   function handleStatChange(key, delta) {
@@ -337,6 +373,7 @@ export default function CharacterScreen({ character, onBack }) {
           currentHealth={currentHealth}
           maxHealth={maxHealth}
           level={level}
+          onUnequip={handleUnequipItem}
         />
       );
     } else if (characterSection === "skills") {
@@ -344,7 +381,7 @@ export default function CharacterScreen({ character, onBack }) {
     } else if (characterSection === "stats") {
       content = <CharacterStatsView character={activeCharacter} onStatChange={handleStatChange} />;
     } else if (characterSection === "inventory") {
-      content = <InventoryView character={activeCharacter} />;
+      content = <InventoryView character={activeCharacter} onEquip={handleEquipItem} />;
     } else {
       content = <PlaceholderView type={characterSection} />;
     }
@@ -405,7 +442,7 @@ export default function CharacterScreen({ character, onBack }) {
       />
     );
   } else if (activeTab === "inventory") {
-    content = <InventoryView character={activeCharacter} />;
+    content = <InventoryView character={activeCharacter} onEquip={handleEquipItem} />;
   } else if (activeTab === "tasks") {
     content = <PlaceholderView type={activeTab} />;
   } else {
