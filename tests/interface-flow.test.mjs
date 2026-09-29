@@ -261,3 +261,4 @@ test("equipped starter items contribute attack and defense without mutating base
     /resolvePlayerAction\(\{ \.\.\.snapshotRef\.current, stats: combatStats \}, \{ direction \}\)/,
   );
 });
+
