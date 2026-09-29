@@ -227,7 +227,6 @@ test("combat profile follows the weapon currently stored in the primary equipmen
   assert.match(characterScreenSource, /combatProfile\.skills/);
 });
 
-
 test("character creation hides the archer class", async () => {
   const skinsSource = await read("../src/data/skins.js");
   assert.match(skinsSource, /creationClassOrder = \["swordsman", "spearman", "assassin"\]/);
