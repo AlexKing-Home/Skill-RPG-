@@ -20,5 +20,7 @@ test("wild boar starts battle with exactly 25 HP", () => {
 test("battle view displays enemy HP", () => {
   assert.match(battleViewSource, /encounter\?\.maxHealth/);
   assert.match(battleViewSource, /encounter\?\.currentHealth/);
-  assert.match(battleViewSource, /HP \{enemyCurrentHealth\} \/ \{enemyMaxHealth\}/);
+  assert.match(battleViewSource, /className="battle-enemy-health"/);
+  assert.match(battleViewSource, /enemyHealthPercent/);
+  assert.match(battleViewSource, /\{enemyCurrentHealth\} \/ \{enemyMaxHealth\}/);
 });
