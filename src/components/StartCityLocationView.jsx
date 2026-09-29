@@ -97,6 +97,11 @@ const FORGE_SERVICES = [
     label: "Ремонт оружия",
     description: "Кузнец готов восстановить прочность выбранного оружия.",
   },
+  {
+    id: "talk",
+    label: "Поговорить",
+    description: "Кузнец готов поговорить о ремесле, оружии и делах Стартового города.",
+  },
 ];
 
 const INN_SERVICES = [
@@ -127,6 +132,11 @@ const SHRINE_SERVICES = [
     id: "buy-healing-potion",
     label: "Купить лечебное зелье",
     description: "Священник предлагает приобрести лечебное зелье.",
+  },
+  {
+    id: "talk",
+    label: "Поговорить",
+    description: "Священник готов поговорить о святилище, городе и местных событиях.",
   },
 ];
 
@@ -185,7 +195,9 @@ export default function StartCityLocationView({ onStartTraining }) {
     if (selectedObject.id === "city-forge") {
       setForgeMenuOpen(true);
       setSelectedForgeService(null);
-      setMessage("Кузнец: Нужна помощь с оружием? Могу улучшить его или привести в порядок.");
+      setMessage(
+        "Кузнец: Нужна помощь с оружием? Могу улучшить его, привести в порядок или просто поговорить.",
+      );
       return;
     }
 
@@ -202,7 +214,7 @@ export default function StartCityLocationView({ onStartTraining }) {
       setShrineMenuOpen(true);
       setSelectedShrineService(null);
       setMessage(
-        "Священник: Добро пожаловать. Я могу благословить твоё оружие или предложить лечебное зелье.",
+        "Священник: Добро пожаловать. Я могу благословить твоё оружие, предложить лечебное зелье или просто поговорить.",
       );
       return;
     }
