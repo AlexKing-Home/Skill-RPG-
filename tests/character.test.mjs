@@ -109,7 +109,7 @@ test("endurance grants one stamina per point above the base ten", () => {
   assert.equal(getMaxStamina({ ...character.stats, endurance: 5 }), 15);
 });
 
-test("new character starts with 10 stamina and HUD defaults", () => {
+test("new character starts with stamina HUD defaults and starter equipment", () => {
   const character = createCharacter("Hero", skins[0]);
   assert.equal(character.version, 7);
   assert.equal(character.experience, 0);
@@ -118,7 +118,12 @@ test("new character starts with 10 stamina and HUD defaults", () => {
   assert.equal(character.characteristicPoints, 10);
   assert.equal(character.maxStamina, 10);
   assert.equal(character.currentStamina, 10);
-  assert.deepEqual(character.equipment, createEmptyEquipment());
+  assert.equal(character.equipment.weapon1?.name, "Учебный одноручный меч");
+  assert.equal(character.equipment.chest?.name, "Потрёпанная кожаная куртка");
+  assert.equal(character.equipment.gloves?.name, "Кожаные перчатки");
+  assert.equal(character.equipment.boots?.name, "Кожаные сапоги");
+  assert.equal(character.inventory[0]?.quantity, 2);
+  assert.equal(character.coins, 100);
   assert.equal(EQUIPMENT_SLOTS.length, 9);
 });
 
