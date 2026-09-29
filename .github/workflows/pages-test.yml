@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/starter-kit-20260929
   pull_request:
     branches:
       - main
@@ -40,7 +41,7 @@ jobs:
         run: npm run build
 
       - name: Publish preview-build branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -50,6 +51,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Preview build ${GITHUB_SHA}"
-          git branch -M preview-build
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
+            PREVIEW_BRANCH="preview-build"
+          else
+            PREVIEW_BRANCH="starter-kit-preview-build"
+          fi
+          git branch -M "${PREVIEW_BRANCH}"
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin preview-build
+          git push --force origin "${PREVIEW_BRANCH}"
