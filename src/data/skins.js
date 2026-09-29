@@ -9,7 +9,7 @@ import {
   maleSwordsman,
 } from "./assets.js";
 import { createEmptyCharacteristics, STARTING_CHARACTERISTIC_POINTS } from "./characteristics.js";
-import { createEmptyEquipment } from "./equipment.js";
+import { createStarterKit } from "./starterKit.js";
 import { createEmptySkillMastery } from "./skills.js";
 import { BASE_STAMINA } from "./stamina.js";
 
@@ -97,6 +97,8 @@ export function getDefaultStatsForClass(classId) {
 }
 
 export function createCharacter(nickname, skin) {
+  const starterKit = createStarterKit(skin.classId);
+
   return {
     version: 7,
     nickname,
@@ -112,7 +114,9 @@ export function createCharacter(nickname, skin) {
     maxStamina: BASE_STAMINA,
     currentStamina: BASE_STAMINA,
     stats: { ...skin.stats },
-    equipment: createEmptyEquipment(),
+    equipment: starterKit.equipment,
+    inventory: starterKit.inventory,
+    coins: starterKit.coins,
     location: {
       worldName: "Текущая местность",
       areaName: "Текущая локация",
