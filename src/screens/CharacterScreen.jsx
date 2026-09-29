@@ -455,3 +455,4 @@ export default function CharacterScreen({ character, onBack }) {
     </main>
   );
 }
+
