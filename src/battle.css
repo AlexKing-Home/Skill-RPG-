@@ -418,6 +418,63 @@
   font-size: 1.4rem;
   color: #f5d28b;
 }
+
+.battle-result--victory {
+  background: linear-gradient(180deg, rgba(59, 46, 21, 0.88), rgba(23, 18, 13, 0.94));
+  box-shadow: 0 0 22px rgba(201, 161, 78, 0.14);
+}
+
+.battle-result--defeat {
+  border-color: rgba(158, 72, 62, 0.8);
+  background: linear-gradient(180deg, rgba(61, 24, 21, 0.88), rgba(23, 13, 13, 0.94));
+}
+
+.battle-result__eyebrow,
+.battle-result__loot-title {
+  display: block;
+  color: #bda77f;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.battle-result__loot {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(169, 139, 87, 0.42);
+  border-radius: 9px;
+  background: rgba(11, 13, 13, 0.62);
+}
+
+.battle-result__loot-row,
+.battle-result__loot-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.battle-result__loot-row strong,
+.battle-result__loot-list strong {
+  color: #f1cd80;
+}
+
+.battle-result__loot-list {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.battle-result__loot-empty {
+  margin: 0;
+  color: #b9b0a3;
+  font-size: 0.8rem;
+}
 .battle-pad__button:disabled {
   opacity: 0.4;
   cursor: default;
