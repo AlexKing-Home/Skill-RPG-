@@ -182,7 +182,13 @@ export default function BattleView({
 
       <div className="battle-card battle-card--compact" role="status" aria-live="assertive">
         {enemyImage ? (
-          <img className="battle-card__enemy-art" src={enemyImage} alt={enemyName} />
+          <img
+            className="battle-card__enemy-art"
+            src={enemyImage}
+            alt={enemyName}
+            loading="eager"
+            decoding="async"
+          />
         ) : null}
         <span className="battle-card__eyebrow">{trainingMode ? "Цель" : "Противник"}</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
