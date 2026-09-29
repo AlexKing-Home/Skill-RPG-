@@ -4,6 +4,7 @@ import BottomNav from "../components/BottomNav.jsx";
 import CharacterDetailsView from "../components/CharacterDetailsView.jsx";
 import CharacterSkillsView from "../components/CharacterSkillsView.jsx";
 import CharacterStatsView from "../components/CharacterStatsView.jsx";
+import InventoryView from "../components/InventoryView.jsx";
 import GameTabs from "../components/GameTabs.jsx";
 import PlaceholderView from "../components/PlaceholderView.jsx";
 import PlayerHud from "../components/PlayerHud.jsx";
@@ -16,6 +17,7 @@ import {
   resolveEnemyAttack,
 } from "../data/combat.js";
 import { getCombatProfile } from "../data/combatProfiles.js";
+import { getEquipmentCombatBonuses } from "../data/equipment.js";
 import { getDedicatedLocation } from "../data/locationRegistry.js";
 import { getAvailableCharacteristicPoints, getSkillProgression } from "../data/progression.js";
 import { increaseWeaponMastery, normalizeSkillMastery } from "../data/skills.js";
@@ -84,6 +86,14 @@ export default function CharacterScreen({ character, onBack }) {
   const willBonuses = getWillBonuses(stats);
   const maxStamina = getMaxStamina(stats);
   const combatProfile = getCombatProfile(character.classId, character.equipment);
+  const equipmentBonuses = getEquipmentCombatBonuses(character.equipment);
+  const combatStats = {
+    ...stats,
+    attack: Math.max(0, Number(stats.attack) || 0) + equipmentBonuses.attack,
+    defense: Math.max(0, Number(stats.defense) || 0) + equipmentBonuses.defense,
+  };
+  const combatStatsRef = useRef(combatStats);
+  combatStatsRef.current = combatStats;
   const [currentHealth, setCurrentHealth] = useState(() =>
     Math.min(maxHealth, Math.max(0, character.currentHealth ?? maxHealth)),
   );
@@ -96,11 +106,12 @@ export default function CharacterScreen({ character, onBack }) {
     characteristicPoints,
     maxStamina,
     currentStamina,
-    stats,
+    stats: combatStats,
   };
   const snapshotRef = useRef(null);
   snapshotRef.current = {
     ...activeCharacter,
+    stats,
     currentHealth,
     activeEncounter,
     location,
@@ -181,19 +192,21 @@ export default function CharacterScreen({ character, onBack }) {
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      applyCombatChanges(resolveEnemyAttack(snapshotRef.current));
+      applyCombatChanges(
+        resolveEnemyAttack({ ...snapshotRef.current, stats: combatStatsRef.current }),
+      );
     }, 100);
     return () => window.clearInterval(timer);
   }, []);
 
   function handleBasicAction(direction) {
-    const result = resolvePlayerAction(snapshotRef.current, { direction });
+    const result = resolvePlayerAction({ ...snapshotRef.current, stats: combatStats }, { direction });
     if (result.accepted) applyCombatChanges(result.changes);
     return result;
   }
 
   function handleSkillActivate(skill) {
-    const current = snapshotRef.current;
+    const current = { ...snapshotRef.current, stats: combatStats };
     const result = resolvePlayerAction(current, { skill });
     if (!result.accepted) return false;
 
@@ -327,6 +340,8 @@ export default function CharacterScreen({ character, onBack }) {
       content = <CharacterSkillsView character={activeCharacter} />;
     } else if (characterSection === "stats") {
       content = <CharacterStatsView character={activeCharacter} onStatChange={handleStatChange} />;
+    } else if (characterSection === "inventory") {
+      content = <InventoryView character={activeCharacter} />;
     } else {
       content = <PlaceholderView type={characterSection} />;
     }
@@ -386,7 +401,9 @@ export default function CharacterScreen({ character, onBack }) {
         weaponLabel={combatProfile.label}
       />
     );
-  } else if (["tasks", "inventory"].includes(activeTab)) {
+  } else if (activeTab === "inventory") {
+    content = <InventoryView character={activeCharacter} />;
+  } else if (activeTab === "tasks") {
     content = <PlaceholderView type={activeTab} />;
   } else {
     content = (
