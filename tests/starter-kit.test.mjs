@@ -8,11 +8,7 @@ import {
 } from "../src/data/equipment.js";
 import { createStarterKit, STARTER_COINS, STARTER_HEALING_POTION } from "../src/data/starterKit.js";
 import { createCharacter, skins } from "../src/data/skins.js";
-import {
-  mergeInventoryItems,
-  rollWildBoarLoot,
-  WILD_BOAR_LOOT_CHANCES,
-} from "../src/data/loot.js";
+import { mergeInventoryItems, rollWildBoarLoot, WILD_BOAR_LOOT_CHANCES } from "../src/data/loot.js";
 
 const expectedWeapons = {
   swordsman: ["oneHanded", "Учебный одноручный меч", 8],
@@ -124,7 +120,6 @@ test("consumables cannot be equipped and remain in inventory", () => {
   assert.equal(result.inventory[0].quantity, 2);
 });
 
-
 test("wild boar loot follows the configured drop table and coin range", () => {
   assert.deepEqual(WILD_BOAR_LOOT_CHANCES, {
     hide: 0.6,
@@ -148,17 +143,8 @@ test("wild boar materials stack while equipment stays separate", () => {
   const firstInventory = mergeInventoryItems([], firstLoot.items);
   const secondInventory = mergeInventoryItems(firstInventory, firstLoot.items);
 
-  assert.equal(
-    secondInventory.find((item) => item.id === "wild-boar-hide").quantity,
-    2,
-  );
-  assert.equal(
-    secondInventory.find((item) => item.id === "wild-boar-fang").quantity,
-    2,
-  );
-  assert.equal(
-    secondInventory.find((item) => item.id === "raw-boar-meat").quantity,
-    2,
-  );
+  assert.equal(secondInventory.find((item) => item.id === "wild-boar-hide").quantity, 2);
+  assert.equal(secondInventory.find((item) => item.id === "wild-boar-fang").quantity, 2);
+  assert.equal(secondInventory.find((item) => item.id === "raw-boar-meat").quantity, 2);
   assert.equal(secondInventory.filter((item) => item.category === "weapon").length, 2);
 });

@@ -85,8 +85,8 @@ export function mergeInventoryItems(inventory = [], incomingItems = []) {
         (candidate) => candidate.id === item.id && candidate.stackable,
       );
       if (existing) {
-        existing.quantity = Math.max(0, Number(existing.quantity) || 0) +
-          Math.max(1, Number(item.quantity) || 1);
+        existing.quantity =
+          Math.max(0, Number(existing.quantity) || 0) + Math.max(1, Number(item.quantity) || 1);
         continue;
       }
     }

@@ -268,7 +268,6 @@ test("equipment moves between slots and inventory through explicit controls", ()
   assert.match(inventorySource, />\s*Надеть\s*</);
 });
 
-
 test("wild boar victory grants persistent loot", () => {
   assert.match(characterScreenSource, /rollWildBoarLoot\(\)/);
   assert.match(characterScreenSource, /mergeInventoryItems\(current\.inventory, loot\.items\)/);

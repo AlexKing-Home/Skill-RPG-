@@ -28,9 +28,7 @@ export default function InventoryView({ character, onEquip }) {
           {character.lastLoot.items.length ? (
             <span>
               {character.lastLoot.items
-                .map((item) =>
-                  item.stackable ? `${item.name} ×${item.quantity ?? 1}` : item.name,
-                )
+                .map((item) => (item.stackable ? `${item.name} ×${item.quantity ?? 1}` : item.name))
                 .join(", ")}
             </span>
           ) : (
