@@ -14,6 +14,18 @@ export function createEmptyEquipment() {
   return Object.fromEntries(EQUIPMENT_SLOTS.map(({ id }) => [id, null]));
 }
 
+export function getEquipmentCombatBonuses(equipment = {}) {
+  return Object.values(equipment).reduce(
+    (total, item) => {
+      if (!item) return total;
+      total.attack += Math.max(0, Number(item.baseStats?.attack) || 0);
+      total.defense += Math.max(0, Number(item.baseStats?.defense) || 0);
+      return total;
+    },
+    { attack: 0, defense: 0 },
+  );
+}
+
 export {
   EQUIPMENT_BY_ID,
   EQUIPMENT_CATALOG,
