@@ -81,7 +81,7 @@ const cityObjects = [
     name: "Тренировочный двор",
     x: 75.06,
     y: 78.68,
-    action: "Осмотреть",
+    action: "Тренировка с манекеном",
     description: "Во дворе стоят тренировочные манекены и стойки с оружием.",
   },
 ];
@@ -115,7 +115,7 @@ const SHRINE_SERVICES = [
 const CITY_ASPECT_RATIO = 1402 / 1122;
 const MAP_TAP_RADIUS = 13.5;
 
-export default function StartCityLocationView() {
+export default function StartCityLocationView({ onStartTraining }) {
   const [selectedId, setSelectedId] = useState(null);
   const [message, setMessage] = useState("");
   const [forgeMenuOpen, setForgeMenuOpen] = useState(false);
@@ -173,6 +173,11 @@ export default function StartCityLocationView() {
       setMessage(
         "Священник: Добро пожаловать. Я могу благословить твоё оружие или предложить лечебное зелье.",
       );
+      return;
+    }
+
+    if (selectedObject.id === "city-training-yard") {
+      onStartTraining?.();
       return;
     }
 
