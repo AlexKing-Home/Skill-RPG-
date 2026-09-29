@@ -142,7 +142,7 @@ test("battle resolves skills through the active weapon profile instead of hardco
   assert.match(battleViewSource, /НЕДОСТАТОЧНО ВЫНОСЛИВОСТИ!/);
   assert.match(
     characterScreenSource,
-    /getCombatProfile\(character\.classId, character\.equipment\)/,
+    /getCombatProfile\(character\.classId, equipment\)/,
   );
   assert.match(characterScreenSource, /findSkill=\{combatProfile\.findSkill\}/);
 });
@@ -252,11 +252,25 @@ test("starter inventory is rendered as a real game view", () => {
 });
 
 test("equipped starter items contribute attack and defense without mutating base stats", () => {
-  assert.match(characterScreenSource, /getEquipmentCombatBonuses\(character\.equipment\)/);
+  assert.match(characterScreenSource, /getEquipmentCombatBonuses\(equipment\)/);
   assert.match(characterScreenSource, /stats: combatStats/);
   assert.match(characterScreenSource, /snapshotRef\.current = \{[\s\S]*stats,/);
   assert.match(
     characterScreenSource,
     /resolvePlayerAction\(\s*\{ \.\.\.snapshotRef\.current, stats: combatStats \},\s*\{ direction \},?\s*\)/,
   );
+});
+
+
+test("equipment moves between slots and inventory through explicit controls", () => {
+  assert.match(characterScreenSource, /function handleEquipItem\(itemId\)/);
+  assert.match(characterScreenSource, /equipInventoryItem\(equipment, inventory, itemId\)/);
+  assert.match(characterScreenSource, /function handleUnequipItem\(slotId\)/);
+  assert.match(characterScreenSource, /unequipItem\(equipment, inventory, slotId\)/);
+  assert.match(characterScreenSource, /equipment: result\.equipment/);
+  assert.match(characterScreenSource, /inventory: result\.inventory/);
+  assert.match(detailsSource, /onUnequip\(selectedSlot\.id\)/);
+  assert.match(detailsSource, />\s*Снять\s*</);
+  assert.match(inventorySource, /onEquip\(item\.id\)/);
+  assert.match(inventorySource, />\s*Надеть\s*</);
 });
