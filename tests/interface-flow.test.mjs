@@ -17,6 +17,7 @@ const statsSource = await read("../src/components/CharacterStatsView.jsx");
 const skillsSource = await read("../src/components/CharacterSkillsView.jsx");
 const playerHudSource = await read("../src/components/PlayerHud.jsx");
 const battleViewSource = await read("../src/components/BattleView.jsx");
+const battleStatusSource = await read("../src/components/BattleStatus.jsx");
 const worldMapSource = await read("../src/components/WorldMapView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
@@ -275,4 +276,16 @@ test("wild boar victory grants persistent loot", () => {
   assert.match(characterScreenSource, /setCoins\(nextCoins\)/);
   assert.match(characterScreenSource, /lastLoot: lootRecord/);
   assert.match(inventorySource, /Последняя добыча:/);
+});
+
+
+test("battle result notification shows victory defeat and granted loot", () => {
+  assert.match(characterScreenSource, /encounter\.status !== "victory"/);
+  assert.match(characterScreenSource, /rewardGranted/);
+  assert.match(characterScreenSource, /reward: lootRecord/);
+  assert.match(battleStatusSource, /Результат боя/);
+  assert.match(battleStatusSource, /Добыча/);
+  assert.match(battleStatusSource, /\+\{reward\.coins\}/);
+  assert.match(battleStatusSource, /Предметов не выпало\./);
+  assert.match(battleStatusSource, /Герой повержен\. Добыча не получена\./);
 });
