@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { getEquipmentCombatBonuses } from "../src/data/equipment.js";
+import {
+  equipInventoryItem,
+  getEquipmentCombatBonuses,
+  unequipItem,
+} from "../src/data/equipment.js";
 import { createStarterKit, STARTER_COINS, STARTER_HEALING_POTION } from "../src/data/starterKit.js";
 import { createCharacter, skins } from "../src/data/skins.js";
 
@@ -58,4 +62,68 @@ test("new visible classes receive starter kit on creation", () => {
     assert.equal(character.inventory[0].quantity, 2);
     assert.equal(character.equipment.weapon1.weaponType, expectedWeapons[classId][0]);
   }
+});
+
+
+test("unequipping moves the item into inventory without duplication", () => {
+  const kit = createStarterKit("swordsman");
+  const result = unequipItem(kit.equipment, kit.inventory, "weapon1");
+
+  assert.equal(result.changed, true);
+  assert.equal(result.equipment.weapon1, null);
+  assert.equal(result.inventory.filter((item) => item.id === "starter-one-handed-sword").length, 1);
+  assert.equal(result.inventory.filter((item) => item.id === STARTER_HEALING_POTION.id).length, 1);
+});
+
+test("equipping removes the item from inventory and restores the slot", () => {
+  const kit = createStarterKit("swordsman");
+  const removed = unequipItem(kit.equipment, kit.inventory, "weapon1");
+  const restored = equipInventoryItem(
+    removed.equipment,
+    removed.inventory,
+    "starter-one-handed-sword",
+  );
+
+  assert.equal(restored.changed, true);
+  assert.equal(restored.equipment.weapon1.id, "starter-one-handed-sword");
+  assert.equal(
+    restored.inventory.some((item) => item.id === "starter-one-handed-sword"),
+    false,
+  );
+});
+
+test("equipping into an occupied slot swaps the old item back to inventory", () => {
+  const kit = createStarterKit("swordsman");
+  const replacement = {
+    ...kit.equipment.weapon1,
+    id: "test-replacement-sword",
+    name: "Проверочный меч",
+    baseStats: { attack: 12 },
+  };
+  const result = equipInventoryItem(
+    kit.equipment,
+    [...kit.inventory, replacement],
+    replacement.id,
+  );
+
+  assert.equal(result.changed, true);
+  assert.equal(result.equipment.weapon1.id, replacement.id);
+  assert.equal(
+    result.inventory.filter((item) => item.id === "starter-one-handed-sword").length,
+    1,
+  );
+  assert.equal(result.inventory.some((item) => item.id === replacement.id), false);
+});
+
+test("consumables cannot be equipped and remain in inventory", () => {
+  const kit = createStarterKit("swordsman");
+  const result = equipInventoryItem(
+    kit.equipment,
+    kit.inventory,
+    STARTER_HEALING_POTION.id,
+  );
+
+  assert.equal(result.changed, false);
+  assert.equal(result.equipment.weapon1.id, "starter-one-handed-sword");
+  assert.equal(result.inventory[0].quantity, 2);
 });
