@@ -200,7 +200,10 @@ export default function CharacterScreen({ character, onBack }) {
   }, []);
 
   function handleBasicAction(direction) {
-    const result = resolvePlayerAction({ ...snapshotRef.current, stats: combatStats }, { direction });
+    const result = resolvePlayerAction(
+      { ...snapshotRef.current, stats: combatStats },
+      { direction },
+    );
     if (result.accepted) applyCombatChanges(result.changes);
     return result;
   }
@@ -455,4 +458,3 @@ export default function CharacterScreen({ character, onBack }) {
     </main>
   );
 }
-
