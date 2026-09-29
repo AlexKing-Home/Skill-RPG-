@@ -69,6 +69,7 @@ export default function CharacterScreen({ character, onBack }) {
   const [inventory, setInventory] = useState(() =>
     Array.isArray(character.inventory) ? [...character.inventory] : [],
   );
+  const [coins, setCoins] = useState(() => Math.max(0, Math.floor(Number(character.coins) || 0)));
   const [lastLoot, setLastLoot] = useState(character.lastLoot ?? null);
   const [skillMastery, setSkillMastery] = useState(() =>
     normalizeSkillMastery(character.skillMastery),
@@ -114,6 +115,7 @@ export default function CharacterScreen({ character, onBack }) {
     currentStamina,
     equipment,
     inventory,
+    coins,
     lastLoot,
     stats: combatStats,
   };
@@ -296,6 +298,7 @@ export default function CharacterScreen({ character, onBack }) {
       };
 
       setInventory(nextInventory);
+      setCoins(nextCoins);
       setLastLoot(lootRecord);
       rewardChanges = {
         inventory: nextInventory,
