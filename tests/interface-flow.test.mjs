@@ -20,6 +20,7 @@ const battleViewSource = await read("../src/components/BattleView.jsx");
 const worldMapSource = await read("../src/components/WorldMapView.jsx");
 const bottomNavSource = await read("../src/components/BottomNav.jsx");
 const placeholderSource = await read("../src/components/PlaceholderView.jsx");
+const encounterSource = await read("../src/data/travelEncounters.js");
 
 test("creating a character opens the integrated game screen", () => {
   assert.match(appSource, /setScreen\("character"\)/);
@@ -100,6 +101,15 @@ test("character HUD includes stamina and skill mastery progression", () => {
   assert.match(characterScreenSource, /progression=\{progression\}/);
 });
 
+test("wild boar encounter provides and displays enemy artwork in battle", () => {
+  assert.match(encounterSource, /image: wildBoarArt/);
+  assert.match(encounterSource, /attack: 18/);
+  assert.match(encounterSource, /defense: 2/);
+  assert.match(encounterSource, /maxHealth: 25/);
+  assert.match(battleViewSource, /className="battle-card__enemy-art"/);
+  assert.match(battleViewSource, /HP \{enemyCurrentHealth\} \/ \{enemyMaxHealth\}/);
+});
+
 test("battle direction buttons define their basic combat actions", () => {
   assert.match(battleViewSource, /left: "УДАР СЛЕВА!"/);
   assert.match(battleViewSource, /right: "УДАР СПРАВА!"/);
@@ -134,23 +144,21 @@ test("battle resolves skills through the active weapon profile instead of hardco
   assert.match(characterScreenSource, /findSkill=\{combatProfile\.findSkill\}/);
 });
 
-test("character combat state deducts stamina and advances weapon mastery", () => {
+test("character combat state applies damage stamina and weapon mastery together", () => {
   assert.match(characterScreenSource, /\[currentStamina, setCurrentStamina\]/);
   assert.match(characterScreenSource, /\[skillMastery, setSkillMastery\]/);
   assert.match(characterScreenSource, /function handleSkillActivate\(skill\)/);
-  assert.match(characterScreenSource, /currentStamina < staminaCost/);
-  assert.match(characterScreenSource, /const nextStamina = currentStamina - staminaCost/);
-  assert.match(characterScreenSource, /increaseWeaponMastery\(skillMastery, masteryKey\)/);
-  assert.match(characterScreenSource, /setCurrentStamina\(nextStamina\)/);
+  assert.match(characterScreenSource, /resolvePlayerAction\(current, \{ skill \}\)/);
+  assert.match(characterScreenSource, /if \(!result.accepted\) return false/);
+  assert.match(characterScreenSource, /increaseWeaponMastery\(current.skillMastery, masteryKey\)/);
   assert.match(characterScreenSource, /setSkillMastery\(nextSkillMastery\)/);
-  assert.match(characterScreenSource, /currentStamina: nextStamina/);
+  assert.match(characterScreenSource, /applyCombatChanges\(\{/);
   assert.match(characterScreenSource, /skillMastery: nextSkillMastery/);
   assert.match(
     characterScreenSource,
     /onSkillActivate=\{trainingMode \? \(\) => \(\{ activated: true \}\) : handleSkillActivate\}/,
   );
 });
-
 test("world map rest button restores stamina to the current maximum and persists it", () => {
   assert.match(worldMapSource, />\s*Отдохнуть\s*</);
   assert.match(worldMapSource, /onClick=\{onRest\}/);
