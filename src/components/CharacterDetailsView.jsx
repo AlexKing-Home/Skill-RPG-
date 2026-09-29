@@ -70,16 +70,35 @@ function CharacterStatIcon({ type }) {
   );
 }
 
-export default function CharacterDetailsView({ character, currentHealth, maxHealth, level }) {
+export default function CharacterDetailsView({
+  character,
+  currentHealth,
+  maxHealth,
+  level,
+  onUnequip,
+}) {
   const [slotMessage, setSlotMessage] = useState("");
+  const [selectedSlotId, setSelectedSlotId] = useState(null);
   const equipment = { ...createEmptyEquipment(), ...(character.equipment ?? {}) };
 
   function handleSlotClick(slot, item) {
+    setSelectedSlotId(slot.id);
     setSlotMessage(
       item?.name
         ? `Выбран предмет «${item.name}» в слоте «${slot.label}».`
         : `Слот «${slot.label}» пуст. Здесь будет открываться выбор предмета из инвентаря.`,
     );
+  }
+
+  const selectedSlot = EQUIPMENT_SLOTS.find(({ id }) => id === selectedSlotId);
+  const selectedItem = selectedSlot ? equipment[selectedSlot.id] : null;
+
+  function handleUnequip() {
+    if (!selectedSlot || !selectedItem || !onUnequip) return;
+    const itemName = selectedItem.name;
+    if (onUnequip(selectedSlot.id)) {
+      setSlotMessage(`«${itemName}» снят и перемещён в инвентарь.`);
+    }
   }
 
   function statValue(id) {
@@ -156,6 +175,14 @@ export default function CharacterDetailsView({ character, currentHealth, maxHeal
             );
           })}
         </div>
+
+        {selectedItem && onUnequip ? (
+          <div className="equipment-actions">
+            <button type="button" className="equipment-action-button" onClick={handleUnequip}>
+              Снять
+            </button>
+          </div>
+        ) : null}
 
         {slotMessage ? (
           <p className="equipment-message" role="status">
