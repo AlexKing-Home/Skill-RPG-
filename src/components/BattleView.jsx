@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import BattleStatus from "./BattleStatus.jsx";
 import "../battle.css";
 
 const directions = [
@@ -31,6 +32,8 @@ export default function BattleView({
   currentStamina = 0,
   maxStamina = 0,
   onSkillActivate,
+  onBasicAction,
+  onFinish,
   onFlee,
   onExitTraining,
   findSkill = null,
@@ -43,9 +46,20 @@ export default function BattleView({
   const actionTimerRef = useRef(null);
   const comboTimerRef = useRef(null);
   const comboSequenceRef = useRef([]);
+  const canAct = trainingMode || encounter?.status === "active";
+  const resolveComboRef = useRef(null);
   const enemyName = trainingMode
     ? "Тренировочный манекен"
-    : (encounter?.name ?? "Неизвестный противник");
+    : (encounter?.name ?? "Нет активного противника");
+  const enemyImage = trainingMode ? null : (encounter?.image ?? null);
+  const enemyMaxHealth = trainingMode
+    ? 0
+    : Math.max(0, Math.floor(Number(encounter?.maxHealth) || 0));
+  const rawEnemyCurrentHealth = encounter?.currentHealth ?? enemyMaxHealth;
+  const enemyCurrentHealth = Math.min(
+    enemyMaxHealth,
+    Math.max(0, Math.floor(Number(rawEnemyCurrentHealth) || 0)),
+  );
   const staminaPercent =
     maxStamina > 0 ? Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100)) : 0;
 
@@ -57,6 +71,14 @@ export default function BattleView({
     [],
   );
 
+  useEffect(() => {
+    if (canAct) return;
+    window.clearTimeout(comboTimerRef.current);
+    comboTimerRef.current = null;
+    comboSequenceRef.current = [];
+    setComboSequence([]);
+  }, [canAct]);
+
   function showAction(action) {
     if (!action) return;
 
@@ -66,8 +88,15 @@ export default function BattleView({
   }
 
   function resolveCombo(sequence) {
+    if (!canAct) return;
+
     if (sequence.length === 1) {
-      showAction(BASIC_ACTIONS[sequence[0]]);
+      if (trainingMode) {
+        showAction(BASIC_ACTIONS[sequence[0]]);
+      } else {
+        const result = onBasicAction?.(sequence[0]);
+        showAction(result?.message ?? BASIC_ACTIONS[sequence[0]]);
+      }
     } else {
       const skill = typeof findSkill === "function" ? findSkill(sequence) : null;
       if (skill) {
@@ -102,18 +131,20 @@ export default function BattleView({
     setComboSequence([]);
   }
 
+  resolveComboRef.current = resolveCombo;
+
   function startComboTimer() {
     if (comboTimerRef.current !== null) return;
 
     setComboTimerKey((key) => key + 1);
     comboTimerRef.current = window.setTimeout(() => {
       comboTimerRef.current = null;
-      resolveCombo(comboSequenceRef.current);
+      resolveComboRef.current(comboSequenceRef.current);
     }, COMBO_INPUT_TIMEOUT_MS);
   }
 
   function handleDirection(directionId) {
-    if (!BASIC_ACTIONS[directionId]) return;
+    if (!canAct || !BASIC_ACTIONS[directionId]) return;
 
     window.clearTimeout(actionTimerRef.current);
     setActiveAction("");
@@ -146,15 +177,27 @@ export default function BattleView({
       </div>
 
       <div className="battle-card battle-card--compact" role="status" aria-live="assertive">
+        {enemyImage ? (
+          <img className="battle-card__enemy-art" src={enemyImage} alt={enemyName} />
+        ) : null}
         <span className="battle-card__eyebrow">{trainingMode ? "Цель" : "Противник"}</span>
         <strong className="battle-card__enemy">{enemyName}</strong>
+        {enemyMaxHealth > 0 ? (
+          <span className="battle-card__status">
+            HP {enemyCurrentHealth} / {enemyMaxHealth}
+          </span>
+        ) : null}
         <div className="battle-card__divider" aria-hidden="true" />
         <p>
           {trainingMode
             ? "Отрабатывайте известные комбинации без расхода выносливости и без получения мастерства."
-            : `${enemyName} преградил путь и напал на героя.`}
+            : encounter
+              ? `${enemyName} преградил путь и напал на героя.`
+              : "Ожидание случайной встречи."}
         </p>
       </div>
+
+      {!trainingMode ? <BattleStatus encounter={encounter} onFinish={onFinish} /> : null}
 
       <div className="battle-controls" aria-label="Боевые элементы управления">
         <div className="battle-stamina">
@@ -199,6 +242,7 @@ export default function BattleView({
               key={direction.id}
               type="button"
               className={`battle-pad__button ${direction.className}`}
+              disabled={!canAct}
               aria-label={direction.label}
               onClick={() => handleDirection(direction.id)}
             >
@@ -207,11 +251,20 @@ export default function BattleView({
           ))}
         </div>
 
+        <details className="battle-history">
+          <summary>Правила боя</summary>
+          <p className="battle-help">
+            {trainingMode
+              ? "Тренировка не расходует выносливость и не повышает мастерство."
+              : "Обычный удар: 0 ВЫН. · Блок: 1 · Парирование: 2. Все действия выполняются через 1,5 сек. после первого нажатия. Атака снимает защитную стойку."}
+          </p>
+        </details>
+
         {onExitTraining ? (
           <button type="button" className="battle-flee" onClick={onExitTraining}>
             Завершить тренировку
           </button>
-        ) : onFlee ? (
+        ) : onFlee && canAct ? (
           <button type="button" className="battle-flee" onClick={onFlee}>
             Бегство
           </button>
