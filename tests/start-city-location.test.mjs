@@ -68,6 +68,19 @@ test("blacksmith interaction opens weapon upgrade and repair services", () => {
   assert.match(view, /aria-label="Услуги кузнеца"/);
 });
 
+
+
+test("innkeeper interaction opens sell buy and talk services", () => {
+  assert.match(view, /action: "Говорить с трактирщиком"/);
+  assert.match(view, /INN_SERVICES/);
+  assert.match(view, /label: "Продать"/);
+  assert.match(view, /label: "Купить"/);
+  assert.match(view, /label: "Поговорить"/);
+  assert.match(view, /setInnMenuOpen\(true\)/);
+  assert.match(view, /selectInnService/);
+  assert.match(view, /aria-label="Услуги трактирщика"/);
+});
+
 test("priest interaction opens blessing and healing potion services", () => {
   assert.match(view, /action: "Говорить со священником"/);
   assert.match(view, /SHRINE_SERVICES/);

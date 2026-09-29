@@ -24,8 +24,8 @@ const cityObjects = [
     name: "Таверна",
     x: 80.22,
     y: 23.58,
-    action: "Осмотреть",
-    description: "В таверне собираются путники. Это подходящее место для слухов, заданий и отдыха.",
+    action: "Говорить с трактирщиком",
+    description: "В таверне собираются путники. За стойкой работает трактирщик.",
   },
   {
     id: "city-notice-board",
@@ -99,6 +99,24 @@ const FORGE_SERVICES = [
   },
 ];
 
+const INN_SERVICES = [
+  {
+    id: "sell",
+    label: "Продать",
+    description: "Трактирщик готов посмотреть предметы, которые ты хочешь продать.",
+  },
+  {
+    id: "buy",
+    label: "Купить",
+    description: "Трактирщик показывает товары, доступные для покупки.",
+  },
+  {
+    id: "talk",
+    label: "Поговорить",
+    description: "Трактирщик готов поделиться слухами и новостями Стартового города.",
+  },
+];
+
 const SHRINE_SERVICES = [
   {
     id: "bless-weapon",
@@ -120,6 +138,8 @@ export default function StartCityLocationView({ onStartTraining }) {
   const [message, setMessage] = useState("");
   const [forgeMenuOpen, setForgeMenuOpen] = useState(false);
   const [selectedForgeService, setSelectedForgeService] = useState(null);
+  const [innMenuOpen, setInnMenuOpen] = useState(false);
+  const [selectedInnService, setSelectedInnService] = useState(null);
   const [shrineMenuOpen, setShrineMenuOpen] = useState(false);
   const [selectedShrineService, setSelectedShrineService] = useState(null);
   const selectedObject = cityObjects.find((object) => object.id === selectedId) ?? null;
@@ -129,6 +149,8 @@ export default function StartCityLocationView({ onStartTraining }) {
     setMessage("");
     setForgeMenuOpen(false);
     setSelectedForgeService(null);
+    setInnMenuOpen(false);
+    setSelectedInnService(null);
     setShrineMenuOpen(false);
     setSelectedShrineService(null);
   }
@@ -167,6 +189,15 @@ export default function StartCityLocationView({ onStartTraining }) {
       return;
     }
 
+    if (selectedObject.id === "city-inn") {
+      setInnMenuOpen(true);
+      setSelectedInnService(null);
+      setMessage(
+        "Трактирщик: Добро пожаловать. Хочешь что-нибудь купить, продать или просто поговорить?",
+      );
+      return;
+    }
+
     if (selectedObject.id === "city-shrine") {
       setShrineMenuOpen(true);
       setSelectedShrineService(null);
@@ -186,6 +217,11 @@ export default function StartCityLocationView({ onStartTraining }) {
 
   function selectForgeService(service) {
     setSelectedForgeService(service.id);
+    setMessage(service.description);
+  }
+
+  function selectInnService(service) {
+    setSelectedInnService(service.id);
     setMessage(service.description);
   }
 
@@ -267,6 +303,24 @@ export default function StartCityLocationView({ onStartTraining }) {
                 }`}
                 onClick={() => selectForgeService(service)}
                 aria-pressed={selectedForgeService === service.id}
+              >
+                {service.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {innMenuOpen && selectedObject?.id === "city-inn" && (
+          <div className="interaction-panel__actions" aria-label="Услуги трактирщика">
+            {INN_SERVICES.map((service) => (
+              <button
+                key={service.id}
+                type="button"
+                className={`interaction-panel__button ${
+                  selectedInnService === service.id ? "is-selected" : ""
+                }`}
+                onClick={() => selectInnService(service)}
+                aria-pressed={selectedInnService === service.id}
               >
                 {service.label}
               </button>
