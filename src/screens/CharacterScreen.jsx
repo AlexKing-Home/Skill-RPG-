@@ -221,10 +221,47 @@ export default function CharacterScreen({ character, onBack }) {
 
   function applyCombatChanges(changes) {
     if (!changes) return;
-    if (changes.currentHealth !== undefined) setCurrentHealth(changes.currentHealth);
-    if (changes.currentStamina !== undefined) setCurrentStamina(changes.currentStamina);
-    if (changes.activeEncounter !== undefined) setActiveEncounter(changes.activeEncounter);
-    persist(changes);
+
+    let nextChanges = changes;
+    const nextEncounter = changes.activeEncounter;
+    const current = snapshotRef.current;
+
+    if (
+      nextEncounter?.status === "victory" &&
+      !nextEncounter.rewardGranted &&
+      nextEncounter.id === "wild-boar"
+    ) {
+      const loot = rollWildBoarLoot();
+      const nextInventory = mergeInventoryItems(current.inventory, loot.items);
+      const nextCoins = Math.max(0, Math.floor(Number(current.coins) || 0)) + loot.coins;
+      const lootRecord = {
+        enemyId: nextEncounter.id,
+        enemyName: nextEncounter.name,
+        coins: loot.coins,
+        items: loot.items,
+      };
+
+      nextChanges = {
+        ...changes,
+        activeEncounter: {
+          ...nextEncounter,
+          rewardGranted: true,
+          reward: lootRecord,
+        },
+        inventory: nextInventory,
+        coins: nextCoins,
+        lastLoot: lootRecord,
+      };
+
+      setInventory(nextInventory);
+      setCoins(nextCoins);
+      setLastLoot(lootRecord);
+    }
+
+    if (nextChanges.currentHealth !== undefined) setCurrentHealth(nextChanges.currentHealth);
+    if (nextChanges.currentStamina !== undefined) setCurrentStamina(nextChanges.currentStamina);
+    if (nextChanges.activeEncounter !== undefined) setActiveEncounter(nextChanges.activeEncounter);
+    persist(nextChanges);
   }
 
   useEffect(() => {
@@ -235,44 +272,6 @@ export default function CharacterScreen({ character, onBack }) {
     }, 100);
     return () => window.clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    const current = snapshotRef.current;
-    const encounter = current.activeEncounter;
-    if (
-      encounter?.status !== "victory" ||
-      encounter.rewardGranted ||
-      encounter.id !== "wild-boar"
-    ) {
-      return;
-    }
-
-    const loot = rollWildBoarLoot();
-    const nextInventory = mergeInventoryItems(current.inventory, loot.items);
-    const nextCoins = Math.max(0, Math.floor(Number(current.coins) || 0)) + loot.coins;
-    const lootRecord = {
-      enemyId: encounter.id,
-      enemyName: encounter.name,
-      coins: loot.coins,
-      items: loot.items,
-    };
-    const nextEncounter = {
-      ...encounter,
-      rewardGranted: true,
-      reward: lootRecord,
-    };
-
-    setInventory(nextInventory);
-    setCoins(nextCoins);
-    setLastLoot(lootRecord);
-    setActiveEncounter(nextEncounter);
-    persist({
-      activeEncounter: nextEncounter,
-      inventory: nextInventory,
-      coins: nextCoins,
-      lastLoot: lootRecord,
-    });
-  }, [activeEncounter?.id, activeEncounter?.rewardGranted, activeEncounter?.status]);
 
   function handleBasicAction(direction) {
     const result = resolvePlayerAction(
